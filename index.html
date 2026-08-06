@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="小羊梦工厂">
+<link rel="manifest" href="manifest.json">
+<title>小羊梦工厂</title>
+<style>
+:root{
+  --p1:#FFB7C5;--p2:#FFCBA4;--p3:#FFF0A8;--p4:#B5EAD7;
+  --p5:#AED6F1;--p6:#D7BDE2;--p7:#E8D5F5;--p8:#FF9AA2;
+  --bg:#FDF6FF;--card:#fff;--bd:rgba(215,189,226,.32);
+  --ink:#3D2651;--ink2:#7B5EA7;--ink3:#B8A4CC;
+  --ga:linear-gradient(135deg,#FFB7C5,#D7BDE2);
+  --gb:linear-gradient(135deg,#B5EAD7,#AED6F1);
+  --gc:linear-gradient(135deg,#FFF0A8,#FFCBA4);
+  --gd:linear-gradient(135deg,#E8D5F5,#D7BDE2);
+  --ge:linear-gradient(135deg,#B5EAD7,#82E0AA);
+  --r:18px;--rs:11px;
+  --sh:0 2px 12px rgba(123,94,167,.09);
+  --nw:220px;--nc:66px;
+  --ease:.28s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:-apple-system,'PingFang SC',sans-serif;background:var(--bg);color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased;}
+#app{display:flex;height:100vh;height:100dvh;}
+/* ── SIDEBAR ── */
+#sb{
+  width:var(--nw);min-width:var(--nw);
+  background:linear-gradient(160deg,#FFF0FA 0%,#F5E4FF 60%,#EEE0FF 100%);
+  border-right:1.5px solid var(--bd);
+  display:flex;flex-direction:column;
+  transition:width var(--ease),min-width var(--ease);
+  overflow:hidden;z-index:100;
+  box-shadow:3px 0 20px rgba(123,94,167,.08);
+}
+#sb.col{width:var(--nc);min-width:var(--nc);}
+.sbh{padding:16px 12px 12px;display:flex;align-items:center;gap:10px;min-height:72px;overflow:hidden;border-bottom:1.5px solid var(--bd);}
+.logo{width:40px;height:40px;flex-shrink:0;}
+.apptitle{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;opacity:1;transition:opacity var(--ease);line-height:1.3;}
+#sb.col .apptitle{opacity:0;}
+.navlist{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+.navlist::-webkit-scrollbar{display:none;}
+.ni{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:16px;
+  cursor:pointer;margin-bottom:3px;
+  transition:background var(--ease),box-shadow var(--ease),transform .14s;
+  white-space:nowrap;overflow:hidden;user-select:none;
+  position:relative;
+}
+.ni::before{
+  content:'';position:absolute;left:0;top:20%;height:60%;
+  width:3px;border-radius:0 3px 3px 0;
+  background:transparent;transition:background var(--ease);
+}
+.ni:active{transform:scale(.96);}
+.ni.on{
+  background:linear-gradient(135deg,rgba(255,183,197,.25),rgba(215,189,226,.18));
+  box-shadow:0 3px 14px rgba(215,189,226,.35);
+}
+.ni.on::before{background:var(--nav-accent,var(--p1));}
+.ni:not(.on):hover{background:rgba(215,189,226,.14);}
+.nic{
+  width:40px;height:40px;flex-shrink:0;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  transition:transform .2s;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+.ni.on .nic{animation:navPop .38s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes navPop{
+  0%  {transform:scale(1) rotate(0);}
+  35% {transform:scale(1.22) rotate(-8deg);}
+  65% {transform:scale(1.1) rotate(4deg);}
+  100%{transform:scale(1.12) rotate(0);}
+}
+.nlb{font-size:13px;font-weight:700;color:var(--ink);opacity:1;transition:opacity var(--ease);}
+#sb.col .nlb{opacity:0;}
+.i0{background:var(--gc);}
+.i1{background:linear-gradient(135deg,#B5EAD7,#7DCEA0);}
+.i2{background:linear-gradient(135deg,#AED6F1,#5DADE2);}
+.i3{background:linear-gradient(135deg,#FFCBA4,#F0A070);}
+.i4{background:linear-gradient(135deg,#B5EAD7,#52BE80);}
+.i5{background:linear-gradient(135deg,#D7BDE2,#A569BD);}
+.ni[data-page=home]   {--nav-accent:#FFB347;}
+.ni[data-page=study]  {--nav-accent:#7DCEA0;}
+.ni[data-page=sport]  {--nav-accent:#5DADE2;}
+.ni[data-page=life]   {--nav-accent:#F0A070;}
+.ni[data-page=diet]   {--nav-accent:#52BE80;}
+.ni[data-page=garden] {--nav-accent:#A569BD;}
+.sbf{padding:10px 8px;border-top:1.5px solid var(--bd);}
+.dst{display:flex;align-items:center;gap:6px;padding:7px 10px;margin-bottom:6px;border-radius:12px;background:rgba(255,255,255,.55);overflow:hidden;}
+.sd{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sd.on{background:#52BE80;box-shadow:0 0 5px rgba(82,190,128,.5);animation:pg 2s infinite;}
+.sd.off{background:#EC7063;}
+@keyframes pg{0%,100%{opacity:1}50%{opacity:.4}}
+.slb{font-size:11px;color:var(--ink2);white-space:nowrap;opacity:1;transition:opacity var(--ease);}
+#sb.col .slb{opacity:0;}
+.togbtn{
+  width:100%;padding:9px;border:none;
+  background:linear-gradient(135deg,rgba(255,183,197,.25),rgba(215,189,226,.2));
+  border-radius:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink2);font-size:14px;font-weight:700;
+  transition:background .2s,transform .15s;
+}
+.togbtn:hover{background:linear-gradient(135deg,rgba(255,183,197,.4),rgba(215,189,226,.35));}
+.togbtn:active{transform:scale(.95);}
+/* ─ MAIN ─ */
+#main{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(123,94,167,.18) transparent;}
+#main::-webkit-scrollbar{width:3px;}#main::-webkit-scrollbar-thumb{background:rgba(123,94,167,.18);border-radius:3px;}
+.pg{display:none;padding:16px 14px 40px;}
+.pg.on{display:block;}
+/* ─ COMMON ─ */
+.ph{display:flex;align-items:center;gap:8px;margin-bottom:15px;}
+.ph h1{font-size:19px;font-weight:800;color:var(--ink);}
+.mla{margin-left:auto;}
+.card{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:var(--sh);margin-bottom:11px;border:1.5px solid var(--bd);position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent,var(--p6));}
+.ct{font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.3px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.sep{border:none;border-top:1px solid var(--bd);margin:10px 0;}
+.empty{text-align:center;padding:28px 0;color:var(--ink3);font-size:13px;}
+/* ─ BUTTONS ─ */
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:var(--rs);transition:all .18s;}
+.btn:active{transform:scale(.94);}
+.bp{background:var(--ga);color:#fff;padding:10px 18px;font-size:13px;box-shadow:0 3px 12px rgba(255,154,162,.3);}
+.bp:hover{box-shadow:0 5px 16px rgba(255,154,162,.4);transform:translateY(-1px);}
+.bg{background:rgba(215,189,226,.2);color:var(--ink2);padding:8px 12px;font-size:13px;}
+.bsm{padding:5px 10px;font-size:12px;border-radius:8px;}
+.bxs{padding:3px 8px;font-size:11px;border-radius:7px;}
+.bdanger{background:rgba(255,107,107,.1);color:#E53935;padding:5px 10px;font-size:12px;border-radius:8px;}
+.badd{width:26px;height:26px;border-radius:50%;font-size:15px;padding:0;background:var(--ga);color:#fff;box-shadow:0 2px 7px rgba(255,154,162,.3);flex-shrink:0;}
+/* ─ INPUTS ─ */
+.inp{width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid rgba(215,189,226,.38);background:var(--card);font-family:inherit;font-size:13px;color:var(--ink);outline:none;transition:border .18s,box-shadow .18s;}
+.inp:focus{border-color:var(--p6);box-shadow:0 0 0 3px rgba(215,189,226,.18);}
+textarea.inp{resize:none;}
+select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237B5EA7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+/* ─ MODAL ─ */
+.ov{position:fixed;inset:0;background:rgba(61,38,81,.4);backdrop-filter:blur(5px);z-index:1000;display:none;align-items:flex-end;justify-content:center;}
+.ov.open{display:flex;}
+.mo{background:var(--card);border-radius:22px 22px 0 0;padding:16px 16px 40px;width:100%;max-height:88vh;overflow-y:auto;animation:su .26s ease;}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhd{width:30px;height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin:0 auto 13px;}
+.mt{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:13px;}
+.ml{font-size:12px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px;}
+.mrow{margin-bottom:11px;}
+/* ─ TOAST ─ */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:rgba(61,38,81,.88);color:#fff;padding:8px 18px;border-radius:18px;font-size:13px;transition:transform .26s;z-index:2000;pointer-events:none;white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+/* ─ CALENDAR ─ */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}
+.cal-h{font-size:10px;font-weight:700;color:var(--ink3);padding:3px 0;}
+.cal-d{font-size:12px;padding:5px 1px;border-radius:7px;color:var(--ink2);}
+.cal-d.today{background:var(--ga);color:#fff;font-weight:800;box-shadow:0 2px 7px rgba(255,154,162,.32);}
+/* ─ COUNTDOWN ─ */
+.cdcard{background:var(--ga);border:none !important;box-shadow:0 5px 20px rgba(255,154,162,.28);}
+.cdcard::before{display:none;}
+.cdbar{height:5px;background:rgba(255,255,255,.22);border-radius:3px;overflow:hidden;margin-top:8px;}
+.cdbar-f{height:100%;background:rgba(255,255,255,.75);border-radius:3px;transition:width .5s;}
+/* ─ CHECKIN GROUP ─ */
+.ci-group-label{font-size:11px;font-weight:700;color:var(--ink2);margin:8px 0 6px;display:flex;align-items:center;gap:5px;}
+.ci-group-label::after{content:'';flex:1;height:1px;background:var(--bd);}
+/* ─ TASK ROW ─ */
+.trow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);}
+.trow:last-child{border-bottom:none;}
+.tchk{width:20px;height:20px;border-radius:50%;border:2px solid var(--p6);background:none;cursor:pointer;flex-shrink:0;transition:all .18s;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.tchk.done{background:var(--ga);border-color:transparent;color:#fff;}
+.tname{flex:1;font-size:13px;color:var(--ink);}
+.tname.done{text-decoration:line-through;color:var(--ink3);}
+.tdel{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:16px;padding:0 2px;}
+/* ─ STUDY SUBJECT ─ */
+.subj-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.subj-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.subj-stats{font-size:11px;color:var(--ink3);margin-top:1px;}
+.subj-actions{display:flex;gap:5px;margin-left:auto;}
+/* ─ SPORT PLAN ROW ─ */
+.sport-day-group{margin-bottom:14px;}
+.sport-day-hd{font-size:12px;font-weight:700;color:var(--ink2);padding:5px 10px;border-radius:10px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.sport-day-hd.is-today{background:var(--ga);color:#fff;}
+.sport-day-hd.is-today span{color:#fff;}
+.sport-day-hd:not(.is-today){background:rgba(215,189,226,.2);}
+.sport-plan-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(250,246,255,.8);margin-bottom:5px;border:1px solid var(--bd);}
+.sp-type{font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.sp-type.cardio{background:rgba(174,214,241,.4);color:#1A5276;}
+.sp-type.strength{background:rgba(255,183,197,.4);color:#922B21;}
+/* ─ WEEK HEADER ─ */
+.week-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--gd);margin-bottom:12px;}
+.week-badge{font-size:12px;font-weight:700;color:var(--ink2);}
+/* ─ HISTORY ─ */
+.hist-week{padding:10px 12px;border-radius:var(--rs);background:rgba(232,213,245,.18);margin-bottom:8px;border:1px solid var(--bd);}
+.hist-week-title{font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+/* ─ DIET ─ */
+.meal-row{display:grid;grid-template-columns:30px 1fr 64px;gap:6px;align-items:center;margin-bottom:6px;}
+.meal-label{font-size:11px;font-weight:700;color:var(--ink3);}
+.weight-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);font-size:13px;}
+/* ─ GARDEN ─ */
+.glock{text-align:center;padding:30px 20px;}
+.glock-icon{font-size:44px;margin-bottom:12px;}
+.glock-title{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.glock-sub{font-size:13px;color:var(--ink3);margin-bottom:18px;}
+.garden-entry{padding:11px 13px;border-radius:12px;background:rgba(215,189,226,.12);margin-bottom:8px;border:1px solid var(--bd);}
+.garden-entry-meta{font-size:11px;color:var(--p6);font-weight:700;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;}
+.garden-entry-text{font-size:13px;color:var(--ink);white-space:pre-wrap;line-height:1.6;}
+/* ─ SHEEP ─ */
+.sheep-stage{display:flex;flex-direction:column;align-items:center;padding:14px 0 6px;position:relative;}
+.sheep-svg-wrap{width:100px;height:100px;position:relative;}
+.sheep-anim{animation:sheepFloat 2.4s ease-in-out infinite;}
+@keyframes sheepFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.sheep-bounce{animation:sheepBounce .5s ease-in-out infinite alternate;}
+@keyframes sheepBounce{0%{transform:scale(1) translateY(0)}100%{transform:scale(1.06) translateY(-3px)}}
+.sheep-sway{animation:sheepSway 2s ease-in-out infinite;}
+@keyframes sheepSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.sheep-mood-label{margin-top:6px;font-size:13px;font-weight:700;color:var(--ink2);text-align:center;}
+.sheep-mood-btns{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;justify-content:center;}
+.mood-btn{border:none;cursor:pointer;font-size:18px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.mood-btn:hover{transform:scale(1.15);}
+.mood-btn.active{background:var(--ga);box-shadow:0 3px 12px rgba(255,154,162,.4);}
+/* ─ DATE GROUP ─ */
+.date-group{margin-bottom:8px;}
+.date-group-hd{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:5px;margin-bottom:6px;}
+.date-group-hd.is-today{background:var(--ga);color:#fff;}
+.date-group-hd.is-future{background:rgba(215,189,226,.25);color:var(--ink2);}
+.date-group-hd.is-past{background:rgba(184,164,204,.15);color:var(--ink3);}
+/* ─ BOTTOM NAV (mobile) ─ */
+#bnav{display:none;position:fixed;bottom:0;left:0;right:0;
+  background:#fff;border-top:1.5px solid var(--bd);z-index:200;
+  flex-direction:row;align-items:center;justify-content:space-around;
+  padding-bottom:env(safe-area-inset-bottom);height:58px;}
+.bni{display:flex;flex-direction:column;align-items:center;gap:1px;
+  font-size:10px;color:var(--ink3);cursor:pointer;
+  padding:4px 8px;border-radius:8px;min-width:44px;transition:color .18s;}
+.bni span:first-child{font-size:22px;line-height:1.2;}
+.bni.on{color:var(--ink2);}
+/* ─ RESPONSIVE ─ */
+@media(max-width:640px){
+  #sb{display:none;}
+  #bnav{display:flex;}
+  #main{padding-bottom:58px;}
+  .pg{padding:12px 10px 70px;}
+  #toast{bottom:72px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<nav id="sb">
+  <div class="sbh">
+    <div class="logo">
+      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="19" cy="16" r="9.5" fill="#F0E6FF"/>
+        <circle cx="12" cy="18" r="6.5" fill="#EDD9FF"/>
+        <circle cx="26" cy="18" r="6.5" fill="#EDD9FF"/>
+        <circle cx="15.5" cy="11.5" r="5.5" fill="#F5EEFF"/>
+        <circle cx="22.5" cy="11.5" r="5.5" fill="#F5EEFF"/>
+        <circle cx="19" cy="9.5" r="5.5" fill="#FAF3FF"/>
+        <ellipse cx="19" cy="21" rx="7.5" ry="6.5" fill="#FDE8F0"/>
+        <ellipse cx="16.2" cy="20" rx="1.3" ry="1.7" fill="#3D2651"/>
+        <ellipse cx="21.8" cy="20" rx="1.3" ry="1.7" fill="#3D2651"/>
+        <circle cx="16.7" cy="19.4" r=".45" fill="#fff"/>
+        <circle cx="22.3" cy="19.4" r=".45" fill="#fff"/>
+        <ellipse cx="14.2" cy="22.2" rx="1.8" ry="1.1" fill="#FFB7C5" opacity=".65"/>
+        <ellipse cx="23.8" cy="22.2" rx="1.8" ry="1.1" fill="#FFB7C5" opacity=".65"/>
+        <ellipse cx="19" cy="22.8" rx="1.1" ry=".75" fill="#D7BDE2"/>
+        <ellipse cx="9.5" cy="16" rx="2.8" ry="3.8" fill="#EDD9FF" transform="rotate(-14 9.5 16)"/>
+        <ellipse cx="9.5" cy="16" rx="1.4" ry="2.3" fill="#FFB7C5" opacity=".55" transform="rotate(-14 9.5 16)"/>
+        <ellipse cx="28.5" cy="16" rx="2.8" ry="3.8" fill="#EDD9FF" transform="rotate(14 28.5 16)"/>
+        <ellipse cx="28.5" cy="16" rx="1.4" ry="2.3" fill="#FFB7C5" opacity=".55" transform="rotate(14 28.5 16)"/>
+        <path d="M17.2 9.5 Q19 7.5 20.8 9.5 Q19 11.2 17.2 9.5Z" fill="#FFB7C5"/>
+        <circle cx="19" cy="9.5" r="1.1" fill="#FF9AA2"/>
+        <rect x="14.5" y="27" width="3.2" height="5.5" rx="1.4" fill="#E8D5F5"/>
+        <rect x="20.3" y="27" width="3.2" height="5.5" rx="1.4" fill="#E8D5F5"/>
+        <rect x="14.5" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
+        <rect x="20.3" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
+      </svg>
+    </div>
+    <div class="apptitle">小羊梦工厂</div>
+  </div>
+  <ul class="navlist" id="navList">
+    <li class="ni on" data-page="home" draggable="true"><div class="nic i0">🏠</div><span class="nlb">今日预览</span></li>
+    <li class="ni" data-page="study" draggable="true"><div class="nic i1">🎓</div><span class="nlb">能力提升</span></li>
+    <li class="ni" data-page="sport" draggable="true"><div class="nic i2">🏋️</div><span class="nlb">锻炼身体</span></li>
+    <li class="ni" data-page="life" draggable="true"><div class="nic i3">✅</div><span class="nlb">日常生活</span></li>
+    <li class="ni" data-page="diet" draggable="true"><div class="nic i4">🥗</div><span class="nlb">减肥计划</span></li>
+    <li class="ni" data-page="garden" draggable="true"><div class="nic i5">🌷</div><span class="nlb">秘密花园</span></li>
+  </ul>
+  <div class="sbf">
+    <div class="dst"><div class="sd" id="sdot"></div><span class="slb" id="slbl">检测中</span></div>
+    <button class="togbtn" id="togBtn">◀</button>
+  </div>
+</nav>
+<main id="main">
+  <div class="pg on" id="pg-home"></div>
+  <div class="pg" id="pg-study"></div>
+  <div class="pg" id="pg-sport"></div>
+  <div class="pg" id="pg-life"></div>
+  <div class="pg" id="pg-diet"></div>
+  <div class="pg" id="pg-garden"></div>
+</main>
+</div>
+<!-- bottom nav for mobile -->
+<nav id="bnav">
+  <div class="bni on" data-page="home"><span>🏠</span><span>今日</span></div>
+  <div class="bni" data-page="study"><span>🎓</span><span>学习</span></div>
+  <div class="bni" data-page="sport"><span>🏋️</span><span>运动</span></div>
+  <div class="bni" data-page="life"><span>✅</span><span>生活</span></div>
+  <div class="bni" data-page="diet"><span>🥗</span><span>饮食</span></div>
+  <div class="bni" data-page="garden"><span>🌷</span><span>花园</span></div>
+</nav>
+<div class="ov" id="ov" onclick="closeMo(event)"><div class="mo" id="moBox"><div class="mhd"></div><div id="moC"></div></div></div>
+<div id="toast"></div>
+<script>
+// ═══ DB ═══
+['SheepDream','SunshineWorkspace'].forEach(n=>{try{indexedDB.deleteDatabase(n);}catch(e){}});
+let db;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open('SheepDreamV4',1);
+    req.onupgradeneeded=e=>{
+      const d=e.target.result;
+      ['weeks','tasks','checkins','study_subjects','sport_plans','weight_log',
+       'diet_plans','garden','todos','countdown','study_logs','sport_logs'].forEach(s=>{
+        if(!d.objectStoreNames.contains(s)){
+          const st=d.createObjectStore(s,{keyPath:'id'});
+          if(s==='tasks'){ st.createIndex('weekId','weekId',{unique:false}); st.createIndex('category','category',{unique:false}); }
+          if(s==='checkins'){ st.createIndex('weekId','weekId',{unique:false}); st.createIndex('date','date',{unique:false}); }
+        }
+      });
+    };
+    req.onsuccess=e=>{db=e.target.result;res(db);};
+    req.onerror=()=>rej(req.error);
+  });
+}
+const dbGet=(s,id)=>new Promise(r=>{const req=db.transaction(s,'readonly').objectStore(s).get(id);req.onsuccess=()=>r(req.result);req.onerror=()=>r(null);});
+const dbPut=(s,o)=>new Promise((r,j)=>{const req=db.transaction(s,'readwrite').objectStore(s).put(o);req.onsuccess=()=>r();req.onerror=()=>j(req.error);});
+const dbAll=(s)=>new Promise(r=>{const req=db.transaction(s,'readonly').objectStore(s).getAll();req.onsuccess=()=>r(req.result||[]);req.onerror=()=>r([]);});
+const dbDel=(s,id)=>new Promise(r=>{const req=db.transaction(s,'readwrite').objectStore(s).delete(id);req.onsuccess=()=>r();req.onerror=()=>r();});
+function dbIndex(store,idx,val){
+  return new Promise(r=>{
+    try{
+      const tx=db.transaction(store,'readonly');
+      const st=tx.objectStore(store);
+      if(!st.indexNames.contains(idx)){r([]);return;}
+      const req=st.index(idx).getAll(val);
+      req.onsuccess=()=>r(req.result||[]);
+      req.onerror=()=>r([]);
+    }catch(e){r([]);}
+  });
+}
+// ═══ WEEK UTILS ═══
+function getWeekId(d=new Date()){
+  const date=new Date(d);date.setHours(0,0,0,0);
+  date.setDate(date.getDate()+4-(date.getDay()||7));
+  const yearStart=new Date(date.getFullYear(),0,1);
+  const wk=Math.ceil(((date-yearStart)/86400000+1)/7);
+  return `${date.getFullYear()}-W${String(wk).padStart(2,'0')}`;
+}
+function getWeekStart(d=new Date()){
+  const date=new Date(d);const day=date.getDay()||7;
+  date.setDate(date.getDate()-day+1);date.setHours(0,0,0,0);return date;
+}
+function getWeekEnd(d=new Date()){const s=getWeekStart(d);const e=new Date(s);e.setDate(e.getDate()+6);return e;}
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function fmtDate(d){return d.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});}
+function pad2(n){return String(n).padStart(2,'0');}
+async function ensureWeek(){
+  const wid=getWeekId();let week=await dbGet('weeks',wid);
+  if(!week){
+    const start=getWeekStart(),end=getWeekEnd();
+    week={id:wid,startDate:start.toISOString().slice(0,10),endDate:end.toISOString().slice(0,10),createdAt:Date.now()};
+    await dbPut('weeks',week);
+  }
+  return week;
+}
+// ═══ UTILS ═══
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function openMo(html){document.getElementById('moC').innerHTML=html;document.getElementById('ov').classList.add('open');}
+function closeMo(e){if(!e||e.target===document.getElementById('ov'))document.getElementById('ov').classList.remove('open');}
+// ═══ CALENDAR ═══
+let calView={year:new Date().getFullYear(),month:new Date().getMonth()};
+function buildCalHtml(year,month){
+  const now=new Date();
+  const fd=new Date(year,month,1).getDay(),dim=new Date(year,month+1,0).getDate();
+  const isCur=year===now.getFullYear()&&month===now.getMonth();
+  let h=['日','一','二','三','四','五','六'].map(d=>`<div class="cal-h">${d}</div>`).join('');
+  for(let i=0;i<fd;i++)h+='<div></div>';
+  for(let d=1;d<=dim;d++)h+=`<div class="cal-d${isCur&&d===now.getDate()?' today':''}">${d}</div>`;
+  return h;
+}
+function refreshCal(){
+  const el=document.getElementById('calCard');if(!el)return;
+  const {year,month}=calView;
+  const now=new Date();
+  const isThisMonth=year===now.getFullYear()&&month===now.getMonth();
+  el.innerHTML=`<div class="ct" style="gap:8px">
+    <button class="btn bg bxs" onclick="calPrev()">◀</button>
+    <span style="flex:1;text-align:center">📅 ${year}年${month+1}月</span>
+    <button class="btn bg bxs" onclick="calNext()">▶</button>
+  </div>
+  ${!isThisMonth?`<div style="text-align:center;margin-bottom:6px"><button class="btn bg bxs" onclick="calToday()">回到今天</button></div>`:''}
+  <div class="cal">${buildCalHtml(year,month)}</div>`;
+}
+window.calPrev=function(){calView.month--;if(calView.month<0){calView.month=11;calView.year--;}refreshCal();};
+window.calNext=function(){calView.month++;if(calView.month>11){calView.month=0;calView.year++;}refreshCal();};
+window.calToday=function(){const n=new Date();calView={year:n.getFullYear(),month:n.getMonth()};refreshCal();};
+// ═══ NAV ═══
+const PAGE_RENDERS={home:renderHome,study:renderStudy,sport:renderSport,life:renderLife,diet:renderDiet,garden:initGarden};
+function navTo(pg){
+  document.querySelectorAll('.ni,.bni').forEach(i=>i.classList.toggle('on',i.dataset.page===pg));
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-'+pg).classList.add('on');
+  PAGE_RENDERS[pg]?.();
+}
+let sbCol=false;
+document.getElementById('togBtn').addEventListener('click',()=>{
+  sbCol=!sbCol;document.getElementById('sb').classList.toggle('col',sbCol);
+  document.getElementById('togBtn').textContent=sbCol?'▶':'◀';
+});
+document.querySelectorAll('.ni').forEach(item=>{item.addEventListener('click',()=>navTo(item.dataset.page));});
+document.querySelectorAll('.bni').forEach(item=>{item.addEventListener('click',()=>navTo(item.dataset.page));});
+// sidebar drag-sort
+let dSrc=null;
+document.querySelectorAll('.ni').forEach(item=>{
+  item.addEventListener('dragstart',()=>{dSrc=item;item.style.opacity='.5';});
+  item.addEventListener('dragend',()=>{item.style.opacity='1';});
+  item.addEventListener('dragover',e=>{e.preventDefault();});
+  item.addEventListener('drop',e=>{
+    e.preventDefault();
+    if(dSrc&&dSrc!==item){const l=document.getElementById('navList'),items=[...l.children];items.indexOf(dSrc)<items.indexOf(item)?l.insertBefore(dSrc,item.nextSibling):l.insertBefore(dSrc,item);}
+  });
+});
+function updStatus(){const d=document.getElementById('sdot'),l=document.getElementById('slbl');if(navigator.onLine){d.className='sd on';l.textContent='已连接';}else{d.className='sd off';l.textContent='离线';}}
+window.addEventListener('online',updStatus);window.addEventListener('offline',updStatus);
+// ═══ DEFAULT SUBJECTS ═══
+const DEF_SUBJECTS=[
+  {id:'subj_en',label:'英语学习',icon:'🇬🇧',color:'#FFB7C5',order:0},
+  {id:'subj_jz',label:'教资学习',icon:'📋',color:'#AED6F1',order:1},
+];
+async function ensureSubjects(){
+  const all=await dbAll('study_subjects');
+  if(!all.length)for(const s of DEF_SUBJECTS)await dbPut('study_subjects',s);
+}
+// ═══ HOME ═══
+async function renderHome(){
+  const el=document.getElementById('pg-home');
+  const today=todayKey();const now=new Date();
+  const wid=getWeekId();
+  await ensureWeek();
+  const cd=await dbGet('countdown','main')||{id:'main',name:'教资笔试',date:''};
+  const allTasks=await dbIndex('tasks','weekId',wid);
+  const allCI=await dbIndex('checkins','date',today);
+  const ciMap={};allCI.forEach(c=>{ciMap[c.taskId]=c;});
+  const subjects=await dbAll('study_subjects');
+  const sportPlans=(await dbGet('sport_plans',wid))||{id:wid,items:[]};
+
+  // countdown
+  let daysLeft='—',cdPct=0;
+  if(cd.date){const diff=Math.ceil((new Date(cd.date)-now)/86400000);daysLeft=Math.max(0,diff);const tot=Math.ceil((new Date(cd.date)-new Date(now.getFullYear(),0,1))/86400000);cdPct=tot>0?Math.max(0,Math.min(100,(tot-daysLeft)/tot*100)):100;}
+
+  // calendar
+  calView={year:now.getFullYear(),month:now.getMonth()};
+
+  // study tasks — today only
+  let studyH='';
+  for(const subj of subjects.sort((a,b)=>a.order-b.order)){
+    const tasks=allTasks.filter(t=>t.subjectId===subj.id&&(t.taskDate===today||!t.taskDate));
+    if(!tasks.length){studyH+=`<div class="ci-group-label">${subj.icon} ${subj.label}</div><div style="font-size:12px;color:var(--ink3);padding:4px 0 8px">暂无任务 → 前往「能力提升」添加</div>`;continue;}
+    studyH+=`<div class="ci-group-label">${subj.icon} ${subj.label}</div>`;
+    for(const t of tasks){
+      const ci=ciMap[t.id];const done=ci?.done||false;
+      studyH+=`<div class="trow">
+        <button class="tchk${done?' done':''}" onclick="toggleCI('${t.id}','study')">${done?'✓':''}</button>
+        <span class="tname${done?' done':''}">${t.name}</span>
+      </div>`;
+    }
+  }
+
+  // sport tasks — today
+  const todayDow=(now.getDay()||7)-1;
+  const todaySport=sportPlans.items.filter(p=>Number(p.day)===todayDow);
+  let sportH='';
+  if(!todaySport.length){sportH='<div style="font-size:12px;color:var(--ink3);padding:4px 0">今天无运动计划 → 前往「锻炼身体」添加</div>';}
+  else{
+    for(const p of todaySport){
+      const ci=ciMap[p.id];const done=ci?.done||false;
+      sportH+=`<div class="trow">
+        <button class="tchk${done?' done':''}" onclick="toggleSportCI('${p.id}')">${done?'✓':''}</button>
+        <div style="flex:1">
+          <div style="font-size:13px">${p.name}</div>
+          <div style="font-size:11px;color:var(--ink3)">${p.type==='cardio'?'有氧':'力量'} · ${p.duration}</div>
+        </div>
+      </div>`;
+    }
+  }
+
+  el.innerHTML=`
+<div class="ph"><h1>🌸 今日预览</h1><span style="margin-left:auto;font-size:12px;color:var(--ink3)">${fmtDate(now)}</span></div>
+<div class="sheep-stage">
+  <div class="sheep-svg-wrap" id="sheepWrap">
+    <svg id="sheepSvg" class="sheep-anim" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100px;height:100px">
+      <circle cx="50" cy="42" r="25" fill="#F0E6FF"/>
+      <circle cx="32" cy="48" r="17" fill="#EDD9FF"/>
+      <circle cx="68" cy="48" r="17" fill="#EDD9FF"/>
+      <circle cx="40" cy="30" r="15" fill="#F5EEFF"/>
+      <circle cx="60" cy="30" r="15" fill="#F5EEFF"/>
+      <circle cx="50" cy="26" r="15" fill="#FAF3FF"/>
+      <ellipse cx="50" cy="54" rx="19" ry="16" fill="#FDE8F0"/>
+      <ellipse cx="25" cy="42" rx="7" ry="10" fill="#EDD9FF" transform="rotate(-14 25 42)"/>
+      <ellipse cx="25" cy="42" rx="3.5" ry="6" fill="#FFB7C5" opacity=".6" transform="rotate(-14 25 42)"/>
+      <ellipse cx="75" cy="42" rx="7" ry="10" fill="#EDD9FF" transform="rotate(14 75 42)"/>
+      <ellipse cx="75" cy="42" rx="3.5" ry="6" fill="#FFB7C5" opacity=".6" transform="rotate(14 75 42)"/>
+      <ellipse cx="38" cy="57" rx="5" ry="3" fill="#FFB7C5" opacity=".6"/>
+      <ellipse cx="62" cy="57" rx="5" ry="3" fill="#FFB7C5" opacity=".6"/>
+      <ellipse cx="50" cy="59" rx="3" ry="2" fill="#D7BDE2"/>
+      <g id="face-happy">
+        <ellipse cx="43" cy="52" rx="3.5" ry="4.5" fill="#3D2651"/>
+        <ellipse cx="57" cy="52" rx="3.5" ry="4.5" fill="#3D2651"/>
+        <circle cx="44.5" cy="50.5" r="1.2" fill="#fff"/>
+        <circle cx="58.5" cy="50.5" r="1.2" fill="#fff"/>
+        <path d="M45 62 Q50 66 55 62" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </g>
+      <g id="face-sad" style="display:none">
+        <ellipse cx="43" cy="53" rx="3" ry="3.5" fill="#3D2651"/>
+        <ellipse cx="57" cy="53" rx="3" ry="3.5" fill="#3D2651"/>
+        <path d="M46 64 Q50 61 54 64" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M40 48 Q43 46 46 48" stroke="#3D2651" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <path d="M54 48 Q57 46 60 48" stroke="#3D2651" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+      </g>
+      <g id="face-excited" style="display:none">
+        <path d="M40 52 L46 52 M40 55 L46 55 M40 58 L46 58" stroke="#3D2651" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M54 52 L60 52 M54 55 L60 55 M54 58 L60 58" stroke="#3D2651" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M44 62 Q50 68 56 62" stroke="#D7BDE2" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </g>
+      <g id="face-hopeful" style="display:none">
+        <ellipse cx="43" cy="52" rx="4" ry="5" fill="#3D2651"/>
+        <ellipse cx="57" cy="52" rx="4" ry="5" fill="#3D2651"/>
+        <circle cx="44.5" cy="50.2" r="1.3" fill="#fff"/>
+        <circle cx="58.5" cy="50.2" r="1.3" fill="#fff"/>
+        <path d="M40 46 Q43 44 46 46" stroke="#3D2651" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <path d="M54 46 Q57 44 60 46" stroke="#3D2651" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <path d="M46 62 Q50 65 54 62" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </g>
+      <g id="face-angry" style="display:none">
+        <ellipse cx="43" cy="53" rx="3.5" ry="4" fill="#3D2651"/>
+        <ellipse cx="57" cy="53" rx="3.5" ry="4" fill="#3D2651"/>
+        <path d="M40 47 Q43 49 46 47" stroke="#3D2651" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M54 47 Q57 49 60 47" stroke="#3D2651" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M46 64 Q50 61 54 64" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </g>
+      <g id="face-laugh" style="display:none">
+        <ellipse cx="43" cy="52" rx="3.5" ry="2.5" fill="#3D2651"/>
+        <ellipse cx="57" cy="52" rx="3.5" ry="2.5" fill="#3D2651"/>
+        <path d="M43 60 Q50 68 57 60 Q53 64 50 64 Q47 64 43 60Z" fill="#D7BDE2"/>
+        <path d="M43 60 Q50 68 57 60" stroke="#B8A4CC" stroke-width="1" fill="none"/>
+      </g>
+      <rect x="37" y="68" width="8" height="14" rx="3.5" fill="#E8D5F5"/>
+      <rect x="55" y="68" width="8" height="14" rx="3.5" fill="#E8D5F5"/>
+      <rect x="37" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
+      <rect x="55" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
+    </svg>
+  </div>
+  <div class="sheep-mood-label" id="sheepMoodLabel">✨ 今天也要加油呀</div>
+  <div class="sheep-mood-btns">
+    <button class="mood-btn active" data-mood="happy" title="开心" onclick="setSheepMood('happy')">😊</button>
+    <button class="mood-btn" data-mood="sad" title="难过" onclick="setSheepMood('sad')">😢</button>
+    <button class="mood-btn" data-mood="excited" title="激动" onclick="setSheepMood('excited')">🤩</button>
+    <button class="mood-btn" data-mood="hopeful" title="期待" onclick="setSheepMood('hopeful')">🥺</button>
+    <button class="mood-btn" data-mood="angry" title="生气" onclick="setSheepMood('angry')">😤</button>
+    <button class="mood-btn" data-mood="laugh" title="大笑" onclick="setSheepMood('laugh')">😂</button>
+  </div>
+</div>
+<div class="card" id="calCard" style="--accent:var(--p5)"></div>
+<div class="card cdcard">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div><div style="font-size:11px;color:rgba(255,255,255,.8);font-weight:600">⏳ 距离</div>
+    <div style="font-size:17px;font-weight:800;color:#fff;margin-top:2px">${cd.name}</div></div>
+    <div style="text-align:right"><div style="font-size:44px;font-weight:900;color:#fff;line-height:1">${daysLeft}</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.75)">天</div></div>
+  </div>
+  <div class="cdbar"><div class="cdbar-f" style="width:${cdPct}%"></div></div>
+  <div style="display:flex;justify-content:space-between;margin-top:5px">
+    <span style="font-size:11px;color:rgba(255,255,255,.65)">${cd.date||'未设置日期'}</span>
+    <button onclick="editCD()" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:11px;padding:3px 9px;border-radius:6px;cursor:pointer">✏️ 编辑</button>
+  </div>
+</div>
+<div class="card" style="--accent:var(--p4)">
+  <div class="ct">🎓 今日学习任务</div>
+  ${studyH||'<div class="empty">暂无学习任务</div>'}
+</div>
+<div class="card" style="--accent:var(--p5)">
+  <div class="ct">🏋️ 今日运动计划</div>
+  ${sportH}
+</div>`;
+  const savedMood=localStorage.getItem('sheep_mood')||'happy';
+  setSheepMood(savedMood,true);
+  refreshCal();
+}
+
+window.toggleCI=async function(taskId,cat){
+  const today=todayKey();const wid=getWeekId();
+  const ciId='ci_'+taskId+'_'+today;
+  const existing=await dbGet('checkins',ciId);
+  const done=!(existing?.done||false);
+  await dbPut('checkins',{id:ciId,taskId,weekId:wid,date:today,done,cat,ts:Date.now()});
+  renderHome();showToast(done?'✅ 打卡！':'取消打卡');
+};
+const MOOD_LABELS={happy:'✨ 今天也要加油呀',sad:'🌧 难过了，抱抱自己',excited:'🌟 超级兴奋！',hopeful:'🌈 充满期待中',angry:'💢 深呼吸，放松放松',laugh:'😂 哈哈哈开心死了'};
+const MOOD_ANIMS={happy:'sheepFloat',sad:'sheepSway',excited:'sheepBounce',hopeful:'sheepFloat',angry:'sheepSway',laugh:'sheepBounce'};
+const MOOD_ANIM_CLASS={sheepFloat:'sheep-anim',sheepSway:'sheep-sway',sheepBounce:'sheep-bounce'};
+window.setSheepMood=function(mood,silent){
+  const svg=document.getElementById('sheepSvg');
+  const label=document.getElementById('sheepMoodLabel');
+  if(!svg)return;
+  ['happy','sad','excited','hopeful','angry','laugh'].forEach(m=>{
+    const el=document.getElementById('face-'+m);
+    if(el)el.style.display=(m===mood?'':'none');
+  });
+  if(label)label.textContent=MOOD_LABELS[mood]||'';
+  const animName=MOOD_ANIMS[mood]||'sheepFloat';
+  svg.className=MOOD_ANIM_CLASS[animName]||'sheep-anim';
+  document.querySelectorAll('.mood-btn').forEach(b=>{b.classList.toggle('active',b.dataset.mood===mood);});
+  localStorage.setItem('sheep_mood',mood);
+  if(!silent)showToast(MOOD_LABELS[mood]||'');
+};
+window.editCD=async function(){
+  const cd=await dbGet('countdown','main')||{id:'main',name:'教资笔试',date:''};
+  openMo(`<div class="mt">⏳ 编辑倒计时</div>
+    <div class="mrow"><span class="ml">考试名称</span><input class="inp" id="cdN" value="${cd.name}"></div>
+    <div class="mrow"><span class="ml">考试日期</span><input class="inp" id="cdD" type="date" value="${cd.date}"></div>
+    <button class="btn bp" style="width:100%" onclick="saveCD()">💾 保存</button>`);
+};
+window.saveCD=async function(){
+  await dbPut('countdown',{id:'main',name:document.getElementById('cdN').value.trim()||'教资笔试',date:document.getElementById('cdD').value});
+  closeMo();renderHome();showToast('倒计时已更新 🎯');
+};
+// ═══ STUDY ═══
+async function renderStudy(){
+  const el=document.getElementById('pg-study');
+  const today=todayKey();const wid=getWeekId();
+  await ensureWeek();
+  const week=await dbGet('weeks',wid);
+  const subjects=await dbAll('study_subjects');
+  const allTasks=await dbIndex('tasks','weekId',wid);
+  const allCI=await dbIndex('checkins','weekId',wid);
+  const ciMap={};allCI.forEach(c=>{ciMap[c.taskId+'_'+c.date]=c;});
+  const weekGoal=week?.studyGoal||'';
+  const tomorrowDt=new Date(today);tomorrowDt.setDate(tomorrowDt.getDate()+1);
+  const tomorrowStr=tomorrowDt.toISOString().slice(0,10);
+
+  function dateLabel(dateStr){
+    if(dateStr===today){const mo=parseInt(today.slice(5,7)),d=parseInt(today.slice(8));return`<span class="date-group-hd is-today">今天（${mo}/${d}）</span>`;}
+    if(dateStr===tomorrowStr){const mo=parseInt(tomorrowStr.slice(5,7)),d=parseInt(tomorrowStr.slice(8));return`<span class="date-group-hd is-future">明天（${mo}/${d}）</span>`;}
+    if(dateStr<today)return`<span class="date-group-hd is-past">${dateStr.slice(5).replace('-','/')}</span>`;
+    return`<span class="date-group-hd is-future">${dateStr.slice(5).replace('-','/')}</span>`;
+  }
+
+  let html=`
+<div class="ph"><h1>🎓 能力提升</h1><button class="btn badd mla" onclick="addSubject()" title="添加科目">＋</button></div>
+<div class="week-bar">
+  <span style="font-size:16px">📅</span>
+  <span class="week-badge">${week?.startDate} ~ ${week?.endDate}</span>
+  <span style="margin-left:auto;font-size:11px;color:var(--ink2)">${wid}</span>
+</div>
+<div class="card" style="--accent:var(--p6)">
+  <div class="ct">🎯 本周整体学习目标</div>
+  <textarea class="inp" id="weekGoalInp" rows="2" placeholder="写下本周的整体学习目标…" oninput="saveWeekGoal(this.value)">${weekGoal}</textarea>
+</div>`;
+
+  for(const subj of subjects.sort((a,b)=>a.order-b.order)){
+    const tasks=allTasks.filter(t=>t.subjectId===subj.id);
+    const grouped={};
+    for(const t of tasks){const k=t.taskDate||today;if(!grouped[k])grouped[k]=[];grouped[k].push(t);}
+    const sortedDates=Object.keys(grouped).sort();
+    let taskGroupsHtml='';
+    if(!sortedDates.length){taskGroupsHtml='<div style="font-size:12px;color:var(--ink3);padding:4px 0">暂无任务</div>';}
+    else{
+      for(const dateStr of sortedDates){
+        const dayTasks=grouped[dateStr];
+        taskGroupsHtml+=`<div class="date-group">${dateLabel(dateStr)}`;
+        for(const t of dayTasks){
+          const ciKey=t.id+'_'+dateStr;const ci=ciMap[ciKey];const done=ci?.done||false;
+          taskGroupsHtml+=`<div class="trow">
+            <button class="tchk${done?' done':''}" onclick="toggleStudyCI('${t.id}','${dateStr}')">${done?'✓':''}</button>
+            <span class="tname${done?' done':''}" style="flex:1">${t.name}</span>
+            <button class="tdel" onclick="delTask('${t.id}')">×</button>
+          </div>`;
+        }
+        taskGroupsHtml+=`</div>`;
+      }
+    }
+    html+=`<div class="card" style="--accent:${subj.color}">
+      <div class="subj-head">
+        <div class="subj-ico" style="background:${subj.color}22;color:${subj.color}">${subj.icon}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:15px">${subj.label}</div>
+        </div>
+        <div class="subj-actions">
+          <button class="btn bg bxs" onclick="copyLastWeekStudy('${subj.id}')" title="复制上周任务">📋</button>
+          <button class="btn bg bxs" onclick="delSubject('${subj.id}')">🗑</button>
+        </div>
+      </div>
+      <div style="margin-bottom:9px">
+        <div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:5px">本周计划</div>
+        <input class="inp" data-subjid="${subj.id}" placeholder="本周${subj.label}计划…" value="${subj.weekPlan||''}"
+          oninput="saveSubjPlan(this)" style="font-size:12px;padding:7px 10px">
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:5px">任务（按日期）</div>
+      ${taskGroupsHtml}
+      <div style="display:flex;gap:5px;margin-top:10px;align-items:center;flex-wrap:wrap">
+        <input class="inp" id="tname-${subj.id}" placeholder="添加任务…" style="flex:1;min-width:100px;font-size:12px;padding:7px 10px"
+          onkeydown="if(event.key==='Enter')addTask('${subj.id}')">
+        <input class="inp" id="tdate-${subj.id}" type="date" value="${today}" style="width:130px;font-size:12px;padding:7px 10px">
+        <button class="btn bg bsm" onclick="addTask('${subj.id}')">+ 添加</button>
+      </div>
+    </div>`;
+  }
+  html+=`<div style="display:flex;gap:8px;justify-content:center;margin-top:6px;flex-wrap:wrap">
+    <button class="btn bg bsm" onclick="copyLastWeekStudyAll()">📋 复制上周全部计划</button>
+    <button class="btn bg bsm" onclick="openStudyHistory()">📂 历史记录</button>
+  </div>`;
+  el.innerHTML=html;
+}
+window.addTask=async function(subjId){
+  const inp=document.getElementById('tname-'+subjId);
+  const dateInp=document.getElementById('tdate-'+subjId);
+  const name=inp?.value.trim();if(!name)return;
+  const taskDate=dateInp?.value||todayKey();
+  const wid=getWeekId();await ensureWeek();
+  await dbPut('tasks',{id:'t_'+Date.now(),weekId:wid,subjectId:subjId,category:'study',name,taskDate,createdAt:Date.now()});
+  inp.value='';renderStudy();renderHome();
+};
+window.delTask=async function(id){await dbDel('tasks',id);renderStudy();renderHome();};
+window.toggleStudyCI=async function(taskId,dateStr){
+  const wid=getWeekId();
+  const ciId='ci_'+taskId+'_'+dateStr;
+  const existing=await dbGet('checkins',ciId);
+  const done=!(existing?.done||false);
+  await dbPut('checkins',{id:ciId,taskId,weekId:wid,date:dateStr,done,cat:'study',ts:Date.now()});
+  renderStudy();renderHome();showToast(done?'✅ 打卡！':'取消打卡');
+};
+window.saveWeekGoal=async function(val){
+  const wid=getWeekId();const week=await dbGet('weeks',wid);
+  if(week){week.studyGoal=val;await dbPut('weeks',week);}
+};
+window.addSubject=function(){
+  openMo(`<div class="mt">🎓 添加学习科目</div>
+    <div class="mrow"><span class="ml">科目名称</span><input class="inp" id="sName" placeholder="例：英语口语"></div>
+    <div class="mrow"><span class="ml">图标（emoji）</span><input class="inp" id="sIcon" value="📚" style="font-size:18px;text-align:center;width:70px"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveSubject()">✅ 添加</button>`);
+};
+window.saveSubject=async function(){
+  const name=document.getElementById('sName').value.trim();if(!name)return;
+  const icon=document.getElementById('sIcon').value||'📚';
+  const colors=['#FFB7C5','#AED6F1','#B5EAD7','#FFF0A8','#D7BDE2','#FFCBA4'];
+  const all=await dbAll('study_subjects');
+  await dbPut('study_subjects',{id:'subj_'+Date.now(),label:name,icon,color:colors[all.length%colors.length],order:all.length,weekPlan:''});
+  closeMo();renderStudy();showToast('科目已添加 🎉');
+};
+window.delSubject=async function(id){
+  if(!confirm('删除此科目及其所有任务？'))return;
+  await dbDel('study_subjects',id);
+  const tasks=await dbAll('tasks');for(const t of tasks.filter(t=>t.subjectId===id))await dbDel('tasks',t.id);
+  renderStudy();renderHome();
+};
+window.saveSubjPlan=async function(inp){
+  const subj=await dbGet('study_subjects',inp.dataset.subjid);if(!subj)return;
+  subj.weekPlan=inp.value;await dbPut('study_subjects',subj);
+};
+window.copyLastWeekStudy=async function(subjId){
+  const wid=getWeekId();
+  const prevDate=getWeekStart();prevDate.setDate(prevDate.getDate()-7);
+  const prevWid=getWeekId(prevDate);
+  const prevTasks=(await dbAll('tasks')).filter(t=>t.weekId===prevWid&&t.subjectId===subjId);
+  if(!prevTasks.length){showToast('上周没有任务可复制');return;}
+  await ensureWeek();
+  for(let i=0;i<prevTasks.length;i++){
+    const t=prevTasks[i];
+    const nd=t.taskDate?new Date(t.taskDate):new Date();
+    nd.setDate(nd.getDate()+7);
+    await dbPut('tasks',{id:'t_'+Date.now()+'_'+i,weekId:wid,subjectId:subjId,category:'study',name:t.name,taskDate:nd.toISOString().slice(0,10),createdAt:Date.now()});
+    await new Promise(r=>setTimeout(r,2));
+  }
+  renderStudy();renderHome();showToast(`已复制 ${prevTasks.length} 条任务 ✨`);
+};
+window.copyLastWeekStudyAll=async function(){
+  const wid=getWeekId();
+  const prevDate=getWeekStart();prevDate.setDate(prevDate.getDate()-7);
+  const prevWid=getWeekId(prevDate);
+  // 复制整体学习目标
+  const prevWeek=await dbGet('weeks',prevWid);
+  if(prevWeek?.studyGoal){
+    const curWeek=await dbGet('weeks',wid);
+    if(curWeek){curWeek.studyGoal=prevWeek.studyGoal;await dbPut('weeks',curWeek);}
+  }
+  // 复制所有科目任务
+  const prevTasks=(await dbAll('tasks')).filter(t=>t.weekId===prevWid&&t.category==='study');
+  if(!prevTasks.length&&!prevWeek?.studyGoal){showToast('上周没有学习计划可复制');return;}
+  await ensureWeek();
+  for(let i=0;i<prevTasks.length;i++){
+    const t=prevTasks[i];
+    const nd=t.taskDate?new Date(t.taskDate):new Date();
+    nd.setDate(nd.getDate()+7);
+    await dbPut('tasks',{id:'t_'+Date.now()+'_'+i,weekId:wid,subjectId:t.subjectId,category:'study',name:t.name,taskDate:nd.toISOString().slice(0,10),createdAt:Date.now()});
+    await new Promise(r=>setTimeout(r,2));
+  }
+  renderStudy();renderHome();
+  showToast(`已复制上周计划（${prevTasks.length} 条任务）✨`);
+};
+window.openStudyHistory=async function(){
+  const weeks=await dbAll('weeks');const curWid=getWeekId();
+  const past=weeks.filter(w=>w.id!==curWid).sort((a,b)=>b.id.localeCompare(a.id));
+  if(!past.length){showToast('暂无历史记录');return;}
+  const rows=past.map(w=>`<div class="hist-week">
+    <div class="hist-week-title">
+      <span>${w.id} (${w.startDate}~${w.endDate})</span>
+      <button class="btn bdanger bxs" onclick="deleteWeek('${w.id}')">🗑 删除</button>
+    </div>
+  </div>`).join('');
+  openMo(`<div class="mt">📂 历史周记录</div>${rows}`);
+};
+window.deleteWeek=async function(wid){
+  if(!confirm(`确定删除 ${wid} 的所有任务和打卡记录？此操作不可恢复。`))return;
+  const tasks=await dbAll('tasks');for(const t of tasks.filter(t=>t.weekId===wid))await dbDel('tasks',t.id);
+  const cis=await dbAll('checkins');for(const c of cis.filter(c=>c.weekId===wid))await dbDel('checkins',c.id);
+  await dbDel('weeks',wid);closeMo();showToast(`${wid} 已删除`);
+};
+// ═══ SPORT ═══
+async function renderSport(){
+  const el=document.getElementById('pg-sport');
+  const today=todayKey();const wid=getWeekId();await ensureWeek();
+  const week=await dbGet('weeks',wid);
+  const plans=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const todayDow=(new Date().getDay()||7)-1;
+  const allCI=await dbIndex('checkins','date',today);
+  const ciMap={};allCI.forEach(c=>{ciMap[c.taskId]=c;});
+  const byDay={};
+  for(const p of plans.items){if(!byDay[p.day])byDay[p.day]=[];byDay[p.day].push(p);}
+  const usedDays=Object.keys(byDay).map(Number).sort((a,b)=>a-b);
+  let dayGroupsHtml='';
+  if(!plans.items.length){dayGroupsHtml='<div class="empty">暂无训练计划，点击 ＋ 添加</div>';}
+  else{
+    for(const day of usedDays){
+      const isToday=Number(day)===todayDow;
+      dayGroupsHtml+=`<div class="sport-day-group">
+        <div class="sport-day-hd${isToday?' is-today':''}">
+          <span>${wdays[day]}${isToday?' (今天)':''}</span>
+        </div>`;
+      for(const p of byDay[day]){
+        const ci=ciMap[p.id];const done=ci?.done||false;
+        dayGroupsHtml+=`<div class="sport-plan-row">
+          <button class="tchk${done?' done':''}" onclick="toggleSportCI('${p.id}')">${done?'✓':''}</button>
+          <span class="sp-type ${p.type==='cardio'?'cardio':'strength'}">${p.type==='cardio'?'有氧':'力量'}</span>
+          <input class="inp" value="${p.name}" placeholder="运动名称" data-pid="${p.id}" data-field="name"
+            oninput="patchSportById(this)" style="flex:1;font-size:12px;padding:6px 9px">
+          <input class="inp" value="${p.duration}" placeholder="如：30分钟" data-pid="${p.id}" data-field="duration"
+            oninput="patchSportById(this)" style="width:90px;font-size:12px;padding:6px 9px">
+          <button class="tdel" onclick="delSportById('${p.id}')">×</button>
+        </div>`;
+      }
+      dayGroupsHtml+=`</div>`;
+    }
+  }
+  el.innerHTML=`
+<div class="ph"><h1>🏋️ 锻炼身体</h1></div>
+<div class="week-bar">
+  <span style="font-size:16px">📅</span>
+  <span class="week-badge">${week?.startDate} ~ ${week?.endDate}</span>
+</div>
+<div class="card" style="--accent:var(--p5)">
+  <div class="ct">📊 本周训练时长（累计）</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:rgba(174,214,241,.2);border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:22px;margin-bottom:4px">🏃‍♀️</div>
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">有氧累计</div>
+      <div style="font-size:24px;font-weight:800;color:#1A5276">${plans.cardioMins||0}</div>
+      <div style="font-size:11px;color:var(--ink3)">分钟</div>
+    </div>
+    <div style="background:rgba(255,183,197,.2);border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:22px;margin-bottom:4px">💪</div>
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">力量累计</div>
+      <div style="font-size:24px;font-weight:800;color:#922B21">${plans.strengthMins||0}</div>
+      <div style="font-size:11px;color:var(--ink3)">分钟</div>
+    </div>
+  </div>
+</div>
+<div class="card" style="--accent:var(--p1)">
+  <div class="ct">📝 本周训练计划
+    <button class="btn badd" onclick="addSportItem()">＋</button>
+  </div>
+  <div style="display:flex;gap:7px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+    <span style="font-size:12px;font-weight:600;color:var(--ink2)">添加到</span>
+    <select class="inp" id="sportDay" style="width:auto;font-size:12px;padding:6px 28px 6px 9px">
+      ${wdays.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
+    </select>
+    <select class="inp" id="sportType" style="width:auto;font-size:12px;padding:6px 28px 6px 9px">
+      <option value="cardio">有氧</option>
+      <option value="strength">力量</option>
+    </select>
+  </div>
+  ${dayGroupsHtml}
+</div>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:6px;flex-wrap:wrap">
+  <button class="btn bg bsm" onclick="copyLastWeekSport()">📋 复制上周计划</button>
+  <button class="btn bp bsm" onclick="generateAIPlan()">🤖 AI 智能设计</button>
+  <button class="btn bg bsm" onclick="openSportHistory()">📂 历史记录</button>
+</div>`;
+}
+window.addSportItem=async function(){
+  const wid=getWeekId();await ensureWeek();
+  const plans=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  const day=parseInt(document.getElementById('sportDay')?.value||0);
+  const type=document.getElementById('sportType')?.value||'cardio';
+  plans.items.push({id:'sp_'+Date.now(),day,type,name:'',duration:''});
+  await dbPut('sport_plans',plans);renderSport();renderHome();
+};
+window.patchSportById=async function(inp){
+  const wid=getWeekId();
+  const plans=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  const pid=inp.dataset.pid,field=inp.dataset.field;
+  const item=plans.items.find(p=>p.id===pid);
+  if(item)item[field]=inp.value;
+  await dbPut('sport_plans',plans);
+};
+window.delSportById=async function(pid){
+  const wid=getWeekId();
+  const plans=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  plans.items=plans.items.filter(p=>p.id!==pid);await dbPut('sport_plans',plans);renderSport();renderHome();
+};
+window.toggleSportCI=async function(planId){
+  const today=todayKey();const wid=getWeekId();
+  const ciId='ci_'+planId+'_'+today;
+  const existing=await dbGet('checkins',ciId);
+  const wasDone=existing?.done||false;
+  const done=!wasDone;
+  const plans=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  const item=plans.items.find(p=>p.id===planId);
+  if(item){
+    const mins=parseInt((item.duration||'').match(/\d+/)?.[0]||0);
+    if(mins>0){
+      const key=item.type==='cardio'?'cardioMins':'strengthMins';
+      // only add when going done; only subtract when going undone — each day counts once
+      if(done)plans[key]=(plans[key]||0)+mins;
+      else plans[key]=Math.max(0,(plans[key]||0)-mins);
+      await dbPut('sport_plans',plans);
+    }
+  }
+  await dbPut('checkins',{id:ciId,taskId:planId,weekId:wid,date:today,done,cat:'sport',ts:Date.now()});
+  renderSport();renderHome();showToast(done?'✅ 打卡！':'取消打卡');
+};
+window.openSportHistory=async function(){
+  const weeks=await dbAll('weeks');const curWid=getWeekId();
+  const past=weeks.filter(w=>w.id!==curWid).sort((a,b)=>b.id.localeCompare(a.id));
+  if(!past.length){showToast('暂无历史记录');return;}
+  const rows=past.map(w=>`<div class="hist-week">
+    <div class="hist-week-title"><span>${w.id} (${w.startDate}~${w.endDate})</span>
+    <button class="btn bdanger bxs" onclick="deleteWeek('${w.id}')">🗑 删除</button></div>
+  </div>`).join('');
+  openMo(`<div class="mt">📂 历史运动记录</div>${rows}`);
+};
+window.copyLastWeekSport=async function(){
+  const wid=getWeekId();
+  const prevDate=getWeekStart();prevDate.setDate(prevDate.getDate()-7);
+  const prevWid=getWeekId(prevDate);
+  const prevPlans=await dbGet('sport_plans',prevWid);
+  if(!prevPlans||!prevPlans.items.length){showToast('上周没有运动计划可复制');return;}
+  const cur=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  if(cur.items.length&&!confirm('本周已有计划，复制后将追加（不覆盖）。继续吗？'))return;
+  const newItems=prevPlans.items.map((item,i)=>({...item,id:'sp_'+Date.now()+'_'+i}));
+  cur.items=[...cur.items,...newItems];
+  await dbPut('sport_plans',cur);
+  renderSport();renderHome();showToast(`已复制 ${newItems.length} 条运动计划 💪`);
+};
+// ─ 本地智能设计（按体重/体脂率规则生成）─
+const CARDIO_LIB=[
+  {name:'慢跑',duration:'30分钟',desc:'保持配速6-7分钟/公里，心率65-75%最大心率，全程匀速，感觉可以说话为准。'},
+  {name:'快走',duration:'45分钟',desc:'步频90-100步/分钟，挺胸收腹，大步走，手臂自然摆动，适合膝关节不好时替代跑步。'},
+  {name:'跳绳',duration:'20分钟',desc:'每组跳100-150下，休息30秒，循环进行。双脚交替跳，脚尖落地缓冲，保护膝盖。'},
+  {name:'椭圆机',duration:'35分钟',desc:'阻力设中档，步频保持60-70次/分钟，双手推拉把手带动上肢，全身联动燃脂效果好。'},
+  {name:'游泳',duration:'40分钟',desc:'自由泳或蛙泳均可，匀速游，不追求速度。水的阻力让全身均匀受力，对关节友好。'},
+];
+const STRENGTH_LIB=[
+  {name:'深蹲',duration:'4组×15次',desc:'双脚与肩同宽，脚尖微外八，下蹲至大腿平行地面，膝盖不超脚尖，起立时夹臀发力。'},
+  {name:'俯卧撑',duration:'4组×12次',desc:'手比肩略宽，身体保持一条直线，下落胸部贴近地面，推起时不锁死肘关节。'},
+  {name:'平板支撑',duration:'4组×45秒',desc:'手肘正对肩膀，腰背挺直不塌腰，收紧核心和臀部，目视地面，均匀呼吸。'},
+  {name:'哑铃弯举',duration:'3组×12次',desc:'双臂自然下垂握哑铃，弯举时上臂固定不动，顶峰停留1秒，缓慢放下，控制离心。'},
+  {name:'臀桥',duration:'4组×20次',desc:'仰躺屈膝，双脚平踩地面，夹紧臀部向上顶髋，顶峰保持2秒，缓慢下落，激活臀肌。'},
+  {name:'哑铃肩推',duration:'3组×12次',desc:'坐姿或站姿，哑铃举至耳旁，向上推举至手臂伸直，缓慢下落，保持核心收紧稳定躯干。'},
+];
+window.generateAIPlan=async function(){
+  const goal=await dbGet('diet_plans','goal')||{};
+  const w=parseFloat(goal.currentW)||0;
+  const bf=parseFloat(goal.bodyFat)||0;
+  const tw=parseFloat(goal.targetW)||0;
+  if(!w){showToast('请先在「减肥计划」填写当前体重');return;}
+
+  // 根据体脂率判断偏重方向
+  // 女性>28%、男性>20% 视为偏高，以有氧为主；否则均衡
+  const highFat=bf>0?(bf>25):false;
+  const needLose=tw>0&&w>tw;
+
+  // 周计划模板：5天训练2天休息
+  // 有氧为主：cardio×4 strength×1
+  // 均衡：cardio×2 strength×3
+  let schedule;
+  if(highFat||needLose){
+    // 周一有氧 周二力量 周三有氧 周四休 周五有氧 周六力量 周日有氧
+    schedule=[
+      {day:0,type:'cardio'},
+      {day:1,type:'strength'},
+      {day:2,type:'cardio'},
+      {day:4,type:'cardio'},
+      {day:5,type:'strength'},
+      {day:6,type:'cardio'},
+    ];
+  } else {
+    // 周一力量 周二有氧 周三力量 周四休 周五有氧 周六力量 周日休
+    schedule=[
+      {day:0,type:'strength'},
+      {day:1,type:'cardio'},
+      {day:2,type:'strength'},
+      {day:4,type:'cardio'},
+      {day:5,type:'strength'},
+    ];
+  }
+
+  // 打乱库顺序随机选
+  const shuffle=arr=>[...arr].sort(()=>Math.random()-.5);
+  const cardioPool=shuffle(CARDIO_LIB);
+  const strengthPool=shuffle(STRENGTH_LIB);
+  let ci=0,si=0;
+  const plans=schedule.map(s=>{
+    if(s.type==='cardio'){const c=cardioPool[ci++%cardioPool.length];return{day:s.day,type:'cardio',name:c.name,duration:c.duration,desc:c.desc};}
+    else{const c=strengthPool[si++%strengthPool.length];return{day:s.day,type:'strength',name:c.name,duration:c.duration,desc:c.desc};}
+  });
+
+  const advice=highFat
+    ?`体脂率偏高，以有氧燃脂为主，搭配力量保肌，训练后注意控制饮食摄入。`
+    :`体重/体脂较理想，均衡安排有氧与力量，维持体型同时提升肌肉量。`;
+
+  showAIPlanModal({advice,plans});
+};
+window.showAIPlanModal=function(plan){
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const rows=plan.plans.map(p=>`
+    <div style="padding:10px;border-radius:10px;background:rgba(215,189,226,.12);margin-bottom:8px;border:1px solid var(--bd)">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+        <span style="font-size:12px;font-weight:700;color:var(--ink2)">${wdays[p.day]}</span>
+        <span class="sp-type ${p.type==='cardio'?'cardio':'strength'}">${p.type==='cardio'?'有氧':'力量'}</span>
+        <span style="font-weight:700;font-size:13px">${p.name}</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--ink3)">${p.duration}</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.55">${p.desc}</div>
+    </div>`).join('');
+  openMo(`<div class="mt">🤖 AI 健身教练方案</div>
+    ${plan.advice?`<div style="font-size:13px;color:var(--ink2);background:rgba(174,214,241,.2);border-radius:10px;padding:9px 12px;margin-bottom:12px">💡 ${plan.advice}</div>`:''}
+    ${rows}
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="importAIPlan(${JSON.stringify(plan).replace(/'/g,'&#39;')})">✅ 一键导入本周计划</button>
+    <button class="btn bg bsm" style="width:100%;margin-top:8px" onclick="closeMo()">暂不导入</button>`);
+};
+window.importAIPlan=async function(plan){
+  const wid=getWeekId();await ensureWeek();
+  const cur=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  const newItems=plan.plans.map((p,i)=>({id:'sp_ai_'+Date.now()+'_'+i,day:p.day,type:p.type,name:p.name+(p.desc?' ('+p.desc.slice(0,20)+'...)':''),duration:p.duration}));
+  cur.items=[...cur.items,...newItems];
+  await dbPut('sport_plans',cur);
+  closeMo();renderSport();renderHome();showToast('AI 计划已导入 💪');
+};
+// ═══ LIFE ═══
+async function renderLife(){
+  const el=document.getElementById('pg-life');
+  const todos=await dbAll('todos');
+  const pending=todos.filter(t=>!t.done).sort((a,b)=>a.ts-b.ts);
+  const done=todos.filter(t=>t.done).sort((a,b)=>b.ts-a.ts).slice(0,10);
+  const overdue=t=>{if(!t.dueDate)return false;return t.dueDate<todayKey();};
+  const pRows=pending.map(t=>`<div class="trow">
+    <button class="tchk" onclick="togTodo('${t.id}')"></button>
+    <div style="flex:1">
+      <div style="font-size:13px;color:${overdue(t)?'#E53935':'var(--ink)'}">${t.name}</div>
+      ${t.dueDate?`<div style="font-size:11px;color:${overdue(t)?'#E53935':'var(--ink3)'};margin-top:1px">📅 ${t.dueDate}${overdue(t)?' 已超期':''}</div>`:''}
+    </div>
+    <button class="tdel" onclick="delTodo('${t.id}')">×</button>
+  </div>`).join('')||'<div class="empty">今天暂无待办 ✨</div>';
+  const dRows=done.map(t=>`<div class="trow" style="opacity:.48">
+    <div class="tchk done" style="width:20px;height:20px;border-radius:50%;background:var(--ga);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+    <span style="flex:1;font-size:13px;text-decoration:line-through;color:var(--ink3)">${t.name}</span>
+  </div>`).join('');
+  el.innerHTML=`
+<div class="ph"><h1>✅ 日常生活</h1></div>
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">待办清单 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${pending.length} 项待完成</span></div>
+  ${pRows}
+  ${dRows?`<hr class="sep">${dRows}`:''}
+  <hr class="sep">
+  <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
+    <input class="inp" id="tdName" placeholder="添加待办事项…">
+    <div style="display:flex;gap:7px">
+      <input class="inp" id="tdDate" type="date" style="flex:1;font-size:12px">
+      <button class="btn bp bsm" onclick="addTodo()" style="flex-shrink:0">+ 添加</button>
+    </div>
+  </div>
+</div>`;
+}
+window.addTodo=async function(){
+  const name=document.getElementById('tdName').value.trim();if(!name)return;
+  const dueDate=document.getElementById('tdDate').value||'';
+  await dbPut('todos',{id:'td_'+Date.now(),name,done:false,dueDate,ts:Date.now()});
+  document.getElementById('tdName').value='';document.getElementById('tdDate').value='';
+  renderLife();
+};
+window.togTodo=async function(id){const t=await dbGet('todos',id);if(!t)return;t.done=!t.done;await dbPut('todos',t);renderLife();};
+window.delTodo=async function(id){await dbDel('todos',id);renderLife();};
+// ═══ DIET ═══
+const MEALS=['早餐','午餐','晚餐','加餐'];
+async function renderDiet(){
+  const el=document.getElementById('pg-diet');
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const today=todayKey();
+  const plan=await dbGet('diet_plans','weekly')||{id:'weekly',days:{}};
+  const goal=await dbGet('diet_plans','goal')||{id:'goal',targetW:'',currentW:'',calGoal:1500,bodyFat:''};
+  // water is stored per-day
+  const waterKey='water_'+today;
+  const waterRec=await dbGet('diet_plans',waterKey)||{id:waterKey,amount:0};
+  const wl=await dbGet('weight_log','main')||{id:'main',entries:[]};
+  const recent=wl.entries.slice(-7).reverse();
+
+  const goalCard=`<div class="card" style="--accent:var(--p4)">
+    <div class="ct">🎯 减脂目标</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><span class="ml">当前体重 kg</span><input class="inp" value="${goal.currentW}" placeholder="58" oninput="saveDietGoal('currentW',this.value)"></div>
+      <div><span class="ml">目标体重 kg</span><input class="inp" value="${goal.targetW}" placeholder="50" oninput="saveDietGoal('targetW',this.value)"></div>
+      <div><span class="ml">每日热量目标 kcal</span><input class="inp" type="number" value="${goal.calGoal}" oninput="saveDietGoal('calGoal',this.value)"></div>
+      <div><span class="ml">体脂率 %</span><input class="inp" type="number" step="0.1" value="${goal.bodyFat||''}" placeholder="如：25.5" oninput="saveDietGoal('bodyFat',this.value)"></div>
+    </div>
+    <div style="margin-top:8px"><span class="ml">今日饮水 ml</span><input class="inp" type="number" value="${waterRec.amount||0}" oninput="saveTodayWater(this.value)"></div>
+  </div>`;
+
+  const wlCard=`<div class="card" style="--accent:var(--p3)">
+    <div class="ct">⚖️ 体重记录 <button class="btn badd" onclick="addWeight()">＋</button></div>
+    ${recent.map(e=>`<div class="weight-row">
+      <span style="color:var(--ink2)">${e.date}</span>
+      <span style="font-weight:700">${e.w} kg</span>
+      ${goal.targetW?`<span style="font-size:12px;color:${parseFloat(e.w)<=parseFloat(goal.targetW)?'#27AE60':'var(--p8)'}">${parseFloat(e.w)<=parseFloat(goal.targetW)?'🎉 达标':'继续加油'}</span>`:''}
+    </div>`).join('')||'<div class="empty">暂无记录</div>'}
+  </div>`;
+
+  let planH=`<div class="card" style="--accent:var(--p2)"><div class="ct">🍽️ 本周饮食计划</div>`;
+  wdays.forEach((d,di)=>{
+    const dd=plan.days[di]||{};
+    planH+=`<div style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:6px;display:inline-block;padding:3px 10px;background:var(--p7);border-radius:8px">${d}</div>`;
+    MEALS.forEach(m=>{
+      const v=dd[m]||'',kcal=dd[m+'_k']||'';
+      planH+=`<div class="meal-row">
+        <span class="meal-label">${m}</span>
+        <input class="inp" value="${v}" placeholder="吃什么…" data-di="${di}" data-meal="${m}" oninput="saveMeal(this)" style="font-size:12px;padding:6px 9px">
+        <input class="inp" value="${kcal}" placeholder="kcal" type="number" data-di="${di}" data-meal="${m}_k" oninput="saveMeal(this)" style="font-size:12px;padding:6px 9px">
+      </div>`;
+    });
+    planH+=`</div>`;
+  });
+  planH+=`</div>`;
+  el.innerHTML=`<div class="ph"><h1>🥗 减肥计划</h1></div>${goalCard}${wlCard}${planH}`;
+}
+window.saveDietGoal=async function(field,val){
+  const g=await dbGet('diet_plans','goal')||{id:'goal',targetW:'',currentW:'',calGoal:1500,bodyFat:''};
+  const old=g[field];
+  g[field]=val;
+  await dbPut('diet_plans',g);
+  // 当前体重变化时自动写今日体重记录
+  if(field==='currentW'&&val&&val!==old){
+    const w=parseFloat(val);
+    if(!isNaN(w)&&w>0){
+      const today=todayKey();
+      const wl=await dbGet('weight_log','main')||{id:'main',entries:[]};
+      wl.entries=wl.entries.filter(e=>e.date!==today);
+      wl.entries.push({date:today,w});
+      wl.entries.sort((a,b)=>a.date.localeCompare(b.date));
+      await dbPut('weight_log',wl);
+      // 刷新体重列表区域（如果当前在减肥页）
+      const dietEl=document.getElementById('pg-diet');
+      if(dietEl&&dietEl.classList.contains('on'))renderDiet();
+    }
+  }
+};
+window.saveTodayWater=async function(val){
+  const key='water_'+todayKey();
+  await dbPut('diet_plans',{id:key,amount:parseInt(val)||0});
+};
+window.saveMeal=async function(inp){
+  const plan=await dbGet('diet_plans','weekly')||{id:'weekly',days:{}};
+  const di=inp.dataset.di;if(!plan.days[di])plan.days[di]={};
+  plan.days[di][inp.dataset.meal]=inp.value;await dbPut('diet_plans',plan);
+};
+window.addWeight=function(){
+  openMo(`<div class="mt">⚖️ 记录体重</div>
+  <div class="mrow"><span class="ml">日期</span><input class="inp" id="wD" type="date" value="${todayKey()}"></div>
+  <div class="mrow"><span class="ml">体重 kg</span><input class="inp" id="wV" type="number" step="0.1" placeholder="58.5"></div>
+  <button class="btn bp" style="width:100%" onclick="saveWeight()">💾 保存</button>`);
+};
+window.saveWeight=async function(){
+  const date=document.getElementById('wD').value,w=document.getElementById('wV').value;if(!w)return;
+  const wl=await dbGet('weight_log','main')||{id:'main',entries:[]};
+  wl.entries=wl.entries.filter(e=>e.date!==date);wl.entries.push({date,w:parseFloat(w)});
+  wl.entries.sort((a,b)=>a.date.localeCompare(b.date));
+  await dbPut('weight_log',wl);closeMo();renderDiet();showToast('体重已记录 💪');
+};
+// ═══ GARDEN (留言板) ═══
+const PW_KEY='sheep_garden_pw_v2';
+function initGarden(){
+  const pw=localStorage.getItem(PW_KEY);
+  if(pw===null){showGardenSetup();}
+  else if(pw===''){renderGarden();}
+  else{showGardenUnlock();}
+}
+function showGardenSetup(){
+  document.getElementById('pg-garden').innerHTML=`
+<div class="ph"><h1>🌷 秘密花园</h1></div>
+<div class="card" style="--accent:var(--p6)">
+  <div class="glock"><div class="glock-icon">🔐</div>
+  <div class="glock-title">设置花园密码</div>
+  <div class="glock-sub">设置后需要输入密码才能进入，保护你的私密记录</div>
+  <div style="margin-bottom:9px"><input class="inp" id="gpw1" type="password" placeholder="设置密码"></div>
+  <div style="margin-bottom:14px"><input class="inp" id="gpw2" type="password" placeholder="确认密码"></div>
+  <button class="btn bp" style="width:100%;margin-bottom:8px" onclick="doSetPw()">🌸 设置密码并进入</button>
+  <button class="btn bg bsm" style="width:100%" onclick="skipPw()">不设置，直接进入</button>
+  </div>
+</div>`;
+}
+window.doSetPw=function(){
+  const p1=document.getElementById('gpw1')?.value||'';
+  const p2=document.getElementById('gpw2')?.value||'';
+  if(!p1){showToast('请输入密码');return;}
+  if(p1!==p2){showToast('两次输入不一致 ❌');return;}
+  localStorage.setItem(PW_KEY,p1);showToast('密码设置成功 🔑');renderGarden();
+};
+window.skipPw=function(){localStorage.setItem(PW_KEY,'');renderGarden();};
+function showGardenUnlock(){
+  document.getElementById('pg-garden').innerHTML=`
+<div class="ph"><h1>🌷 秘密花园</h1></div>
+<div class="card" style="--accent:var(--p6)">
+  <div class="glock"><div class="glock-icon">🔒</div>
+  <div class="glock-title">请输入密码</div>
+  <div style="margin-bottom:12px"><input class="inp" id="gpwIn" type="password" placeholder="密码"
+    onkeydown="if(event.key==='Enter')doVerifyPw()"></div>
+  <button class="btn bp" style="width:100%;margin-bottom:8px" onclick="doVerifyPw()">🌸 进入花园</button>
+  <button class="btn bg bsm" style="width:100%" onclick="doResetGarden()">忘记密码（清空数据重置）</button>
+  </div>
+</div>`;
+  setTimeout(()=>document.getElementById('gpwIn')?.focus(),100);
+}
+window.doVerifyPw=function(){
+  const input=document.getElementById('gpwIn')?.value||'';
+  const stored=localStorage.getItem(PW_KEY)||'';
+  if(input===stored){renderGarden();}
+  else{
+    showToast('密码错误 🔐');
+    const inp=document.getElementById('gpwIn');
+    if(inp){inp.value='';inp.style.borderColor='#E53935';setTimeout(()=>{inp.style.borderColor='';},1000);}
+  }
+};
+window.doResetGarden=function(){
+  if(!confirm('重置将清空所有花园记录，且无法恢复。确定吗？'))return;
+  localStorage.removeItem(PW_KEY);
+  const tx=db.transaction('garden','readwrite');tx.objectStore('garden').clear();
+  tx.oncomplete=()=>{showToast('已重置');showGardenSetup();};
+};
+async function renderGarden(){
+  const el=document.getElementById('pg-garden');
+  const all=await dbAll('garden');
+  const hasPw=!!(localStorage.getItem(PW_KEY));
+  // sort newest first
+  const entries=all.sort((a,b)=>b.ts-a.ts);
+  const histHtml=entries.length?entries.map(e=>{
+    const dt=new Date(e.ts);
+    const label=dt.toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="garden-entry">
+      <div class="garden-entry-meta">
+        <span>🌷 ${label}</span>
+        <button class="tdel" onclick="delGardenEntry('${e.id}')">×</button>
+      </div>
+      <div class="garden-entry-text">${e.text}</div>
+    </div>`;
+  }).join(''):'<div class="empty">还没有任何留言 🌱</div>';
+
+  el.innerHTML=`
+<div class="ph"><h1>🌷 秘密花园</h1>
+  ${hasPw?`<button class="btn bg bsm mla" onclick="changeGardenPw()">🔑</button>`:''}
+</div>
+<div class="card" style="--accent:var(--p6);background:linear-gradient(135deg,#F3E5FF,#E8D5F5);border:none">
+  <div class="ct" style="color:#6A1B9A">🌸 写下此刻</div>
+  <textarea id="gtxt" class="inp" rows="5" placeholder="今天怎么样？有什么感受、收获，或者想说的…"
+    style="background:rgba(255,255,255,.62);border-color:rgba(215,189,226,.45)"></textarea>
+  <button class="btn bp" style="width:100%;margin-top:9px" onclick="saveGardenEntry()">💾 保存并留存</button>
+</div>
+${entries.length?`<div class="card" style="--accent:var(--p6)"><div class="ct">🕰 留言记录（${entries.length}条）</div>${histHtml}</div>`:histHtml}`;
+}
+window.saveGardenEntry=async function(){
+  const txt=document.getElementById('gtxt')?.value.trim();
+  if(!txt){showToast('请先写点什么 ✍️');return;}
+  const ts=Date.now();
+  await dbPut('garden',{id:'g_'+ts,ts,text:txt});
+  showToast('已保存到花园 🌸');
+  renderGarden();
+};
+window.delGardenEntry=async function(id){
+  if(!confirm('删除这条记录？'))return;
+  await dbDel('garden',id);renderGarden();
+};
+window.changeGardenPw=function(){
+  openMo(`<div class="mt">🔑 修改密码</div>
+    <div class="mrow"><span class="ml">新密码（留空则取消密码）</span><input class="inp" id="np1" type="password" placeholder="新密码"></div>
+    <div class="mrow"><span class="ml">确认新密码</span><input class="inp" id="np2" type="password" placeholder="确认"></div>
+    <button class="btn bp" style="width:100%" onclick="doChangePw()">💾 保存</button>`);
+};
+window.doChangePw=function(){
+  const p1=document.getElementById('np1').value,p2=document.getElementById('np2').value;
+  if(p1!==p2){showToast('两次不一致');return;}
+  localStorage.setItem(PW_KEY,p1);closeMo();showToast(p1?'密码已修改':'密码已取消');renderGarden();
+};
+// ═══ DATA EXPORT ═══
+async function exportData(){
+  const stores=['weeks','tasks','checkins','study_subjects','sport_plans','weight_log','diet_plans','garden','todos','countdown','study_logs','sport_logs'];
+  const data={};for(const s of stores)data[s]=await dbAll(s);
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`sheep-backup-${todayKey()}.json`;a.click();
+  showToast('数据已导出 💾');
+}
+// ═══ INIT ═══
+async function init(){
+  try{
+    await openDB();
+    await ensureSubjects();
+    await ensureWeek();
+    updStatus();
+    if(!localStorage.getItem('sheep_claude_key'))localStorage.setItem('sheep_claude_key','sk-mg-4kgp5kplr2pgivg7okdgqyzjre3kyh2rkcaejai');
+    await renderHome();
+    if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }catch(err){
+    console.error('Init error:',err);
+    document.getElementById('pg-home').innerHTML='<div style="padding:20px;color:red;font-size:13px">加载失败：'+err.message+'<br><button onclick="location.reload()" style="margin-top:10px;padding:8px 16px;background:#FFB7C5;border:none;border-radius:8px;cursor:pointer">重新加载</button></div>';
+  }
+}
+init();
+window.addEventListener('unhandledrejection',e=>{console.error('Unhandled promise rejection:',e.reason);});
+</script>
+</body>
+</html>
+
