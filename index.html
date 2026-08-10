@@ -29,86 +29,95 @@ html,body{height:100%;font-family:-apple-system,'PingFang SC',sans-serif;backgro
 /* ── SIDEBAR ── */
 #sb{
   width:var(--nw);min-width:var(--nw);
-  background:linear-gradient(160deg,#FFF0FA 0%,#F5E4FF 60%,#EEE0FF 100%);
-  border-right:1.5px solid var(--bd);
+  background:linear-gradient(170deg,#FFF0F5 0%,#F7EEFF 45%,#EEE4FF 100%);
+  border-right:1.5px solid rgba(215,189,226,.3);
   display:flex;flex-direction:column;
   transition:width var(--ease),min-width var(--ease);
   overflow:hidden;z-index:100;
-  box-shadow:3px 0 20px rgba(123,94,167,.08);
+  box-shadow:3px 0 20px rgba(180,140,210,.1);
 }
 #sb.col{width:var(--nc);min-width:var(--nc);}
-.sbh{padding:16px 12px 12px;display:flex;align-items:center;gap:10px;min-height:72px;overflow:hidden;border-bottom:1.5px solid var(--bd);}
-.logo{width:40px;height:40px;flex-shrink:0;}
-.apptitle{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;opacity:1;transition:opacity var(--ease);line-height:1.3;}
+.sbh{padding:18px 14px 14px;display:flex;align-items:center;gap:11px;min-height:72px;overflow:hidden;border-bottom:1px solid rgba(215,189,226,.3);}
+.logo{width:38px;height:38px;flex-shrink:0;}
+.apptitle{font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;opacity:1;transition:opacity var(--ease);line-height:1.35;letter-spacing:.2px;}
+.apptitle small{display:block;font-size:9px;font-weight:600;color:var(--ink3);letter-spacing:.8px;margin-top:1px;text-transform:uppercase;}
 #sb.col .apptitle{opacity:0;}
-.navlist{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+.navlist{flex:1;padding:10px 10px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
 .navlist::-webkit-scrollbar{display:none;}
+.nav-sep{height:1px;background:rgba(215,189,226,.35);margin:6px 4px 8px;}
+.nav-sec-label{font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--ink3);padding:0 6px;margin-bottom:4px;white-space:nowrap;overflow:hidden;opacity:1;transition:opacity var(--ease);}
+#sb.col .nav-sec-label{opacity:0;}
 .ni{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 10px;border-radius:16px;
-  cursor:pointer;margin-bottom:3px;
+  display:flex;align-items:center;gap:11px;
+  padding:8px 10px;border-radius:14px;
+  cursor:pointer;margin-bottom:2px;
   transition:background var(--ease),box-shadow var(--ease),transform .14s;
   white-space:nowrap;overflow:hidden;user-select:none;
   position:relative;
 }
+.ni:active{transform:scale(.96);}
+.ni.on{
+  background:rgba(255,255,255,.85);
+  box-shadow:0 2px 12px rgba(180,140,210,.18),inset 0 0 0 1px rgba(215,189,226,.4);
+}
+.ni:not(.on):hover{background:rgba(255,255,255,.5);}
 .ni::before{
-  content:'';position:absolute;left:0;top:20%;height:60%;
+  content:'';position:absolute;left:0;top:18%;height:64%;
   width:3px;border-radius:0 3px 3px 0;
   background:transparent;transition:background var(--ease);
 }
-.ni:active{transform:scale(.96);}
-.ni.on{
-  background:linear-gradient(135deg,rgba(255,183,197,.25),rgba(215,189,226,.18));
-  box-shadow:0 3px 14px rgba(215,189,226,.35);
-}
-.ni.on::before{background:var(--nav-accent,var(--p1));}
-.ni:not(.on):hover{background:rgba(215,189,226,.14);}
+.ni.on::before{background:var(--nav-accent,var(--p6));}
 .nic{
-  width:40px;height:40px;flex-shrink:0;
-  border-radius:50%;
+  width:36px;height:36px;flex-shrink:0;
+  border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;
   transition:transform .2s;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
+  background:rgba(215,189,226,.2);
 }
-.ni.on .nic{animation:navPop .38s cubic-bezier(.34,1.56,.64,1) forwards;}
+.nic svg{width:17px;height:17px;color:var(--ink2);}
+.ni.on .nic{
+  background:var(--nav-ic-bg,rgba(215,189,226,.3));
+  box-shadow:0 2px 8px rgba(180,140,210,.15);
+  animation:navPop .38s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.ni.on .nic svg{color:var(--nav-accent,var(--ink2));}
 @keyframes navPop{
   0%  {transform:scale(1) rotate(0);}
   35% {transform:scale(1.22) rotate(-8deg);}
   65% {transform:scale(1.1) rotate(4deg);}
   100%{transform:scale(1.12) rotate(0);}
 }
-.nlb{font-size:13px;font-weight:700;color:var(--ink);opacity:1;transition:opacity var(--ease);}
+.nlb{font-size:12px;font-weight:600;color:var(--ink2);opacity:1;transition:opacity var(--ease),color var(--ease);}
+.ni.on .nlb{color:var(--ink);font-weight:700;}
 #sb.col .nlb{opacity:0;}
-.i0{background:var(--gc);}
-.i1{background:linear-gradient(135deg,#B5EAD7,#7DCEA0);}
-.i2{background:linear-gradient(135deg,#AED6F1,#5DADE2);}
-.i3{background:linear-gradient(135deg,#FFCBA4,#F0A070);}
-.i4{background:linear-gradient(135deg,#B5EAD7,#52BE80);}
-.i5{background:linear-gradient(135deg,#D7BDE2,#A569BD);}
-.ni[data-page=home]   {--nav-accent:#FFB347;}
-.ni[data-page=study]  {--nav-accent:#7DCEA0;}
-.ni[data-page=sport]  {--nav-accent:#5DADE2;}
-.ni[data-page=life]   {--nav-accent:#F0A070;}
-.ni[data-page=diet]   {--nav-accent:#52BE80;}
-.ni[data-page=garden] {--nav-accent:#A569BD;}
-.sbf{padding:10px 8px;border-top:1.5px solid var(--bd);}
-.dst{display:flex;align-items:center;gap:6px;padding:7px 10px;margin-bottom:6px;border-radius:12px;background:rgba(255,255,255,.55);overflow:hidden;}
-.sd{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ni[data-page=home]   {--nav-accent:#FF9AA2;--nav-ic-bg:rgba(255,183,197,.3);}
+.ni[data-page=study]  {--nav-accent:#7DCEA0;--nav-ic-bg:rgba(181,234,215,.3);}
+.ni[data-page=sport]  {--nav-accent:#5DADE2;--nav-ic-bg:rgba(174,214,241,.3);}
+.ni[data-page=gym]    {--nav-accent:#5DADE2;--nav-ic-bg:rgba(174,214,241,.25);}
+.ni[data-page=life]   {--nav-accent:#F0A070;--nav-ic-bg:rgba(255,203,164,.3);}
+.ni[data-page=money]  {--nav-accent:#D4AC0D;--nav-ic-bg:rgba(255,240,168,.35);}
+.ni[data-page=diet]   {--nav-accent:#7DCEA0;--nav-ic-bg:rgba(181,234,215,.25);}
+.ni[data-page=garden] {--nav-accent:#A569BD;--nav-ic-bg:rgba(215,189,226,.35);}
+.ni[data-page=xhs]    {--nav-accent:#E05252;--nav-ic-bg:rgba(255,180,180,.25);}
+.ni[data-page=love]   {--nav-accent:#FF6B9D;--nav-ic-bg:rgba(255,183,197,.3);}
+.ni[data-page=jiaozu] {--nav-accent:#F4A460;--nav-ic-bg:rgba(244,180,120,.3);}
+.sbf{padding:10px 10px 14px;border-top:1px solid rgba(215,189,226,.3);}
+.dst{display:flex;align-items:center;gap:6px;padding:6px 8px;margin-bottom:8px;border-radius:10px;background:rgba(255,255,255,.6);overflow:hidden;}
+.sd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .sd.on{background:#52BE80;box-shadow:0 0 5px rgba(82,190,128,.5);animation:pg 2s infinite;}
 .sd.off{background:#EC7063;}
 @keyframes pg{0%,100%{opacity:1}50%{opacity:.4}}
-.slb{font-size:11px;color:var(--ink2);white-space:nowrap;opacity:1;transition:opacity var(--ease);}
+.slb{font-size:11px;color:var(--ink3);white-space:nowrap;opacity:1;transition:opacity var(--ease);}
 #sb.col .slb{opacity:0;}
 .togbtn{
-  width:100%;padding:9px;border:none;
-  background:linear-gradient(135deg,rgba(255,183,197,.25),rgba(215,189,226,.2));
-  border-radius:12px;cursor:pointer;
+  width:100%;padding:8px;border:none;
+  background:rgba(215,189,226,.2);
+  border-radius:10px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  color:var(--ink2);font-size:14px;font-weight:700;
+  color:var(--ink3);font-size:13px;
   transition:background .2s,transform .15s;
 }
-.togbtn:hover{background:linear-gradient(135deg,rgba(255,183,197,.4),rgba(215,189,226,.35));}
+.togbtn:hover{background:rgba(215,189,226,.35);}
 .togbtn:active{transform:scale(.95);}
 /* ─ MAIN ─ */
 #main{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(123,94,167,.18) transparent;}
@@ -149,8 +158,8 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .ml{font-size:12px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px;}
 .mrow{margin-bottom:11px;}
 /* ─ TOAST ─ */
-#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:rgba(61,38,81,.88);color:#fff;padding:8px 18px;border-radius:18px;font-size:13px;transition:transform .26s;z-index:2000;pointer-events:none;white-space:nowrap;}
-#toast.show{transform:translateX(-50%) translateY(0);}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:rgba(61,38,81,.88);color:#fff;padding:8px 18px;border-radius:18px;font-size:13px;transition:transform .26s,opacity .26s;z-index:2000;pointer-events:none;white-space:nowrap;opacity:0;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 /* ─ CALENDAR ─ */
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}
 .cal-h{font-size:10px;font-weight:700;color:var(--ink3);padding:3px 0;}
@@ -193,10 +202,32 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 /* ─ HISTORY ─ */
 .hist-week{padding:10px 12px;border-radius:var(--rs);background:rgba(232,213,245,.18);margin-bottom:8px;border:1px solid var(--bd);}
 .hist-week-title{font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
-/* ─ DIET ─ */
-.meal-row{display:grid;grid-template-columns:30px 1fr 64px;gap:6px;align-items:center;margin-bottom:6px;}
-.meal-label{font-size:11px;font-weight:700;color:var(--ink3);}
-.weight-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);font-size:13px;}
+/* ─ DIET (now inside sport) ─ */
+.sport-tabs{display:flex;gap:4px;padding:4px;background:rgba(215,189,226,.18);border-radius:14px;margin-bottom:14px;}
+.sport-tab{flex:1;padding:7px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .2s;}
+.sport-tab.on{background:#fff;color:var(--ink2);box-shadow:0 2px 8px rgba(180,140,210,.15);}
+.body-hero{border-radius:var(--r);padding:18px;background:linear-gradient(135deg,#B5EAD7,#AED6F1);margin-bottom:11px;position:relative;overflow:hidden;}
+.body-hero::after{content:'';position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.15);}
+.body-hero-val{font-size:36px;font-weight:800;color:var(--ink);line-height:1;}
+.body-hero-unit{font-size:14px;font-weight:600;color:var(--ink2);margin-left:3px;}
+.body-hero-lbl{font-size:11px;color:var(--ink2);margin-top:3px;}
+.body-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px;}
+.body-stat{background:var(--card);border-radius:var(--rs);padding:10px;border:1.5px solid var(--bd);text-align:center;}
+.body-stat-n{font-size:17px;font-weight:800;color:var(--ink);}
+.body-stat-l{font-size:10px;color:var(--ink3);margin-top:2px;}
+.progress-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 0;}
+.weight-history-bar{display:flex;align-items:flex-end;gap:4px;height:60px;padding:0 4px;}
+.wh-bar{flex:1;border-radius:4px 4px 0 0;background:var(--p5);min-width:8px;transition:height .3s;}
+.wh-bar.latest{background:var(--ga);}
+.meal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;}
+.meal-card{background:rgba(250,246,255,.8);border-radius:12px;padding:10px;border:1.5px solid var(--bd);}
+.meal-card-hd{font-size:11px;font-weight:800;color:var(--ink2);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.encourage-banner{border-radius:var(--r);padding:13px 14px;background:var(--ga);margin-bottom:11px;display:flex;align-items:center;gap:10px;}
+.encourage-text{font-size:13px;font-weight:700;color:#fff;line-height:1.45;flex:1;}
+.encourage-icon{font-size:28px;flex-shrink:0;}
+.meal-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.meal-label{font-size:11px;font-weight:700;color:var(--ink3);width:28px;flex-shrink:0;}
+.weight-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:13px;}
 /* ─ GARDEN ─ */
 .glock{text-align:center;padding:30px 20px;}
 .glock-icon{font-size:44px;margin-bottom:12px;}
@@ -219,21 +250,133 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .mood-btn{border:none;cursor:pointer;font-size:18px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .mood-btn:hover{transform:scale(1.15);}
 .mood-btn.active{background:var(--ga);box-shadow:0 3px 12px rgba(255,154,162,.4);}
+/* ─ MONEY ─ */
+.money-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;}
+.money-stat{background:var(--card);border-radius:var(--rs);padding:11px 12px;border:1.5px solid var(--bd);text-align:center;}
+.money-stat-val{font-size:20px;font-weight:800;color:var(--ink);}
+.money-stat-lbl{font-size:11px;color:var(--ink3);margin-top:2px;}
+.money-remain{grid-column:1/-1;background:var(--gc);border:none;border-radius:var(--r);padding:14px;text-align:center;box-shadow:0 4px 14px rgba(255,203,164,.3);}
+.money-remain-val{font-size:28px;font-weight:800;color:var(--ink);}
+.money-remain-lbl{font-size:12px;color:var(--ink2);margin-top:3px;}
+.money-bar{height:8px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden;margin-top:8px;}
+.money-bar-fill{height:100%;border-radius:4px;transition:width .4s;}
+.money-cat-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+.money-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);}
+.money-row:last-child{border-bottom:none;}
+/* ─ XHS ─ */
+.xhs-tabs{display:flex;gap:4px;padding:4px;background:rgba(215,189,226,.18);border-radius:14px;margin-bottom:14px;}
+.xhs-tab{flex:1;padding:7px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .2s;}
+.xhs-tab.on{background:#fff;color:var(--ink2);box-shadow:0 2px 8px rgba(180,140,210,.15);}
+.xhs-topic-card{background:var(--card);border-radius:14px;padding:12px 14px;border:1.5px solid var(--bd);margin-bottom:8px;box-shadow:var(--sh);}
+.xhs-status{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+.xhs-status.idea{background:rgba(255,240,168,.6);color:#7D6608;}
+.xhs-status.wip{background:rgba(174,214,241,.5);color:#1A5276;}
+.xhs-status.done{background:rgba(181,234,215,.5);color:#1E8449;}
+.xhs-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px;}
+.xhs-stat{background:var(--card);border-radius:var(--rs);padding:10px;border:1.5px solid var(--bd);text-align:center;}
+.xhs-stat-n{font-size:20px;font-weight:800;color:var(--ink);}
+.xhs-stat-l{font-size:10px;color:var(--ink3);margin-top:2px;}
+/* ─ GYM ─ */
+.gym-anchor-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 0;margin-top:-8px;}
+.gym-anchor{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(215,189,226,.2);color:var(--ink2);cursor:pointer;border:1.5px solid var(--bd);transition:all .18s;}
+.gym-anchor:hover,.gym-anchor.active{background:var(--gb);color:#fff;border-color:transparent;}
+.gym-ex-card{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:12px;background:rgba(174,214,241,.1);border:1px solid var(--bd);margin-bottom:7px;}
+.gym-ex-name{font-weight:700;font-size:13px;color:var(--ink);}
+.gym-ex-dur{font-size:11px;color:var(--ink2);font-weight:600;}
+.gym-ex-desc{font-size:11px;color:var(--ink3);line-height:1.55;}
+.gym-ex-add{align-self:flex-end;margin-top:4px;}
+/* ─ LOVE ─ */
+.love-hero{border-radius:var(--r);padding:22px;background:linear-gradient(135deg,#FFB7C5,#E8D5F5);margin-bottom:11px;text-align:center;position:relative;overflow:hidden;}
+.love-hero::before{content:'';position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12);}
+.love-days{font-size:54px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(255,100,150,.25);}
+.love-days-lbl{font-size:13px;color:rgba(255,255,255,.85);margin-top:4px;font-weight:600;}
+.love-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.love-photo{aspect-ratio:1;border-radius:12px;background:rgba(215,189,226,.2);border:1.5px solid var(--bd);overflow:hidden;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.love-photo img{width:100%;height:100%;object-fit:cover;}
+.love-photo-add{font-size:24px;color:var(--ink3);}
+.love-anniversary{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,183,197,.12);border:1px solid var(--bd);margin-bottom:7px;}
+.love-anni-days{font-size:20px;font-weight:800;color:var(--p8);min-width:44px;text-align:center;}
+.love-wish{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bd);}
+.love-wish:last-child{border-bottom:none;}
+.jz-card{background:var(--card);border-radius:var(--r);border:1.5px solid var(--bd);box-shadow:var(--sh);margin-bottom:10px;overflow:hidden;}
+.jz-q-row{display:flex;align-items:flex-start;gap:10px;padding:13px 14px;cursor:pointer;}
+.jz-num{min-width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#F4A460,#E8875A);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.jz-q-text{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.55;flex:1;}
+.jz-toggle{font-size:12px;color:var(--ink3);flex-shrink:0;margin-top:3px;transition:transform .2s;}
+.jz-card.open .jz-toggle{transform:rotate(180deg);}
+.jz-ans{display:none;padding:0 14px 13px 50px;font-size:13px;color:var(--ink2);line-height:1.7;border-top:1px solid var(--bd);}
+.jz-card.open .jz-ans{display:block;}
+.jz-mnemonic{margin-top:7px;padding:7px 10px;background:rgba(244,164,96,.12);border-radius:8px;font-size:12px;color:#C46B2A;font-weight:600;}
+.jz-status{display:flex;gap:6px;margin-top:10px;}
+.jz-btn-status{flex:1;padding:6px 0;border-radius:8px;font-size:12px;font-weight:700;border:1.5px solid var(--bd);background:var(--bg);color:var(--ink2);cursor:pointer;transition:all .18s;}
+.jz-btn-status.good{background:rgba(125,206,160,.2);border-color:#7DCEA0;color:#3A8A5C;}
+.jz-btn-status.review{background:rgba(244,164,96,.2);border-color:#F4A460;color:#C46B2A;}
+.jz-day-bar{background:var(--card);border-radius:var(--r);border:1.5px solid var(--bd);padding:13px 14px;margin-bottom:10px;box-shadow:var(--sh);}
+.jz-progress-track{height:8px;background:rgba(0,0,0,.06);border-radius:4px;margin:8px 0;}
+.jz-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#F4A460,#E8875A);transition:width .4s;}
+.tl-group-label{font-size:11px;font-weight:800;color:var(--ink3);letter-spacing:.04em;margin:10px 0 5px;padding-left:2px;}
+.tl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);}
+.tl-item:last-child{border-bottom:none;}
+.tl-chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd);background:var(--bg);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transition:all .18s;margin-top:1px;}
+.tl-chk.done{background:linear-gradient(135deg,#7DCEA0,#5BAD82);border-color:#7DCEA0;}
+.tl-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1;}
+.tl-text.done{color:var(--ink3);text-decoration:line-through;}
+.tl-prog-wrap{margin:8px 0 4px;}
+.tl-prog-track{height:6px;background:rgba(0,0,0,.06);border-radius:3px;}
+.tl-prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7DCEA0,#52BE80);transition:width .4s;}
+.sleep-row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);}
+.sleep-row:last-child{border-bottom:none;}
+.sleep-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.sleep-dot.ok{background:#7DCEA0;}
+.sleep-dot.late{background:#F4A460;}
+.sleep-dot.none{background:rgba(0,0,0,.1);}
+.love-wish-star{font-size:18px;cursor:pointer;flex-shrink:0;}
+/* ─ HOME DASHBOARD ─ */
+.home-date-bar{border-radius:var(--r);padding:16px 18px;background:linear-gradient(135deg,#FFB7C5 0%,#D7BDE2 100%);margin-bottom:11px;position:relative;overflow:hidden;}
+.home-date-bar::after{content:'';position:absolute;right:-25px;top:-25px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.12);}
+.home-date-main{font-size:13px;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:6px;}
+.home-cd-row{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;}
+.home-cd-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.75);margin-bottom:2px;}
+.home-cd-days{font-size:56px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 12px rgba(180,80,120,.22);}
+.home-cd-unit{font-size:13px;font-weight:700;color:rgba(255,255,255,.75);margin-left:3px;align-self:flex-end;padding-bottom:6px;}
+.home-top3-wrap{margin-bottom:11px;}
+.top3-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--card);border:1.5px solid var(--bd);box-shadow:var(--sh);margin-bottom:7px;cursor:pointer;transition:all .2s;}
+.top3-item:active{transform:scale(.97);}
+.top3-item.done{background:rgba(181,234,215,.18);border-color:rgba(181,234,215,.5);}
+.top3-num{width:24px;height:24px;border-radius:50%;background:var(--ga);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(255,154,162,.3);}
+.top3-item.done .top3-num{background:var(--gb);box-shadow:none;}
+.top3-text{flex:1;font-size:14px;font-weight:600;color:var(--ink);}
+.top3-item.done .top3-text{text-decoration:line-through;color:var(--ink3);font-weight:400;}
+.top3-empty{text-align:center;padding:18px 14px;color:var(--ink3);font-size:13px;border-radius:14px;background:var(--card);border:1.5px dashed var(--bd);cursor:pointer;}
+.habit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px;}
+.habit-btn{padding:14px 10px 11px;border-radius:14px;border:1.5px solid var(--bd);background:var(--card);cursor:pointer;text-align:center;transition:all .2s;box-shadow:var(--sh);position:relative;}
+.habit-btn:active{transform:scale(.95);}
+.habit-btn.done{background:linear-gradient(135deg,#B5EAD7,#AED6F1);border-color:transparent;box-shadow:0 3px 12px rgba(100,200,180,.2);}
+.habit-btn-name{font-size:12px;font-weight:700;color:var(--ink2);line-height:1.35;word-break:break-all;}
+.habit-btn.done .habit-btn-name{color:#1A5276;}
+.habit-btn-streak{font-size:10px;color:var(--ink3);margin-top:4px;}
+.habit-btn.done .habit-btn-streak{color:#27AE60;font-weight:700;}
+.study-prog-wrap{background:var(--card);border-radius:var(--r);padding:14px;border:1.5px solid var(--bd);box-shadow:var(--sh);margin-bottom:11px;}
+.study-prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.study-prog-bar{height:7px;background:rgba(0,0,0,.06);border-radius:4px;overflow:hidden;margin-bottom:9px;}
+.study-prog-fill{height:100%;border-radius:4px;background:var(--gb);transition:width .5s;}
+.study-prog-subj{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);padding:3px 0;}
 /* ─ DATE GROUP ─ */
-.date-group{margin-bottom:8px;}
 .date-group-hd{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:5px;margin-bottom:6px;}
 .date-group-hd.is-today{background:var(--ga);color:#fff;}
 .date-group-hd.is-future{background:rgba(215,189,226,.25);color:var(--ink2);}
 .date-group-hd.is-past{background:rgba(184,164,204,.15);color:var(--ink3);}
 /* ─ BOTTOM NAV (mobile) ─ */
 #bnav{display:none;position:fixed;bottom:0;left:0;right:0;
-  background:#fff;border-top:1.5px solid var(--bd);z-index:200;
+  background:rgba(255,248,255,.96);backdrop-filter:blur(12px);
+  border-top:1.5px solid rgba(215,189,226,.3);z-index:200;
   flex-direction:row;align-items:center;justify-content:space-around;
   padding-bottom:env(safe-area-inset-bottom);height:58px;}
-.bni{display:flex;flex-direction:column;align-items:center;gap:1px;
-  font-size:10px;color:var(--ink3);cursor:pointer;
-  padding:4px 8px;border-radius:8px;min-width:44px;transition:color .18s;}
-.bni span:first-child{font-size:22px;line-height:1.2;}
+.bni{display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:var(--ink3);cursor:pointer;
+  padding:4px 6px;border-radius:8px;min-width:40px;transition:color .18s;}
+.bni svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.bni span{font-size:9px;font-weight:600;}
 .bni.on{color:var(--ink2);}
 /* ─ RESPONSIVE ─ */
 @media(max-width:640px){
@@ -277,38 +420,140 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
         <rect x="20.3" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
       </svg>
     </div>
-    <div class="apptitle">小羊梦工厂</div>
+    <div class="apptitle">小羊梦工厂<small>PERSONAL WORKSPACE</small></div>
   </div>
   <ul class="navlist" id="navList">
-    <li class="ni on" data-page="home" draggable="true"><div class="nic i0">🏠</div><span class="nlb">今日预览</span></li>
-    <li class="ni" data-page="study" draggable="true"><div class="nic i1">🎓</div><span class="nlb">能力提升</span></li>
-    <li class="ni" data-page="sport" draggable="true"><div class="nic i2">🏋️</div><span class="nlb">锻炼身体</span></li>
-    <li class="ni" data-page="life" draggable="true"><div class="nic i3">✅</div><span class="nlb">日常生活</span></li>
-    <li class="ni" data-page="diet" draggable="true"><div class="nic i4">🥗</div><span class="nlb">减肥计划</span></li>
-    <li class="ni" data-page="garden" draggable="true"><div class="nic i5">🌷</div><span class="nlb">秘密花园</span></li>
+    <li class="ni on" data-page="home" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/>
+        </svg>
+      </div>
+      <span class="nlb">今日预览</span>
+    </li>
+    <div class="nav-sep"></div>
+    <div class="nav-sec-label">生活</div>
+    <li class="ni" data-page="life" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+      </div>
+      <span class="nlb">日常生活</span>
+    </li>
+    <li class="ni" data-page="love" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+        </svg>
+      </div>
+      <span class="nlb">浪漫小屋</span>
+    </li>
+    <li class="ni" data-page="money" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="9" y2="15"/>
+        </svg>
+      </div>
+      <span class="nlb">记账本</span>
+    </li>
+    <div class="nav-sep"></div>
+    <div class="nav-sec-label">学习</div>
+    <li class="ni" data-page="study" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+        </svg>
+      </div>
+      <span class="nlb">能力提升</span>
+    </li>
+    <li class="ni" data-page="jiaozu" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <rect x="4" y="3" width="16" height="18" rx="2"/>
+          <line x1="8" y1="8" x2="16" y2="8"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+          <line x1="8" y1="16" x2="12" y2="16"/>
+          <path d="M14 15l1.5 1.5L18 14" stroke-width="2.2"/>
+        </svg>
+      </div>
+      <span class="nlb">教资备考</span>
+    </li>
+    <div class="nav-sep"></div>
+    <li class="ni" data-page="xhs" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <rect x="3" y="3" width="18" height="18" rx="4"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="8" x2="13" y2="8"/><line x1="8" y1="16" x2="11" y2="16"/>
+        </svg>
+      </div>
+      <span class="nlb">小红书创作</span>
+    </li>
+    <li class="ni" data-page="garden" draggable="true">
+      <div class="nic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink2)">
+          <path d="M12 22V12m0 0C12 7 7 4 3 6c0 4 3 8 9 6zm0 0c0-5 5-8 9-6-1 4-4 8-9 6z"/>
+        </svg>
+      </div>
+      <span class="nlb">秘密花园</span>
+    </li>
   </ul>
   <div class="sbf">
     <div class="dst"><div class="sd" id="sdot"></div><span class="slb" id="slbl">检测中</span></div>
-    <button class="togbtn" id="togBtn">◀</button>
+  <button class="togbtn" id="togBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </nav>
 <main id="main">
   <div class="pg on" id="pg-home"></div>
   <div class="pg" id="pg-study"></div>
+  <div class="pg" id="pg-jiaozu"></div>
   <div class="pg" id="pg-sport"></div>
+  <div class="pg" id="pg-gym"></div>
   <div class="pg" id="pg-life"></div>
+  <div class="pg" id="pg-money"></div>
   <div class="pg" id="pg-diet"></div>
   <div class="pg" id="pg-garden"></div>
+  <div class="pg" id="pg-xhs"></div>
+  <div class="pg" id="pg-love"></div>
 </main>
 </div>
 <!-- bottom nav for mobile -->
 <nav id="bnav">
-  <div class="bni on" data-page="home"><span>🏠</span><span>今日</span></div>
-  <div class="bni" data-page="study"><span>🎓</span><span>学习</span></div>
-  <div class="bni" data-page="sport"><span>🏋️</span><span>运动</span></div>
-  <div class="bni" data-page="life"><span>✅</span><span>生活</span></div>
-  <div class="bni" data-page="diet"><span>🥗</span><span>饮食</span></div>
-  <div class="bni" data-page="garden"><span>🌷</span><span>花园</span></div>
+  <div class="bni on" data-page="home">
+    <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
+    <span>今日</span>
+  </div>
+  <div class="bni" data-page="study">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span>学习</span>
+  </div>
+  <div class="bni" data-page="jiaozu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/><path d="M14 15l1.5 1.5L18 14" stroke-width="2.2"/></svg>
+    <span>教资</span>
+  </div>
+  <div class="bni" data-page="sport">
+    <svg viewBox="0 0 24 24"><path d="M6.5 6.5h11M6.5 17.5h11M4 10h2.5V14H4M19.5 10H17.5V14H20"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+    <span>运动</span>
+  </div>
+  <div class="bni" data-page="gym">
+    <svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/></svg>
+    <span>动作</span>
+  </div>
+  <div class="bni" data-page="life">
+    <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span>生活</span>
+  </div>
+  <div class="bni" data-page="money">
+    <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="9" y2="15"/></svg>
+    <span>记账</span>
+  </div>
+  <div class="bni" data-page="love">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <span>小屋</span>
+  </div>
+  <div class="bni" data-page="xhs">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="8" x2="13" y2="8"/><line x1="8" y1="16" x2="11" y2="16"/></svg>
+    <span>创作</span>
+  </div>
 </nav>
 <div class="ov" id="ov" onclick="closeMo(event)"><div class="mo" id="moBox"><div class="mhd"></div><div id="moC"></div></div></div>
 <div id="toast"></div>
@@ -318,11 +563,11 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 let db;
 function openDB(){
   return new Promise((res,rej)=>{
-    const req=indexedDB.open('SheepDreamV4',1);
+    const req=indexedDB.open('SheepDreamV4',6);
     req.onupgradeneeded=e=>{
       const d=e.target.result;
       ['weeks','tasks','checkins','study_subjects','sport_plans','weight_log',
-       'diet_plans','garden','todos','countdown','study_logs','sport_logs'].forEach(s=>{
+       'diet_plans','garden','todos','countdown','study_logs','sport_logs','ledger','xhs_topics','love_data','top3','jiaozu_bank','jiaozu_logs'].forEach(s=>{
         if(!d.objectStoreNames.contains(s)){
           const st=d.createObjectStore(s,{keyPath:'id'});
           if(s==='tasks'){ st.createIndex('weekId','weekId',{unique:false}); st.createIndex('category','category',{unique:false}); }
@@ -376,7 +621,8 @@ async function ensureWeek(){
   return week;
 }
 // ═══ UTILS ═══
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+let _toastTimer=null;
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');if(_toastTimer)clearTimeout(_toastTimer);_toastTimer=setTimeout(()=>{t.classList.remove('show');_toastTimer=null;},2000);}
 function openMo(html){document.getElementById('moC').innerHTML=html;document.getElementById('ov').classList.add('open');}
 function closeMo(e){if(!e||e.target===document.getElementById('ov'))document.getElementById('ov').classList.remove('open');}
 // ═══ CALENDAR ═══
@@ -407,7 +653,7 @@ window.calPrev=function(){calView.month--;if(calView.month<0){calView.month=11;c
 window.calNext=function(){calView.month++;if(calView.month>11){calView.month=0;calView.year++;}refreshCal();};
 window.calToday=function(){const n=new Date();calView={year:n.getFullYear(),month:n.getMonth()};refreshCal();};
 // ═══ NAV ═══
-const PAGE_RENDERS={home:renderHome,study:renderStudy,sport:renderSport,life:renderLife,diet:renderDiet,garden:initGarden};
+const PAGE_RENDERS={home:renderHome,study:renderStudy,sport:renderSport,gym:renderGym,life:renderLife,diet:renderDiet,garden:initGarden,money:renderMoney,xhs:renderXhs,love:renderLove,jiaozu:renderJiaozu};
 function navTo(pg){
   document.querySelectorAll('.ni,.bni').forEach(i=>i.classList.toggle('on',i.dataset.page===pg));
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
@@ -417,7 +663,9 @@ function navTo(pg){
 let sbCol=false;
 document.getElementById('togBtn').addEventListener('click',()=>{
   sbCol=!sbCol;document.getElementById('sb').classList.toggle('col',sbCol);
-  document.getElementById('togBtn').textContent=sbCol?'▶':'◀';
+  document.getElementById('togBtn').innerHTML=sbCol
+    ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>'
+    :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>';
 });
 document.querySelectorAll('.ni').forEach(item=>{item.addEventListener('click',()=>navTo(item.dataset.page));});
 document.querySelectorAll('.bni').forEach(item=>{item.addEventListener('click',()=>navTo(item.dataset.page));});
@@ -436,12 +684,22 @@ function updStatus(){const d=document.getElementById('sdot'),l=document.getEleme
 window.addEventListener('online',updStatus);window.addEventListener('offline',updStatus);
 // ═══ DEFAULT SUBJECTS ═══
 const DEF_SUBJECTS=[
-  {id:'subj_en',label:'英语学习',icon:'🇬🇧',color:'#FFB7C5',order:0},
-  {id:'subj_jz',label:'教资学习',icon:'📋',color:'#AED6F1',order:1},
+  {id:'subj_en',label:'英语提升',icon:'🇬🇧',color:'#FFB7C5',order:0},
+  {id:'subj_jz',label:'教资备考',icon:'📋',color:'#AED6F1',order:1,
+    subtypes:[
+      {id:'jz1',label:'科目一',color:'#AED6F1',items:['理论课','文学素养','材料分析','阅读理解','作文']},
+      {id:'jz2',label:'科目二',color:'#B5EAD7',items:['理论课','简答题','材料分析','教学设计']},
+    ]
+  },
 ];
 async function ensureSubjects(){
   const all=await dbAll('study_subjects');
-  if(!all.length)for(const s of DEF_SUBJECTS)await dbPut('study_subjects',s);
+  if(!all.length){for(const s of DEF_SUBJECTS)await dbPut('study_subjects',s);}
+  else{
+    // patch existing 教资 with subtypes if missing
+    const jz=all.find(s=>s.id==='subj_jz');
+    if(jz&&!jz.subtypes){jz.subtypes=DEF_SUBJECTS[1].subtypes;await dbPut('study_subjects',jz);}
+  }
 }
 // ═══ HOME ═══
 async function renderHome(){
@@ -492,6 +750,41 @@ async function renderHome(){
           <div style="font-size:13px">${p.name}</div>
           <div style="font-size:11px;color:var(--ink3)">${p.type==='cardio'?'有氧':'力量'} · ${p.duration}</div>
         </div>
+      </div>`;
+    }
+  }
+
+  // habits + 每日调理打卡（未完成项）
+  const habits=await dbAll('todos');
+  const habitItems=habits.filter(t=>t.isHabit);
+  let habitH='';
+  // 每日调理打卡未完成项
+  const tlCfgHome=await dbGet('todos','tl_items');
+  const tlItemsHome=tlCfgHome?.items||[];
+  const tlLogHome=(await dbGet('todos','tl_log_'+today))||{id:'tl_log_'+today,done:[]};
+  const tlDoneHome=tlLogHome.done||[];
+  const tlPendingHome=tlItemsHome.filter(it=>!tlDoneHome.includes(it.id));
+  let tlHomeH='';
+  if(tlPendingHome.length){
+    tlHomeH+=`<div class="ci-group-label">每日调理</div>`;
+    for(const it of tlPendingHome){
+      tlHomeH+=`<div class="trow">
+        <button class="tchk" onclick="togTlHome('${it.id}')"></button>
+        <span class="tname">${it.text}</span>
+      </div>`;
+    }
+  }
+  if(!habitItems.length&&!tlPendingHome.length){habitH='<div style="font-size:12px;color:var(--ink3);padding:4px 0">今日打卡全部完成 🎉</div>';}
+  else{
+    if(tlHomeH)habitH+=tlHomeH;
+    for(const h of habitItems){
+      const ciKey='hci_'+h.id+'_'+today;
+      const ci=await dbGet('todos',ciKey);const done=ci?.done||false;
+      habitH+=`<div class="trow">
+        <button class="tchk${done?' done':''}" onclick="toggleHabit('${h.id}')">${done?'✓':''}</button>
+        <span class="tname${done?' done':''}">${h.name}</span>
+        <span style="font-size:11px;color:var(--ink3)">${h.streak||0}天</span>
+        <button class="tdel" onclick="delHabit('${h.id}')">×</button>
       </div>`;
     }
   }
@@ -593,10 +886,26 @@ async function renderHome(){
 <div class="card" style="--accent:var(--p5)">
   <div class="ct">🏋️ 今日运动计划</div>
   ${sportH}
+</div>
+<div class="card" style="--accent:var(--p3)">
+  <div class="ct">🔥 今日打卡习惯
+    <button class="btn badd" onclick="addHabit()" title="添加习惯">＋</button>
+  </div>
+  <div id="habitList">${habitH}</div>
+</div>
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">💰 快速记账</div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px" id="homeMonCats">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="hmcat-${c}" onclick="homeSelCat('${c}')" style="font-size:11px;padding:3px 9px">${c}</span>`).join('')}</div>
+  <div style="display:flex;gap:7px">
+    <input class="inp" id="hmAmt" type="number" placeholder="金额" style="flex:1">
+    <input class="inp" id="hmNote" placeholder="备注" style="flex:2">
+    <button class="btn bp bsm" onclick="homeAddMoney()" style="flex-shrink:0">记</button>
+  </div>
 </div>`;
   const savedMood=localStorage.getItem('sheep_mood')||'happy';
   setSheepMood(savedMood,true);
   refreshCal();
+  if(window._homeCat)document.getElementById('hmcat-'+window._homeCat)?.classList.add('active');
 }
 
 window.toggleCI=async function(taskId,cat){
@@ -606,6 +915,48 @@ window.toggleCI=async function(taskId,cat){
   const done=!(existing?.done||false);
   await dbPut('checkins',{id:ciId,taskId,weekId:wid,date:today,done,cat,ts:Date.now()});
   renderHome();showToast(done?'✅ 打卡！':'取消打卡');
+};
+window.addHabit=function(){
+  openMo(`<div class="mt">🔥 添加每日习惯</div>
+    <div class="mrow"><span class="ml">习惯名称</span><input class="inp" id="hName" placeholder="如：早起、喝水1500ml…"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveHabit()">添加</button>`);
+};
+window.saveHabit=async function(){
+  const name=document.getElementById('hName').value.trim();if(!name)return;
+  await dbPut('todos',{id:'habit_'+Date.now(),name,isHabit:true,done:false,streak:0,ts:Date.now()});
+  closeMo();renderHome();showToast('习惯已添加 🔥');
+};
+window.toggleHabit=async function(habitId){
+  const today=todayKey();
+  const ciKey='hci_'+habitId+'_'+today;
+  const ci=await dbGet('todos',ciKey);
+  const done=!(ci?.done||false);
+  await dbPut('todos',{id:ciKey,done,ts:Date.now(),isHabitCI:true});
+  // update streak
+  const habit=await dbGet('todos',habitId);
+  if(habit){
+    if(done){habit.streak=(habit.streak||0)+1;}
+    else{habit.streak=Math.max(0,(habit.streak||1)-1);}
+    await dbPut('todos',habit);
+  }
+  renderHome();showToast(done?'🔥 打卡！':'取消打卡');
+};
+window.delHabit=async function(id){await dbDel('todos',id);renderHome();};
+window.homeSelCat=function(c){
+  window._homeCat=c;
+  document.querySelectorAll('[id^=hmcat-]').forEach(el=>el.classList.remove('active'));
+  document.getElementById('hmcat-'+c)?.classList.add('active');
+};
+window.homeAddMoney=async function(){
+  const amt=parseFloat(document.getElementById('hmAmt')?.value);
+  if(!amt||amt<=0){showToast('请输入金额');return;}
+  const cat=window._homeCat||'其他';
+  const note=document.getElementById('hmNote')?.value.trim()||'';
+  await dbPut('ledger',{id:'le_'+Date.now(),date:todayKey(),amount:amt,cat,note});
+  document.getElementById('hmAmt').value='';document.getElementById('hmNote').value='';
+  window._homeCat=null;
+  showToast('¥'+amt.toFixed(2)+' 已记录');
+  renderHome();
 };
 const MOOD_LABELS={happy:'✨ 今天也要加油呀',sad:'🌧 难过了，抱抱自己',excited:'🌟 超级兴奋！',hopeful:'🌈 充满期待中',angry:'💢 深呼吸，放松放松',laugh:'😂 哈哈哈开心死了'};
 const MOOD_ANIMS={happy:'sheepFloat',sad:'sheepSway',excited:'sheepBounce',hopeful:'sheepFloat',angry:'sheepSway',laugh:'sheepBounce'};
@@ -651,10 +1002,12 @@ async function renderStudy(){
   const tomorrowStr=tomorrowDt.toISOString().slice(0,10);
 
   function dateLabel(dateStr){
-    if(dateStr===today){const mo=parseInt(today.slice(5,7)),d=parseInt(today.slice(8));return`<span class="date-group-hd is-today">今天（${mo}/${d}）</span>`;}
-    if(dateStr===tomorrowStr){const mo=parseInt(tomorrowStr.slice(5,7)),d=parseInt(tomorrowStr.slice(8));return`<span class="date-group-hd is-future">明天（${mo}/${d}）</span>`;}
-    if(dateStr<today)return`<span class="date-group-hd is-past">${dateStr.slice(5).replace('-','/')}</span>`;
-    return`<span class="date-group-hd is-future">${dateStr.slice(5).replace('-','/')}</span>`;
+    const click=`onclick="editTaskGroupDate('${dateStr}',this)"`;
+    const editIcon=`<span style="font-size:10px;margin-left:4px;opacity:.5;cursor:pointer">✏️</span>`;
+    if(dateStr===today){const mo=parseInt(today.slice(5,7)),d=parseInt(today.slice(8));return`<span class="date-group-hd is-today" ${click}>今天（${mo}/${d}）${editIcon}</span>`;}
+    if(dateStr===tomorrowStr){const mo=parseInt(tomorrowStr.slice(5,7)),d=parseInt(tomorrowStr.slice(8));return`<span class="date-group-hd is-future" ${click}>明天（${mo}/${d}）${editIcon}</span>`;}
+    if(dateStr<today)return`<span class="date-group-hd is-past" ${click}>${dateStr.slice(5).replace('-','/')}${editIcon}</span>`;
+    return`<span class="date-group-hd is-future" ${click}>${dateStr.slice(5).replace('-','/')}${editIcon}</span>`;
   }
 
   let html=`
@@ -671,26 +1024,75 @@ async function renderStudy(){
 
   for(const subj of subjects.sort((a,b)=>a.order-b.order)){
     const tasks=allTasks.filter(t=>t.subjectId===subj.id);
-    const grouped={};
-    for(const t of tasks){const k=t.taskDate||today;if(!grouped[k])grouped[k]=[];grouped[k].push(t);}
-    const sortedDates=Object.keys(grouped).sort();
     let taskGroupsHtml='';
-    if(!sortedDates.length){taskGroupsHtml='<div style="font-size:12px;color:var(--ink3);padding:4px 0">暂无任务</div>';}
-    else{
-      for(const dateStr of sortedDates){
-        const dayTasks=grouped[dateStr];
-        taskGroupsHtml+=`<div class="date-group">${dateLabel(dateStr)}`;
-        for(const t of dayTasks){
-          const ciKey=t.id+'_'+dateStr;const ci=ciMap[ciKey];const done=ci?.done||false;
-          taskGroupsHtml+=`<div class="trow">
-            <button class="tchk${done?' done':''}" onclick="toggleStudyCI('${t.id}','${dateStr}')">${done?'✓':''}</button>
-            <span class="tname${done?' done':''}" style="flex:1">${t.name}</span>
-            <button class="tdel" onclick="delTask('${t.id}')">×</button>
+
+    if(subj.subtypes&&subj.subtypes.length){
+      // Render grouped by subtype, then by date within each subtype
+      subj.subtypes.forEach(st=>{
+        const stTasks=tasks.filter(t=>t.subtype===st.id);
+        const grouped={};
+        for(const t of stTasks){const k=t.taskDate||today;if(!grouped[k])grouped[k]=[];grouped[k].push(t);}
+        const sortedDates=Object.keys(grouped).sort();
+        const done=stTasks.filter(t=>{const ciKey=t.id+'_'+(t.taskDate||today);return ciMap[ciKey]?.done;}).length;
+        taskGroupsHtml+=`<div style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:800;color:#fff;padding:3px 10px;border-radius:8px;background:${st.color}cc;display:inline-flex;align-items:center;gap:6px;margin-bottom:6px">
+            ${st.label}
+            <span style="opacity:.8;font-weight:400">${done}/${stTasks.length}</span>
           </div>`;
+        if(!sortedDates.length){
+          taskGroupsHtml+=`<div style="font-size:12px;color:var(--ink3);padding:2px 0 6px">暂无任务</div>`;
+        } else {
+          for(const dateStr of sortedDates){
+            const dayTasks=grouped[dateStr];
+            taskGroupsHtml+=`<div class="date-group">${dateLabel(dateStr)}`;
+            for(const t of dayTasks){
+              const ciKey=t.id+'_'+dateStr;const ci=ciMap[ciKey];const isDone=ci?.done||false;
+              taskGroupsHtml+=`<div class="trow">
+                <button class="tchk${isDone?' done':''}" onclick="toggleStudyCI('${t.id}','${dateStr}')">${isDone?'✓':''}</button>
+                <span class="tname${isDone?' done':''}" style="flex:1">${t.name}</span>
+                <button class="tdel" onclick="delTask('${t.id}')">×</button>
+              </div>`;
+            }
+            taskGroupsHtml+=`</div>`;
+          }
         }
+        // Quick add for this subtype
+        taskGroupsHtml+=`<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px">
+          <input class="inp" id="tname-${subj.id}-${st.id}" placeholder="添加${st.label}任务…" style="flex:1;min-width:100px;font-size:12px;padding:6px 9px"
+            onkeydown="if(event.key==='Enter')addTask('${subj.id}',null,'${st.id}')">
+          <input class="inp" id="tdate-${subj.id}-${st.id}" type="date" value="${today}" style="width:120px;font-size:12px;padding:6px 9px">
+          <button class="btn bg bxs" onclick="addTask('${subj.id}',null,'${st.id}')">+ 加</button>
+        </div>`;
         taskGroupsHtml+=`</div>`;
+      });
+    } else {
+      const grouped={};
+      for(const t of tasks){const k=t.taskDate||today;if(!grouped[k])grouped[k]=[];grouped[k].push(t);}
+      const sortedDates=Object.keys(grouped).sort();
+      if(!sortedDates.length){taskGroupsHtml='<div style="font-size:12px;color:var(--ink3);padding:4px 0">暂无任务</div>';}
+      else{
+        for(const dateStr of sortedDates){
+          const dayTasks=grouped[dateStr];
+          taskGroupsHtml+=`<div class="date-group">${dateLabel(dateStr)}`;
+          for(const t of dayTasks){
+            const ciKey=t.id+'_'+dateStr;const ci=ciMap[ciKey];const done=ci?.done||false;
+            taskGroupsHtml+=`<div class="trow">
+              <button class="tchk${done?' done':''}" onclick="toggleStudyCI('${t.id}','${dateStr}')">${done?'✓':''}</button>
+              <span class="tname${done?' done':''}" style="flex:1">${t.name}</span>
+              <button class="tdel" onclick="delTask('${t.id}')">×</button>
+            </div>`;
+          }
+          taskGroupsHtml+=`</div>`;
+        }
       }
     }
+
+    const addRowHtml=!subj.subtypes?`<div style="display:flex;gap:5px;margin-top:10px;align-items:center;flex-wrap:wrap">
+      <input class="inp" id="tname-${subj.id}" placeholder="添加任务…" style="flex:1;min-width:100px;font-size:12px;padding:7px 10px"
+        onkeydown="if(event.key==='Enter')addTask('${subj.id}')">
+      <input class="inp" id="tdate-${subj.id}" type="date" value="${today}" style="width:130px;font-size:12px;padding:7px 10px">
+      <button class="btn bg bsm" onclick="addTask('${subj.id}')">+ 添加</button>
+    </div>`:'';
     html+=`<div class="card" style="--accent:${subj.color}">
       <div class="subj-head">
         <div class="subj-ico" style="background:${subj.color}22;color:${subj.color}">${subj.icon}</div>
@@ -707,14 +1109,9 @@ async function renderStudy(){
         <input class="inp" data-subjid="${subj.id}" placeholder="本周${subj.label}计划…" value="${subj.weekPlan||''}"
           oninput="saveSubjPlan(this)" style="font-size:12px;padding:7px 10px">
       </div>
-      <div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:5px">任务（按日期）</div>
+      <div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:5px">任务${subj.subtypes?'（按科目分组）':'（按日期）'}</div>
       ${taskGroupsHtml}
-      <div style="display:flex;gap:5px;margin-top:10px;align-items:center;flex-wrap:wrap">
-        <input class="inp" id="tname-${subj.id}" placeholder="添加任务…" style="flex:1;min-width:100px;font-size:12px;padding:7px 10px"
-          onkeydown="if(event.key==='Enter')addTask('${subj.id}')">
-        <input class="inp" id="tdate-${subj.id}" type="date" value="${today}" style="width:130px;font-size:12px;padding:7px 10px">
-        <button class="btn bg bsm" onclick="addTask('${subj.id}')">+ 添加</button>
-      </div>
+      ${addRowHtml}
     </div>`;
   }
   html+=`<div style="display:flex;gap:8px;justify-content:center;margin-top:6px;flex-wrap:wrap">
@@ -723,16 +1120,39 @@ async function renderStudy(){
   </div>`;
   el.innerHTML=html;
 }
-window.addTask=async function(subjId){
-  const inp=document.getElementById('tname-'+subjId);
-  const dateInp=document.getElementById('tdate-'+subjId);
+window.addTask=async function(subjId,_unused,subtypeId){
+  const inputId=subtypeId?`tname-${subjId}-${subtypeId}`:`tname-${subjId}`;
+  const dateId=subtypeId?`tdate-${subjId}-${subtypeId}`:`tdate-${subjId}`;
+  const inp=document.getElementById(inputId);
+  const dateInp=document.getElementById(dateId);
   const name=inp?.value.trim();if(!name)return;
   const taskDate=dateInp?.value||todayKey();
   const wid=getWeekId();await ensureWeek();
-  await dbPut('tasks',{id:'t_'+Date.now(),weekId:wid,subjectId:subjId,category:'study',name,taskDate,createdAt:Date.now()});
+  const rec={id:'t_'+Date.now(),weekId:wid,subjectId:subjId,category:'study',name,taskDate,createdAt:Date.now()};
+  if(subtypeId)rec.subtype=subtypeId;
+  await dbPut('tasks',rec);
   inp.value='';renderStudy();renderHome();
 };
 window.delTask=async function(id){await dbDel('tasks',id);renderStudy();renderHome();};
+window.editTaskGroupDate=function(oldDate,labelEl){
+  const inp=document.createElement('input');
+  inp.type='date';inp.value=oldDate;inp.style.cssText='position:fixed;opacity:0;pointer-events:none;top:0;left:0';
+  document.body.appendChild(inp);
+  inp.addEventListener('change',async()=>{
+    const newDate=inp.value;document.body.removeChild(inp);
+    if(!newDate||newDate===oldDate)return;
+    await updateTaskGroupDate(oldDate,newDate);
+  });
+  inp.addEventListener('blur',()=>{if(document.body.contains(inp))document.body.removeChild(inp);});
+  inp.click();inp.focus();
+};
+window.updateTaskGroupDate=async function(oldDate,newDate){
+  const wid=getWeekId();
+  const allTasks=await dbIndex('tasks','weekId',wid);
+  const toUpdate=allTasks.filter(t=>(t.taskDate||todayKey())===oldDate);
+  for(const t of toUpdate){t.taskDate=newDate;await dbPut('tasks',t);}
+  renderStudy();renderHome();showToast('日期已更新 ✅');
+};
 window.toggleStudyCI=async function(taskId,dateStr){
   const wid=getWeekId();
   const ciId='ci_'+taskId+'_'+dateStr;
@@ -829,6 +1249,11 @@ window.deleteWeek=async function(wid){
 };
 // ═══ SPORT ═══
 async function renderSport(){
+  const tab=window._sportTab||'plan';
+  if(tab==='body'){await renderBodyTab();return;}
+  await renderSportPlanTab();
+}
+async function renderSportPlanTab(){
   const el=document.getElementById('pg-sport');
   const today=todayKey();const wid=getWeekId();await ensureWeek();
   const week=await dbGet('weeks',wid);
@@ -865,34 +1290,35 @@ async function renderSport(){
     }
   }
   el.innerHTML=`
-<div class="ph"><h1>🏋️ 锻炼身体</h1></div>
+<div class="ph"><h1>锻炼身体</h1></div>
+<div class="sport-tabs">
+  <div class="sport-tab on" onclick="switchSportTab('plan')">训练计划</div>
+  <div class="sport-tab" onclick="switchSportTab('body')">身材管理</div>
+</div>
 <div class="week-bar">
-  <span style="font-size:16px">📅</span>
+  <span style="font-size:13px;color:var(--ink3)">本周</span>
   <span class="week-badge">${week?.startDate} ~ ${week?.endDate}</span>
 </div>
 <div class="card" style="--accent:var(--p5)">
-  <div class="ct">📊 本周训练时长（累计）</div>
+  <div class="ct">本周训练累计</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
     <div style="background:rgba(174,214,241,.2);border-radius:12px;padding:12px;text-align:center">
-      <div style="font-size:22px;margin-bottom:4px">🏃‍♀️</div>
-      <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">有氧累计</div>
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">有氧</div>
       <div style="font-size:24px;font-weight:800;color:#1A5276">${plans.cardioMins||0}</div>
       <div style="font-size:11px;color:var(--ink3)">分钟</div>
     </div>
     <div style="background:rgba(255,183,197,.2);border-radius:12px;padding:12px;text-align:center">
-      <div style="font-size:22px;margin-bottom:4px">💪</div>
-      <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">力量累计</div>
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">力量</div>
       <div style="font-size:24px;font-weight:800;color:#922B21">${plans.strengthMins||0}</div>
       <div style="font-size:11px;color:var(--ink3)">分钟</div>
     </div>
   </div>
 </div>
 <div class="card" style="--accent:var(--p1)">
-  <div class="ct">📝 本周训练计划
+  <div class="ct">本周训练计划
     <button class="btn badd" onclick="addSportItem()">＋</button>
   </div>
   <div style="display:flex;gap:7px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:600;color:var(--ink2)">添加到</span>
     <select class="inp" id="sportDay" style="width:auto;font-size:12px;padding:6px 28px 6px 9px">
       ${wdays.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
     </select>
@@ -904,9 +1330,168 @@ async function renderSport(){
   ${dayGroupsHtml}
 </div>
 <div style="display:flex;gap:8px;justify-content:center;margin-top:6px;flex-wrap:wrap">
-  <button class="btn bg bsm" onclick="copyLastWeekSport()">📋 复制上周计划</button>
-  <button class="btn bp bsm" onclick="generateAIPlan()">🤖 AI 智能设计</button>
-  <button class="btn bg bsm" onclick="openSportHistory()">📂 历史记录</button>
+  <button class="btn bg bsm" onclick="copyLastWeekSport()">复制上周计划</button>
+  <button class="btn bp bsm" onclick="generateAIPlan()">AI 智能设计</button>
+  <button class="btn bg bsm" onclick="openSportHistory()">历史记录</button>
+</div>`;
+}
+window.switchSportTab=function(tab){window._sportTab=tab;renderSport();};
+async function renderBodyTab(){
+  const el=document.getElementById('pg-sport');
+  const goal=await dbGet('diet_plans','goal')||{id:'goal',targetW:'',currentW:'',bodyFat:''};
+  const wl=await dbGet('weight_log','main')||{id:'main',entries:[]};
+  const today=todayKey();
+  const waterKey='water_'+today;
+  const waterRec=await dbGet('diet_plans',waterKey)||{id:waterKey,amount:0};
+  const recent=wl.entries.slice(-7);
+  const latest=recent[recent.length-1];
+  const cw=parseFloat(goal.currentW)||0;
+  const tw=parseFloat(goal.targetW)||0;
+  const bf=parseFloat(goal.bodyFat)||0;
+  // BMI（假设身高165cm，可后续扩展）
+  const h=parseFloat(goal.height)||165;
+  const bmi=cw>0?(cw/(h/100*h/100)).toFixed(1):null;
+  const bmiLabel=bmi?parseFloat(bmi)<18.5?'偏瘦':parseFloat(bmi)<24?'正常':parseFloat(bmi)<28?'偏胖':'肥胖':'—';
+  const toGo=cw>0&&tw>0?Math.max(0,cw-tw).toFixed(1):null;
+  // TDEE 智能估算（Mifflin-St Jeor 基础 × 1.375 中度活跃）
+  let tdee=0;
+  if(cw>0&&h>0){
+    // 默认女性公式（后续可加性别选项）
+    const bmr=10*cw+6.25*h-5*25-161;// 默认25岁
+    tdee=Math.round(bmr*1.375);
+  }
+  const deficitGoal=tdee>0?Math.round(tdee*0.8):null;// 减脂目标：TDEE×80%
+  // 激励语
+  const encourages=[
+    '每一次挥汗，都是在雕刻更好的自己',
+    '你不是在减肥，你在找回最好的状态',
+    '今天的坚持，是明天的自信',
+    '进步不在于速度，在于每天都有行动',
+    '轻盈是努力的礼物',
+  ];
+  const todayDow=(new Date().getDay()||7)-1;
+  const enc=encourages[todayDow%encourages.length];
+  // 打卡连续天数
+  const allCI=await dbAll('checkins');
+  const sportCI=allCI.filter(c=>c.cat==='sport'&&c.done);
+  let streak=0;
+  const d=new Date();
+  while(true){
+    const k=d.toISOString().slice(0,10);
+    if(sportCI.some(c=>c.date===k)){streak++;d.setDate(d.getDate()-1);}
+    else break;
+    if(streak>99)break;
+  }
+  // 体重趋势迷你条形图
+  let barHtml='';
+  if(recent.length){
+    const vals=recent.map(e=>e.w);
+    const mn=Math.min(...vals),mx=Math.max(...vals);
+    barHtml=`<div style="margin-top:8px">
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:6px">近期体重趋势（kg）</div>
+      <div class="weight-history-bar">${recent.map((e,i)=>{
+        const pct=mx>mn?((e.w-mn)/(mx-mn)*70+20):50;
+        const isLast=i===recent.length-1;
+        return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+          <div style="font-size:9px;color:var(--ink3)">${e.w}</div>
+          <div class="wh-bar${isLast?' latest':''}" style="width:100%;height:${pct}%"></div>
+          <div style="font-size:9px;color:var(--ink3)">${e.date.slice(5)}</div>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
+  }
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const plan=await dbGet('diet_plans','weekly')||{id:'weekly',days:{}};
+  const MEALS3=['早餐','午餐','晚餐'];
+  const dd=plan.days[todayDow]||{};
+  const totalKcal=MEALS3.reduce((s,m)=>s+(parseFloat(dd[m+'_k'])||0),0);
+  let mealHtml='<div class="meal-grid">';
+  MEALS3.forEach(m=>{
+    const v=dd[m]||'';const kcal=dd[m+'_k']||'';
+    mealHtml+=`<div class="meal-card">
+      <div class="meal-card-hd">${m}</div>
+      <input class="inp" value="${v}" placeholder="吃了什么…" data-di="${todayDow}" data-meal="${m}"
+        oninput="saveMealBody(this)" style="font-size:11px;padding:5px 8px;margin-bottom:5px">
+      <div style="display:flex;align-items:center;gap:4px">
+        <input class="inp" type="number" value="${kcal}" placeholder="kcal" data-di="${todayDow}" data-meal="${m}_k"
+          oninput="saveMealBody(this)" style="font-size:11px;padding:4px 7px;flex:1">
+        <span style="font-size:10px;color:var(--ink3);flex-shrink:0">kcal</span>
+      </div>
+    </div>`;
+  });
+  mealHtml+=`</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:8px 10px;border-radius:10px;background:rgba(174,214,241,.15)">
+    <span style="font-size:12px;color:var(--ink2);font-weight:700">今日合计</span>
+    <span id="bodyKcalTotal" style="font-size:16px;font-weight:800;color:${deficitGoal>0&&totalKcal>deficitGoal?'#E53935':totalKcal>0?'#27AE60':'var(--ink)'}">${totalKcal} <span style="font-size:11px;font-weight:400;color:var(--ink3)">kcal${deficitGoal>0?' / 建议'+deficitGoal:''}</span></span>
+  </div>`;
+
+  el.innerHTML=`
+<div class="ph"><h1>锻炼身体</h1></div>
+<div class="sport-tabs">
+  <div class="sport-tab" onclick="switchSportTab('plan')">训练计划</div>
+  <div class="sport-tab on" onclick="switchSportTab('body')">身材管理</div>
+</div>
+${streak>0?`<div class="encourage-banner">
+  <div class="encourage-icon">${streak>=7?'🔥':streak>=3?'⚡':'✨'}</div>
+  <div class="encourage-text">${streak>=7?`连续打卡 ${streak} 天！你真的太拼了`+'\n'+enc:streak>=3?`${streak} 天连续！势头很好 · `+enc:enc}</div>
+</div>`:`<div class="encourage-banner"><div class="encourage-icon">✨</div><div class="encourage-text">${enc}</div></div>`}
+<div class="body-hero">
+  <div style="display:flex;align-items:flex-end;gap:8px">
+    <div>
+      <div style="font-size:11px;color:var(--ink2);margin-bottom:2px">当前体重</div>
+      <div><span class="body-hero-val">${cw||'—'}</span><span class="body-hero-unit">kg</span></div>
+    </div>
+    ${toGo?`<div style="margin-left:auto;text-align:right">
+      <div style="font-size:11px;color:var(--ink2)">距目标</div>
+      <div style="font-size:20px;font-weight:800;color:var(--ink)">-${toGo}kg</div>
+    </div>`:''}
+  </div>
+  ${cw>0&&tw>0?`<div style="margin-top:10px;height:6px;background:rgba(255,255,255,.35);border-radius:3px;overflow:hidden">
+    <div style="height:100%;border-radius:3px;background:rgba(61,38,81,.35);width:${Math.min(100,Math.max(5,((cw-tw)/((cw*1.2)-tw))*100)).toFixed(0)}%"></div>
+  </div>`:''}
+</div>
+<div class="body-stats-row">
+  <div class="body-stat">
+    <div class="body-stat-n">${bmi||'—'}</div>
+    <div class="body-stat-l">BMI · ${bmiLabel}</div>
+  </div>
+  <div class="body-stat">
+    <div class="body-stat-n">${bf||'—'}${bf?'%':''}</div>
+    <div class="body-stat-l">体脂率</div>
+  </div>
+  <div class="body-stat">
+    <div class="body-stat-n">${deficitGoal||'—'}</div>
+    <div class="body-stat-l">建议热量 kcal</div>
+  </div>
+</div>
+<div class="card" style="--accent:var(--p4)">
+  <div class="ct">编辑目标数据</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div><span class="ml">当前体重 kg</span><input class="inp" value="${goal.currentW}" placeholder="58" oninput="saveDietGoal('currentW',this.value)"></div>
+    <div><span class="ml">目标体重 kg</span><input class="inp" value="${goal.targetW}" placeholder="50" oninput="saveDietGoal('targetW',this.value)"></div>
+    <div><span class="ml">体脂率 %</span><input class="inp" type="number" step="0.1" value="${goal.bodyFat||''}" placeholder="25.5" oninput="saveDietGoal('bodyFat',this.value)"></div>
+    <div><span class="ml">身高 cm</span><input class="inp" type="number" value="${goal.height||165}" placeholder="165" oninput="saveDietGoal('height',this.value)"></div>
+  </div>
+  <div style="margin-top:8px"><span class="ml">今日饮水 ml</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input class="inp" type="number" value="${waterRec.amount||0}" oninput="saveTodayWater(this.value)" style="flex:1">
+      <div style="font-size:12px;color:${(waterRec.amount||0)>=2000?'#27AE60':'var(--ink3)'}">目标 2000ml ${(waterRec.amount||0)>=2000?'✓ 达到':''}</div>
+    </div>
+  </div>
+</div>
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">今日饮食记录</div>
+  ${tdee>0?`<div style="font-size:12px;color:var(--ink2);background:rgba(174,214,241,.15);border-radius:8px;padding:7px 10px;margin-bottom:10px">建议每日摄入 <strong>${deficitGoal} kcal</strong>（基础代谢×活动系数 ${tdee} kcal 的 80%）</div>`:''}
+  ${mealHtml}
+</div>
+<div class="card" style="--accent:var(--p3)">
+  <div class="ct">体重记录 <button class="btn badd" onclick="addWeight()">＋</button></div>
+  ${barHtml}
+  ${recent.slice().reverse().slice(0,5).map(e=>`<div class="weight-row">
+    <span style="color:var(--ink3)">${e.date}</span>
+    <span style="font-weight:700">${e.w} kg</span>
+    ${tw?`<span style="font-size:12px;color:${parseFloat(e.w)<=tw?'#27AE60':'var(--p8)'}">${parseFloat(e.w)<=tw?'达标':'继续加油'}</span>`:''}
+  </div>`).join('')||'<div class="empty">暂无体重记录</div>'}
 </div>`;
 }
 window.addSportItem=async function(){
@@ -976,19 +1561,136 @@ window.copyLastWeekSport=async function(){
 };
 // ─ 本地智能设计（按体重/体脂率规则生成）─
 const CARDIO_LIB=[
-  {name:'慢跑',duration:'30分钟',desc:'保持配速6-7分钟/公里，心率65-75%最大心率，全程匀速，感觉可以说话为准。'},
-  {name:'快走',duration:'45分钟',desc:'步频90-100步/分钟，挺胸收腹，大步走，手臂自然摆动，适合膝关节不好时替代跑步。'},
-  {name:'跳绳',duration:'20分钟',desc:'每组跳100-150下，休息30秒，循环进行。双脚交替跳，脚尖落地缓冲，保护膝盖。'},
-  {name:'椭圆机',duration:'35分钟',desc:'阻力设中档，步频保持60-70次/分钟，双手推拉把手带动上肢，全身联动燃脂效果好。'},
-  {name:'游泳',duration:'40分钟',desc:'自由泳或蛙泳均可，匀速游，不追求速度。水的阻力让全身均匀受力，对关节友好。'},
+  {name:'快走',duration:'40分钟',desc:'步频90步/分钟，挺胸收腹，手臂自然摆动，心率保持55-65%最大心率，适合入门和膝关节不适时。'},
+  {name:'慢跑',duration:'30分钟',desc:'配速7-8分钟/公里，心率65-75%最大心率，能说完整句子为准，全程匀速呼吸。'},
+  {name:'跳绳',duration:'20分钟',desc:'每组100-150下，休息30秒循环。脚尖落地缓冲，手腕发力甩绳，膝盖微弯减震。'},
+  {name:'椭圆机',duration:'35分钟',desc:'阻力中档，步频60-70次/分钟，双手推拉把手联动上肢，保持躯干直立不弯腰。'},
+  {name:'动感单车',duration:'30分钟',desc:'阻力适中，踩踏频率保持80-90rpm，上坡段增加阻力，平路段维持节奏，全程收紧核心。'},
+  {name:'开合跳',duration:'15分钟',desc:'落地时膝盖微弯，跳起时双手击头顶，节奏均匀。可配合节拍音乐进行，分3-4组完成。'},
+  {name:'踏步有氧操',duration:'25分钟',desc:'原地高抬腿踏步，加入手臂上下摆动，保持心率在中等偏高区间，适合在家进行。'},
+  {name:'爬楼梯',duration:'20分钟',desc:'走楼梯或踏步机，腿部发力踏实，背部挺直，每层楼换步伐节奏，对臀腿锻炼有额外效果。'},
 ];
-const STRENGTH_LIB=[
-  {name:'深蹲',duration:'4组×15次',desc:'双脚与肩同宽，脚尖微外八，下蹲至大腿平行地面，膝盖不超脚尖，起立时夹臀发力。'},
-  {name:'俯卧撑',duration:'4组×12次',desc:'手比肩略宽，身体保持一条直线，下落胸部贴近地面，推起时不锁死肘关节。'},
-  {name:'平板支撑',duration:'4组×45秒',desc:'手肘正对肩膀，腰背挺直不塌腰，收紧核心和臀部，目视地面，均匀呼吸。'},
-  {name:'哑铃弯举',duration:'3组×12次',desc:'双臂自然下垂握哑铃，弯举时上臂固定不动，顶峰停留1秒，缓慢放下，控制离心。'},
-  {name:'臀桥',duration:'4组×20次',desc:'仰躺屈膝，双脚平踩地面，夹紧臀部向上顶髋，顶峰保持2秒，缓慢下落，激活臀肌。'},
-  {name:'哑铃肩推',duration:'3组×12次',desc:'坐姿或站姿，哑铃举至耳旁，向上推举至手臂伸直，缓慢下落，保持核心收紧稳定躯干。'},
+// 无氧-臀腿（难度递增）
+const GLUTE_LIB=[
+  {name:'臀桥',duration:'4组×20次',desc:'仰躺屈膝踩地，夹臀向上顶髋，顶峰收紧停2秒，缓慢下落，感受臀肌发力，不要用腰部代偿。'},
+  {name:'箱式深蹲',duration:'4组×15次',desc:'坐到椅子边缘后站起，双脚与肩同宽，脚尖微外，站起时夹臀发力，适合深蹲入门。'},
+  {name:'宽距深蹲',duration:'4组×15次',desc:'双脚比肩宽，脚尖外展45°，下蹲膝盖朝脚尖方向，加强内收肌和臀部内侧刺激。'},
+  {name:'弓步蹲',duration:'3组×12次/腿',desc:'单腿向前迈一大步，前脚膝盖在脚踝正上方，后膝接近地面，保持躯干直立，交替进行。'},
+  {name:'保加利亚分腿蹲',duration:'3组×10次/腿',desc:'后脚放椅面，单腿缓慢下蹲，前腿承重，膝盖不内扣，对臀腿孤立刺激强。'},
+  {name:'深蹲（标准）',duration:'4组×12次',desc:'双脚肩宽，蹲至大腿平行地面，全程脚掌贴地，膝盖不超脚尖，起立夹臀，核心收紧。'},
+  {name:'腿举',duration:'4组×15次',desc:'脚踩踏板与肩同宽，推起时不锁死膝盖，下放控制4秒，感受大腿前侧充分拉伸。'},
+  {name:'单腿臀桥',duration:'3组×15次/腿',desc:'一腿伸直抬起，另一腿支撑推髋，支撑腿臀部充分收缩，注意骨盆不要歪斜。'},
+  {name:'侧卧抬腿',duration:'3组×20次/侧',desc:'侧躺腿微弯，上腿向上抬到最高再缓落，收缩臀中肌，全程脚尖朝前不旋转。'},
+  {name:'罗马尼亚硬拉',duration:'3组×10次',desc:'双手握杠铃/哑铃，髋关节主导推臀向后，背部挺直，感受腘绳肌拉伸，重量超大腿中段返回。'},
+  {name:'深蹲跳',duration:'3组×12次',desc:'标准深蹲蹲下后爆发性跳起，落地轻柔膝盖微弯缓冲，提升腿部爆发力，难度较高。'},
+];
+// 无氧-背部（难度递增）
+const BACK_LIB=[
+  {name:'猫牛伸展',duration:'3组×15次',desc:'四肢撑地，吸气塌腰抬头（牛式），呼气拱背低头（猫式），激活脊柱及背部深层肌群，适合热身。'},
+  {name:'哑铃直臂下拉',duration:'3组×15次',desc:'双手持哑铃前平举，保持手臂微弯，向下向后拉到髋部，感受背阔肌收缩，再慢慢抬回。'},
+  {name:'坐姿划船机',duration:'4组×12次',desc:'背部挺直，拉绳到腹部，肘关节向后，肩胛骨夹紧，再缓慢伸直手臂，感受背部拉伸。'},
+  {name:'哑铃单臂划船',duration:'3组×12次/侧',desc:'一手撑凳一脚跪凳，另手持哑铃下垂，肘关节带动向上拉至腰侧，肩胛骨向脊柱夹，缓慢放下。'},
+  {name:'俯身哑铃划船',duration:'3组×12次',desc:'俯身45°，双手持哑铃下垂，肘部向上拉至腰侧，感受整个背部收缩，保持背部平直不弓腰。'},
+  {name:'弹力带坐姿划船',duration:'3组×15次',desc:'弹力带绑固定点，坐姿拉向腹部，保持肘贴体侧，肩胛骨主动收缩，控制离心过程。'},
+  {name:'引体向上（辅助）',duration:'3组×8次',desc:'借助弹力带减少体重负担，宽握正手，胸部靠近横杆，缓慢下放，强化背阔肌上背部。'},
+  {name:'背伸展（超人式）',duration:'3组×15次',desc:'俯卧，双手双脚同时抬离地面，背部和臀部收紧，顶峰停留2秒，激活竖脊肌和臀部。'},
+  {name:'T型划船',duration:'3组×10次',desc:'杠铃一端抵墙，俯身抓横杆，背部平直，双肘向两侧展开拉至胸口，强化中背和菱形肌。'},
+  {name:'引体向上',duration:'3组×最多次',desc:'宽握正手，从死挂开始，胸口靠近杆，全程背阔肌发力，缓慢下放，是背部最有效动作之一。'},
+  {name:'杠铃俯身划船',duration:'4组×8次',desc:'俯身45°，双手正握杠铃，拉至腰部，肘紧贴体侧，肩胛骨夹紧，重量较大需保持腰部稳定。'},
+];
+// 无氧-核心（难度递增）
+const CORE_LIB=[
+  {name:'腹式呼吸',duration:'3组×1分钟',desc:'仰躺，吸气时腹部鼓起，呼气时腹部压下，感受腹横肌收缩，激活深层核心，适合热身激活。'},
+  {name:'卷腹',duration:'4组×20次',desc:'仰躺屈膝，手放耳侧，呼气时上背离地约30°，腹肌用力卷起，缓慢下落不完全放松。'},
+  {name:'死虫式',duration:'3组×10次/侧',desc:'仰躺四肢朝天，对侧手脚同时缓慢放低不触地，腰背压紧地面，稳定核心后换另一侧。'},
+  {name:'腿部上举',duration:'3组×15次',desc:'仰躺双腿伸直，抬起至90°再缓慢下落不触地，腰部全程压实地面，感受下腹发力。'},
+  {name:'平板支撑',duration:'4组×45秒',desc:'前臂支撑，肘在肩正下方，身体一条直线，收腹夹臀，不塌腰不翘臀，均匀呼吸坚持。'},
+  {name:'侧平板支撑',duration:'3组×30秒/侧',desc:'前臂侧撑，身体侧面保持直线，髋部不下沉，对腹斜肌和腰方肌有很好的强化效果。'},
+  {name:'自行车卷腹',duration:'3组×20次',desc:'仰躺，交替将对侧肘膝靠近，另一腿伸直，躯干旋转，腹斜肌充分收缩，节奏流畅。'},
+  {name:'俄罗斯转体',duration:'3组×20次',desc:'V字坐，腿微弯离地，双手交叉，左右旋转躯干，腹部持续收紧，进阶可手持重物。'},
+  {name:'登山者',duration:'3组×20次',desc:'俯卧撑位，交替快速将膝关节拉向胸口，核心保持稳定，速度越快强度越高，全身协调。'},
+  {name:'悬挂举腿',duration:'3组×12次',desc:'悬挂单杠，双腿并拢向上举至90°或更高，全程腰不晃动，顶峰停留感受下腹收缩。'},
+  {name:'抗旋转平板',duration:'3组×30秒',desc:'平板支撑基础上，单手轮流抬起触肩，核心对抗旋转力矩，对深层稳定肌群要求极高。'},
+];
+// 无氧-上肢（肩+臂+胸，难度递增）
+const UPPER_LIB=[
+  {name:'墙式俯卧撑',duration:'4组×15次',desc:'站立面墙，双手推墙，肘弯曲胸部靠近墙面再推回，适合俯卧撑入门，锻炼胸部和肱三头肌。'},
+  {name:'哑铃侧平举',duration:'3组×15次',desc:'双臂自然下垂，缓慢侧平举至肩高，拇指朝下"倒水"姿势，顶峰停留1秒，感受三角肌中束。'},
+  {name:'哑铃前平举',duration:'3组×12次',desc:'双手持哑铃，交替或同时向前抬至肩高，肘微弯，控制下落速度，强化三角肌前束。'},
+  {name:'哑铃弯举',duration:'3组×12次',desc:'上臂固定夹体侧，弯举时旋转手腕拇指朝外，顶峰停留1秒，缓慢下落，强调离心控制。'},
+  {name:'俯卧撑',duration:'4组×12次',desc:'手比肩略宽，身体一条直线，下落胸部近地面，推起不锁肘，全程核心收紧保持稳定。'},
+  {name:'哑铃飞鸟',duration:'3组×12次',desc:'仰躺或站姿，双臂展开如拥抱状向中间夹，肘微弯保持，感受胸大肌向心收缩，缓慢打开。'},
+  {name:'哑铃肩推',duration:'3组×12次',desc:'哑铃举至耳旁，向上推举伸直，核心收紧不弓腰，缓慢下落到起始位，强化整体肩部肌群。'},
+  {name:'哑铃锤式弯举',duration:'3组×12次',desc:'哑铃握法竖向，弯举时拇指朝上，强调肱桡肌和肱肌，与标准弯举交替使用效果更全面。'},
+  {name:'钻石俯卧撑',duration:'3组×10次',desc:'双手紧靠形成菱形，手心朝前，下落时肘贴体侧，重点刺激肱三头肌和胸大肌内侧。'},
+  {name:'坐姿过头臂屈伸',duration:'3组×12次',desc:'单手持哑铃举过头，另手扶肘，屈肘让哑铃落在脑后，再伸肘推起，全程上臂不动。'},
+  {name:'臂屈伸（撑体）',duration:'3组×10次',desc:'双手撑椅背/杠，身体下落至手臂90°，靠肱三头肌发力推起，肘不外展，可加重物增难度。'},
+];
+// 功能性训练方案（5种，每种5-8个动作）
+// bf>30 → 方案0-1(低冲击), 25-30 → 方案1-2, <25 → 方案3-4
+const FUNCTIONAL_PLANS=[
+  {
+    tag:'低强度全身激活',
+    desc:'适合体脂偏高或初入门，低冲击，关节友好，重在建立基础体能。',
+    items:[
+      {name:'猫牛伸展',duration:'3组×15次',desc:'四肢撑地，吸气塌腰抬头，呼气拱背低头，激活脊柱和背部深层肌群。'},
+      {name:'臀桥',duration:'3组×20次',desc:'仰躺屈膝，夹臀顶髋，顶峰停2秒，激活臀部和腰部稳定肌群。'},
+      {name:'侧卧抬腿',duration:'3组×15次/侧',desc:'激活臀中肌，防止膝盖内扣，改善步态稳定性。'},
+      {name:'站姿弹力带推拉',duration:'3组×12次',desc:'弹力带绑固定点，胸高位推出拉回，强化肩部稳定和核心抗旋转。'},
+      {name:'慢速深蹲',duration:'3组×10次',desc:'4秒下蹲2秒起，感受全程控制，强化下肢稳定性。'},
+    ],
+  },
+  {
+    tag:'燃脂有氧力量复合',
+    desc:'适合有一定基础、体脂中等偏高，有氧和力量交替进行提升代谢。',
+    items:[
+      {name:'原地高抬腿',duration:'3组×30秒',desc:'快速抬膝，手臂配合摆动，将心率推高至有氧区间，热身或组间有氧。'},
+      {name:'深蹲跳',duration:'3组×10次',desc:'蹲下后爆发跳起，落地缓冲，训练腿部爆发力同时维持高代谢。'},
+      {name:'俯卧撑',duration:'3组×10次',desc:'标准俯卧撑，强化胸肩和肱三头肌，控制下落速度增加难度。'},
+      {name:'侧步蹲',duration:'3组×12次/侧',desc:'大步侧跨，单腿下蹲，另腿伸直，有助于臀内外侧均衡发展。'},
+      {name:'平板支撑转体',duration:'3组×10次/侧',desc:'平板位，单手撑转身侧平板，再回正，增强核心旋转稳定性。'},
+      {name:'波比跳',duration:'3组×8次',desc:'下蹲撑地跳开俯卧撑收腿起跳，全身复合动作，燃脂效率极高。'},
+    ],
+  },
+  {
+    tag:'体能提升循环训练',
+    desc:'适合体脂正常、希望提升心肺和肌耐力，高密度循环。',
+    items:[
+      {name:'跳绳热身',duration:'1组×3分钟',desc:'中等节奏跳绳激活全身，提高心率和踝关节灵活性。'},
+      {name:'保加利亚分腿蹲',duration:'3组×10次/腿',desc:'单腿深蹲，后脚放椅面，挑战腿部稳定性和臀腿力量。'},
+      {name:'哑铃深蹲推举',duration:'3组×10次',desc:'深蹲起立的同时将哑铃肩推，下肢和肩部复合动作，全身协同发力。'},
+      {name:'弓步+旋转',duration:'3组×10次/腿',desc:'弓步蹲下时躯干朝前腿方向旋转，提升髋部灵活性和核心旋转力。'},
+      {name:'俯卧撑+T型旋转',duration:'3组×8次/侧',desc:'做一个俯卧撑后单手撑地旋转成侧平板，强化胸肩和核心稳定。'},
+      {name:'登山者（快速）',duration:'3组×20秒',desc:'俯卧撑位快速交替拉膝，维持高心率，复合训练腹部和肩部稳定。'},
+    ],
+  },
+  {
+    tag:'增肌塑形力量训练',
+    desc:'适合体脂适中、以增肌为主要目标，动作慢且集中感受肌肉发力。',
+    items:[
+      {name:'罗马尼亚硬拉',duration:'4组×10次',desc:'髋关节主导推臀向后，背部挺直，感受腘绳肌和臀部充分拉伸和收缩。'},
+      {name:'坐姿哑铃肩推',duration:'4组×10次',desc:'背靠椅背稳定躯干，双手持哑铃推举，集中感受肩部发力。'},
+      {name:'哑铃单臂划船',duration:'4组×10次/侧',desc:'俯身单手划船，肩胛骨夹紧，强调背阔肌和菱形肌收缩。'},
+      {name:'哑铃飞鸟',duration:'3组×12次',desc:'胸部孤立训练，感受胸大肌向心和离心全程收缩。'},
+      {name:'弓步哑铃弯举',duration:'3组×12次',desc:'弓步位进行哑铃弯举，增加下肢稳定挑战，同时训练肱二头肌。'},
+      {name:'臂屈伸（撑体）',duration:'3组×10次',desc:'利用体重训练肱三头肌，可负重增难度，建立手臂线条。'},
+      {name:'俄罗斯转体（加重）',duration:'3组×15次',desc:'双脚抬起，手持哑铃旋转，强化腹斜肌，塑造腰部线条。'},
+    ],
+  },
+  {
+    tag:'爆发力与运动表现',
+    desc:'适合体脂低、追求运动表现提升，包含爆发性动作。',
+    items:[
+      {name:'箱跳',duration:'3组×8次',desc:'双腿爆发跳上台阶或跳箱，落地缓冲，提升腿部爆发力和协调性。'},
+      {name:'波比跳',duration:'4组×10次',desc:'全身复合爆发动作，训练心肺和全身肌群，适合高级训练者。'},
+      {name:'哑铃深蹲翻举',duration:'3组×8次',desc:'深蹲起立后将哑铃翻至肩部，复合全身发力，接近功能性力量动作。'},
+      {name:'侧向跨步跳',duration:'3组×10次/侧',desc:'向侧方单腿起跳落地缓冲，训练侧向爆发力和踝膝稳定性。'},
+      {name:'俯卧撑击掌',duration:'3组×6次',desc:'推起时爆发击掌，要求胸肩爆发力，进阶上肢训练动作。'},
+      {name:'冲刺跑（原地）',duration:'3组×20秒',desc:'原地全力快速踏步模拟冲刺，最大心率训练，提升心肺和腿部爆发。'},
+      {name:'土耳其起身',duration:'3组×5次/侧',desc:'从躺姿持哑铃缓慢起立全程，对全身协调性和稳定性要求极高。'},
+      {name:'单腿硬拉',duration:'3组×8次/腿',desc:'单腿站立俯身，哑铃沿腿下垂，挑战臀部肌力和平衡控制。'},
+    ],
+  },
 ];
 window.generateAIPlan=async function(){
   const goal=await dbGet('diet_plans','goal')||{};
@@ -997,124 +1699,445 @@ window.generateAIPlan=async function(){
   const tw=parseFloat(goal.targetW)||0;
   if(!w){showToast('请先在「减肥计划」填写当前体重');return;}
 
-  // 根据体脂率判断偏重方向
-  // 女性>28%、男性>20% 视为偏高，以有氧为主；否则均衡
   const highFat=bf>0?(bf>25):false;
   const needLose=tw>0&&w>tw;
+  const shuffle=arr=>[...arr].sort(()=>Math.random()-.5);
 
-  // 周计划模板：5天训练2天休息
-  // 有氧为主：cardio×4 strength×1
-  // 均衡：cardio×2 strength×3
-  let schedule;
+  // 判断是否加入功能性训练
+  // bf>=30 → 方案0; 25-30 → 方案1; 20-25 → 方案2; 15-20 → 方案3; <15 → 方案4
+  let funcIdx=0;
+  if(bf>=30)funcIdx=0;
+  else if(bf>=25)funcIdx=1;
+  else if(bf>=20)funcIdx=2;
+  else if(bf>=15)funcIdx=3;
+  else funcIdx=4;
+  const funcPlan=FUNCTIONAL_PLANS[funcIdx];
+
+  // 无氧肌群库随机抽取，确保每个肌群有动作
+  const glute=shuffle(GLUTE_LIB)[0];
+  const back=shuffle(BACK_LIB)[0];
+  const core=shuffle(CORE_LIB)[0];
+  const upper=shuffle(UPPER_LIB)[0];
+
+  // 周计划安排策略（0=周一...6=周日）
+  // 同肌群至少间隔48h（2天），有氧穿插在力量之间
+  // 高体脂/减重：有氧×3 力量×2 功能×1 休×1
+  // 均衡：有氧×2 力量×3 功能×1 休×1
+  let plans;
   if(highFat||needLose){
-    // 周一有氧 周二力量 周三有氧 周四休 周五有氧 周六力量 周日有氧
-    schedule=[
-      {day:0,type:'cardio'},
-      {day:1,type:'strength'},
-      {day:2,type:'cardio'},
-      {day:4,type:'cardio'},
-      {day:5,type:'strength'},
-      {day:6,type:'cardio'},
+    // 周一有氧 周二臀腿 周三有氧 周四背+核心 周五有氧 周六上肢 周日休
+    const c=shuffle(CARDIO_LIB);
+    plans=[
+      {day:0,type:'cardio',name:c[0].name,duration:c[0].duration,desc:c[0].desc},
+      {day:1,type:'strength',name:glute.name,duration:glute.duration,desc:glute.desc,group:'臀腿'},
+      {day:2,type:'cardio',name:c[1%c.length].name,duration:c[1%c.length].duration,desc:c[1%c.length].desc},
+      {day:3,type:'strength',name:back.name,duration:back.duration,desc:back.desc,group:'背部'},
+      {day:3,type:'strength',name:core.name,duration:core.duration,desc:core.desc,group:'核心'},
+      {day:4,type:'cardio',name:c[2%c.length].name,duration:c[2%c.length].duration,desc:c[2%c.length].desc},
+      {day:5,type:'strength',name:upper.name,duration:upper.duration,desc:upper.desc,group:'上肢'},
     ];
   } else {
-    // 周一力量 周二有氧 周三力量 周四休 周五有氧 周六力量 周日休
-    schedule=[
-      {day:0,type:'strength'},
-      {day:1,type:'cardio'},
-      {day:2,type:'strength'},
-      {day:4,type:'cardio'},
-      {day:5,type:'strength'},
+    // 周一臀腿 周二有氧 周三背+核心 周四休 周五上肢 周六功能性 周日有氧
+    const c=shuffle(CARDIO_LIB);
+    const funcItems=funcPlan.items.slice(0,3);// 从功能方案取前3个动作代表
+    plans=[
+      {day:0,type:'strength',name:glute.name,duration:glute.duration,desc:glute.desc,group:'臀腿'},
+      {day:1,type:'cardio',name:c[0].name,duration:c[0].duration,desc:c[0].desc},
+      {day:2,type:'strength',name:back.name,duration:back.duration,desc:back.desc,group:'背部'},
+      {day:2,type:'strength',name:core.name,duration:core.duration,desc:core.desc,group:'核心'},
+      {day:4,type:'strength',name:upper.name,duration:upper.duration,desc:upper.desc,group:'上肢'},
+      {day:5,type:'functional',name:'功能性：'+funcPlan.tag,duration:funcItems.map(fi=>fi.name).join('、'),desc:funcPlan.desc},
+      {day:6,type:'cardio',name:c[1%c.length].name,duration:c[1%c.length].duration,desc:c[1%c.length].desc},
     ];
   }
 
-  // 打乱库顺序随机选
-  const shuffle=arr=>[...arr].sort(()=>Math.random()-.5);
-  const cardioPool=shuffle(CARDIO_LIB);
-  const strengthPool=shuffle(STRENGTH_LIB);
-  let ci=0,si=0;
-  const plans=schedule.map(s=>{
-    if(s.type==='cardio'){const c=cardioPool[ci++%cardioPool.length];return{day:s.day,type:'cardio',name:c.name,duration:c.duration,desc:c.desc};}
-    else{const c=strengthPool[si++%strengthPool.length];return{day:s.day,type:'strength',name:c.name,duration:c.duration,desc:c.desc};}
-  });
-
   const advice=highFat
-    ?`体脂率偏高，以有氧燃脂为主，搭配力量保肌，训练后注意控制饮食摄入。`
-    :`体重/体脂较理想，均衡安排有氧与力量，维持体型同时提升肌肉量。`;
+    ?`体脂率偏高（${bf}%），以有氧燃脂为主，穿插分化力量保肌，同肌群间隔48h充分恢复。`
+    :needLose
+    ?`体重高于目标${(w-tw).toFixed(1)}kg，有氧力量均衡安排，搭配功能性训练（${funcPlan.tag}），提升代谢效率。`
+    :`体重/体脂良好，均衡力量+功能性训练（${funcPlan.tag}），维持体型兼顾运动表现。`;
 
   showAIPlanModal({advice,plans});
 };
 window.showAIPlanModal=function(plan){
+  window._aiPlan=plan;
   const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const typeLabel=t=>t==='cardio'?'有氧':t==='functional'?'功能性':'力量';
+  const typeCls=t=>t==='cardio'?'cardio':t==='functional'?'functional':'strength';
   const rows=plan.plans.map(p=>`
     <div style="padding:10px;border-radius:10px;background:rgba(215,189,226,.12);margin-bottom:8px;border:1px solid var(--bd)">
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
         <span style="font-size:12px;font-weight:700;color:var(--ink2)">${wdays[p.day]}</span>
-        <span class="sp-type ${p.type==='cardio'?'cardio':'strength'}">${p.type==='cardio'?'有氧':'力量'}</span>
+        <span class="sp-type ${typeCls(p.type)}">${typeLabel(p.type)}${p.group?'·'+p.group:''}</span>
         <span style="font-weight:700;font-size:13px">${p.name}</span>
         <span style="margin-left:auto;font-size:12px;color:var(--ink3)">${p.duration}</span>
       </div>
       <div style="font-size:12px;color:var(--ink3);line-height:1.55">${p.desc}</div>
     </div>`).join('');
-  openMo(`<div class="mt">🤖 AI 健身教练方案</div>
+  openMo(`<div style="display:flex;align-items:center;gap:8px;margin-bottom:13px">
+    <div class="mt" style="margin-bottom:0;flex:1">🤖 AI 健身教练方案</div>
+    <button class="btn bg bsm" onclick="generateAIPlan()" title="换一组方案">🔄</button>
+  </div>
     ${plan.advice?`<div style="font-size:13px;color:var(--ink2);background:rgba(174,214,241,.2);border-radius:10px;padding:9px 12px;margin-bottom:12px">💡 ${plan.advice}</div>`:''}
     ${rows}
-    <button class="btn bp" style="width:100%;margin-top:4px" onclick="importAIPlan(${JSON.stringify(plan).replace(/'/g,'&#39;')})">✅ 一键导入本周计划</button>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="importAIPlan()">✅ 一键导入本周计划</button>
     <button class="btn bg bsm" style="width:100%;margin-top:8px" onclick="closeMo()">暂不导入</button>`);
 };
-window.importAIPlan=async function(plan){
+window.importAIPlan=async function(){
+  const plan=window._aiPlan;if(!plan)return;
   const wid=getWeekId();await ensureWeek();
   const cur=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
-  const newItems=plan.plans.map((p,i)=>({id:'sp_ai_'+Date.now()+'_'+i,day:p.day,type:p.type,name:p.name+(p.desc?' ('+p.desc.slice(0,20)+'...)':''),duration:p.duration}));
+  const newItems=plan.plans.map((p,i)=>({id:'sp_ai_'+Date.now()+'_'+i,day:p.day,type:p.type==='functional'?'cardio':p.type,name:p.name,duration:p.duration}));
   cur.items=[...cur.items,...newItems];
   await dbPut('sport_plans',cur);
   closeMo();renderSport();renderHome();showToast('AI 计划已导入 💪');
 };
+// ═══ GYM (动作库) ═══
+function renderGym(){
+  const el=document.getElementById('pg-gym');
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const categories=[
+    {id:'cardio',label:'有氧',color:'#AED6F1',lib:CARDIO_LIB,type:'cardio'},
+    {id:'glute',label:'臀腿',color:'#FFB7C5',lib:GLUTE_LIB,type:'strength'},
+    {id:'back',label:'背部',color:'#B5EAD7',lib:BACK_LIB,type:'strength'},
+    {id:'core',label:'核心',color:'#FFF0A8',lib:CORE_LIB,type:'strength'},
+    {id:'upper',label:'上肢',color:'#D7BDE2',lib:UPPER_LIB,type:'strength'},
+    {id:'func',label:'功能性训练',color:'#FFCBA4',lib:null,plans:FUNCTIONAL_PLANS},
+  ];
+  const anchors=categories.map(c=>`<span class="gym-anchor" onclick="gymScrollTo('gym-cat-${c.id}')">${c.label}</span>`).join('');
+  let sectHtml='';
+  for(const cat of categories){
+    sectHtml+=`<div id="gym-cat-${cat.id}" style="scroll-margin-top:60px">
+      <div class="ct" style="margin-top:8px"><span style="padding:3px 10px;border-radius:8px;background:${cat.color}44;color:var(--ink)">${cat.label}</span></div>`;
+    if(cat.lib){
+      cat.lib.forEach((ex,idx)=>{
+        sectHtml+=`<div class="gym-ex-card">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="gym-ex-name">${idx+1}. ${ex.name}</div>
+            <span class="gym-ex-dur" style="margin-left:auto">${ex.duration}</span>
+          </div>
+          <div class="gym-ex-desc">${ex.desc}</div>
+          <button class="btn bg bxs gym-ex-add" onclick="gymAddExercise(${JSON.stringify({name:ex.name,duration:ex.duration,type:cat.type}).replace(/"/g,"'")})">+ 加入计划</button>
+        </div>`;
+      });
+    } else {
+      // 功能性方案
+      cat.plans.forEach((plan,pi)=>{
+        sectHtml+=`<div class="card" style="--accent:var(--p2);margin-bottom:8px">
+          <div class="ct"><span style="font-weight:800">${plan.tag}</span><span style="font-size:11px;color:var(--ink3)">${plan.items.length}个动作</span></div>
+          <div style="font-size:12px;color:var(--ink2);margin-bottom:8px">${plan.desc}</div>`;
+        plan.items.forEach((it,ii)=>{
+          sectHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:flex-start">
+            <span style="font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0;margin-top:1px">${ii+1}</span>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:700">${it.name} <span style="font-weight:400;color:var(--ink3)">${it.duration}</span></div>
+              <div style="font-size:11px;color:var(--ink3);line-height:1.5">${it.desc}</div>
+            </div>
+          </div>`;
+        });
+        sectHtml+=`<button class="btn bg bsm" style="width:100%;margin-top:8px" onclick="gymAddFunctional(${pi})">+ 将整套方案加入计划</button>
+        </div>`;
+      });
+    }
+    sectHtml+='</div>';
+  }
+  el.innerHTML=`
+<div class="ph"><h1>💪 动作库</h1></div>
+<div class="gym-anchor-bar">${anchors}</div>
+${sectHtml}`;
+}
+window.gymScrollTo=function(id){
+  const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+};
+window.gymAddExercise=function(exStr){
+  const ex=typeof exStr==='string'?JSON.parse(exStr.replace(/'/g,'"')):exStr;
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const opts=wdays.map((d,i)=>`<button class="btn bg bsm" style="flex:1" onclick="gymDoAdd(${i},'${ex.name}','${ex.duration}','${ex.type}')">+${d}</button>`).join('');
+  openMo(`<div class="mt">📅 加入哪天计划？</div>
+    <div style="font-weight:700;font-size:14px;margin-bottom:12px">${ex.name} · ${ex.duration}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${opts}</div>`);
+};
+window.gymDoAdd=async function(day,name,duration,type){
+  const wid=getWeekId();await ensureWeek();
+  const cur=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  cur.items.push({id:'sp_'+Date.now(),day,type,name,duration});
+  await dbPut('sport_plans',cur);
+  closeMo();showToast('已加入计划 💪');
+};
+window.gymAddFunctional=async function(planIdx){
+  const plan=FUNCTIONAL_PLANS[planIdx];
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const opts=wdays.map((d,i)=>`<button class="btn bg bsm" style="flex:1" onclick="gymDoAddFunctional(${i},${planIdx})">+${d}</button>`).join('');
+  openMo(`<div class="mt">📅 「${plan.tag}」加入哪天？</div>
+    <div style="font-size:12px;color:var(--ink3);margin-bottom:12px">${plan.items.length}个动作将整体写入当天计划</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${opts}</div>`);
+};
+window.gymDoAddFunctional=async function(day,planIdx){
+  const plan=FUNCTIONAL_PLANS[planIdx];
+  const wid=getWeekId();await ensureWeek();
+  const cur=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  plan.items.forEach((it,i)=>{
+    cur.items.push({id:'sp_f_'+Date.now()+'_'+i,day,type:'cardio',name:'[功能]'+it.name,duration:it.duration});
+  });
+  await dbPut('sport_plans',cur);
+  closeMo();showToast(`已加入${plan.items.length}个动作 💪`);
+};
 // ═══ LIFE ═══
+const TODO_CATS=['工作','学习','生活','购物','健康','其他'];
+const TODO_PRIS=[{k:'high',label:'高',color:'#E53935'},{k:'mid',label:'中',color:'#F39C12'},{k:'low',label:'低',color:'#27AE60'}];
 async function renderLife(){
   const el=document.getElementById('pg-life');
   const todos=await dbAll('todos');
-  const pending=todos.filter(t=>!t.done).sort((a,b)=>a.ts-b.ts);
-  const done=todos.filter(t=>t.done).sort((a,b)=>b.ts-a.ts).slice(0,10);
-  const overdue=t=>{if(!t.dueDate)return false;return t.dueDate<todayKey();};
-  const pRows=pending.map(t=>`<div class="trow">
-    <button class="tchk" onclick="togTodo('${t.id}')"></button>
-    <div style="flex:1">
-      <div style="font-size:13px;color:${overdue(t)?'#E53935':'var(--ink)'}">${t.name}</div>
-      ${t.dueDate?`<div style="font-size:11px;color:${overdue(t)?'#E53935':'var(--ink3)'};margin-top:1px">📅 ${t.dueDate}${overdue(t)?' 已超期':''}</div>`:''}
-    </div>
-    <button class="tdel" onclick="delTodo('${t.id}')">×</button>
-  </div>`).join('')||'<div class="empty">今天暂无待办 ✨</div>';
-  const dRows=done.map(t=>`<div class="trow" style="opacity:.48">
-    <div class="tchk done" style="width:20px;height:20px;border-radius:50%;background:var(--ga);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+  const today=todayKey();
+
+  // ── 每日调理打卡 ──
+  const TL_DEFAULT=[
+    {id:'tl1',group:'作息固本',text:'23:00前入睡，7-8点起床，周末作息差不超1小时'},
+    {id:'tl2',group:'饮食扶正',text:'戒所有冰饮冰食，只喝温饮温水'},
+    {id:'tl3',group:'饮食扶正',text:'忌口油炸、辛辣、高糖甜品'},
+    {id:'tl4',group:'饮食扶正',text:'每餐七分饱，细嚼慢咽'},
+    {id:'tl5',group:'饮食扶正',text:'保证优质蛋白+足量绿叶菜，常吃健脾食材'},
+    {id:'tl6',group:'日常习惯',text:'饭后站立/慢走10分钟'},
+    {id:'tl7',group:'日常习惯',text:'每坐1小时起身活动3-5分钟'},
+    {id:'tl8',group:'日常习惯',text:'睡前温水泡脚10分钟'},
+    {id:'tl9',group:'日常习惯',text:'每日5分钟腹式呼吸'},
+    {id:'tl10',group:'轻量运动',text:'每日20-30分钟温和运动（快走/八段锦等，忌大汗）'},
+    {id:'tl11',group:'情绪与护理',text:'少急躁焦虑，平稳情绪'},
+    {id:'tl12',group:'情绪与护理',text:'温水清洁外阴，不冲阴道；内裤每日换洗暴晒'},
+    {id:'tl13',group:'情绪与护理',text:'同房全程规范使用安全套'},
+  ];
+  // 加载持久化条目，首次写入默认值
+  let tlCfg=await dbGet('todos','tl_items');
+  if(!tlCfg){tlCfg={id:'tl_items',items:TL_DEFAULT};await dbPut('todos',tlCfg);}
+  const TL_ITEMS=tlCfg.items||TL_DEFAULT;
+
+  // 今日打卡状态：没有则从昨天条目结构新建（done清空）
+  const tlLogKey='tl_log_'+today;
+  let tlLog=await dbGet('todos',tlLogKey);
+  if(!tlLog){tlLog={id:tlLogKey,done:[]};await dbPut('todos',tlLog);}
+  const tlDone=tlLog.done||[];
+  const tlTotal=TL_ITEMS.length;
+  const tlDoneCount=tlDone.length;
+  const tlPct=Math.round(tlDoneCount/tlTotal*100);
+
+  // group items
+  const editing=!!window._tlEditing;
+  const groups={};
+  TL_ITEMS.forEach(it=>{if(!groups[it.group])groups[it.group]=[];groups[it.group].push(it);});
+  let tlHtml='';
+  for(const [gname,items] of Object.entries(groups)){
+    tlHtml+=`<div class="tl-group-label">${gname}</div>`;
+    items.forEach(it=>{
+      const done=tlDone.includes(it.id);
+      if(editing){
+        tlHtml+=`<div class="tl-item">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--bd);flex-shrink:0;margin-top:6px"></div>
+          <div class="tl-text" style="flex:1">${it.text}</div>
+          <button class="tdel" onclick="delTlItem('${it.id}')" style="flex-shrink:0">×</button>
+        </div>`;
+      } else {
+        tlHtml+=`<div class="tl-item">
+          <div class="tl-chk${done?' done':''}" onclick="togTl('${it.id}')">${done?'✓':''}</div>
+          <div class="tl-text${done?' done':''}" style="flex:1">${it.text}</div>
+        </div>`;
+      }
+    });
+  }
+  const filterCat=window._lifeCat||'all';
+  const filterPri=window._lifePri||'all';
+  let pending=todos.filter(t=>!t.done);
+  if(filterCat!=='all')pending=pending.filter(t=>(t.cat||'其他')===filterCat);
+  if(filterPri!=='all')pending=pending.filter(t=>(t.pri||'mid')===filterPri);
+  // sort: overdue first, then by priority, then by dueDate
+  const priOrder={high:0,mid:1,low:2};
+  const overdue=t=>t.dueDate&&t.dueDate<today;
+  pending.sort((a,b)=>{
+    const ao=overdue(a)?-1:0,bo=overdue(b)?-1:0;
+    if(ao!==bo)return ao-bo;
+    const ap=priOrder[a.pri||'mid'],bp=priOrder[b.pri||'mid'];
+    if(ap!==bp)return ap-bp;
+    if(a.dueDate&&b.dueDate)return a.dueDate.localeCompare(b.dueDate);
+    return a.ts-b.ts;
+  });
+  const done=todos.filter(t=>t.done).sort((a,b)=>b.ts-a.ts).slice(0,8);
+
+  const catTags=['all',...TODO_CATS].map(c=>`<span class="gym-anchor${filterCat===c?' active':''}" onclick="lifeFilterCat('${c}')" style="font-size:11px;padding:3px 9px">${c==='all'?'全部':c}</span>`).join('');
+  const priTags=[{k:'all',label:'全部',color:'var(--ink3)'},...TODO_PRIS].map(p=>`<span class="gym-anchor${filterPri===p.k?' active':''}" onclick="lifeFilterPri('${p.k}')" style="font-size:11px;padding:3px 9px;color:${p.color||'var(--ink3)'}">${p.label}</span>`).join('');
+
+  const pRows=pending.map(t=>{
+    const od=overdue(t);
+    const pri=TODO_PRIS.find(p=>p.k===(t.pri||'mid'))||TODO_PRIS[1];
+    const cc=CAT_COLORS[t.cat]||'#E8D5F5';
+    return`<div class="trow" style="${od?'background:rgba(229,57,53,.04);border-radius:8px;':''}" >
+      <button class="tchk" onclick="togTodo('${t.id}')"></button>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;color:${od?'#E53935':'var(--ink)'};word-break:break-all">${t.name}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:3px;align-items:center">
+          <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;background:${pri.color}22;color:${pri.color}">${pri.label}优先</span>
+          ${t.cat?`<span style="font-size:10px;padding:1px 6px;border-radius:5px;background:${cc}44;color:var(--ink2)">${t.cat}</span>`:''}
+          ${t.dueDate?`<span style="font-size:10px;color:${od?'#E53935':'var(--ink3)'}">${t.dueDate}${od?' ⚠️超期':''}</span>`:''}
+        </div>
+      </div>
+      <button class="tdel" onclick="delTodo('${t.id}')">×</button>
+    </div>`;
+  }).join('')||`<div class="empty">${filterCat!=='all'||filterPri!=='all'?'没有符合筛选的待办':'今天暂无待办 ✨'}</div>`;
+
+  const dRows=done.map(t=>`<div class="trow" style="opacity:.45">
+    <div style="width:20px;height:20px;border-radius:50%;background:var(--ga);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
     <span style="flex:1;font-size:13px;text-decoration:line-through;color:var(--ink3)">${t.name}</span>
   </div>`).join('');
+
+  // stats
+  const highPending=todos.filter(t=>!t.done&&t.pri==='high').length;
+  const overdueCount=todos.filter(t=>!t.done&&overdue(t)).length;
+
+  // ── 早睡打卡 ──
+  const sleepCfg=(await dbGet('todos','sleep_cfg'))||{id:'sleep_cfg',target:'23:00'};
+  const sleepTarget=sleepCfg.target||'23:00';
+  const sleepRows=(()=>{
+    const rows=[];
+    for(let i=6;i>=0;i--){
+      const d=new Date();d.setDate(d.getDate()-i);
+      const dk=d.toISOString().slice(0,10);
+      const label=['日','一','二','三','四','五','六'][d.getDay()];
+      rows.push({dk,label});
+    }
+    return rows;
+  })();
+  const sleepLogs=await Promise.all(sleepRows.map(r=>dbGet('todos','sleep_'+r.dk)));
+  const sleepCardRows=sleepRows.map((r,i)=>{
+    const log=sleepLogs[i];const actual=log?.time||'';const isToday=r.dk===today;
+    let dotClass='none',statusTxt='未记录';
+    if(actual){
+      const [sh,sm]=actual.split(':').map(Number);
+      const [th,tm]=sleepTarget.split(':').map(Number);
+      const late=(sh*60+sm)>(th*60+tm)&&!(sh>=0&&sh<6);
+      dotClass=late?'late':'ok';statusTxt=actual+(late?' 偏晚':' 准时');
+    }
+    return`<div class="sleep-row">
+      <div class="sleep-dot ${dotClass}"></div>
+      <div style="flex:1;font-size:13px;color:var(--ink)">周${r.label} <span style="font-size:11px;color:var(--ink3)">${r.dk.slice(5).replace('-','/')}</span></div>
+      <div style="font-size:12px;color:${dotClass==='ok'?'#27AE60':dotClass==='late'?'#C46B2A':'var(--ink3)'}">${statusTxt}</div>
+      ${isToday?`<input type="time" class="inp" value="${actual}" style="width:90px;font-size:12px;padding:4px 7px" onchange="saveSleep('${r.dk}',this.value)">`:''}
+    </div>`;
+  }).join('');
+
   el.innerHTML=`
 <div class="ph"><h1>✅ 日常生活</h1></div>
-<div class="card" style="--accent:var(--p2)">
-  <div class="ct">待办清单 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${pending.length} 项待完成</span></div>
-  ${pRows}
-  ${dRows?`<hr class="sep">${dRows}`:''}
-  <hr class="sep">
-  <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
-    <input class="inp" id="tdName" placeholder="添加待办事项…">
-    <div style="display:flex;gap:7px">
-      <input class="inp" id="tdDate" type="date" style="flex:1;font-size:12px">
-      <button class="btn bp bsm" onclick="addTodo()" style="flex-shrink:0">+ 添加</button>
+<div class="card" style="--accent:var(--p4)">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="ct" style="margin:0">每日调理打卡</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      ${editing
+        ? `<button class="btn badd" onclick="addTlItem()">＋ 添加</button>
+           <button class="btn bg bsm" style="background:var(--p4);color:#fff" onclick="saveTlEdit()">保存</button>`
+        : `<div style="font-size:13px;font-weight:800;color:#52BE80">${tlDoneCount}/${tlTotal}</div>
+           <button class="btn bg bxs" onclick="enterTlEdit()">编辑</button>`
+      }
     </div>
   </div>
+  <div class="tl-prog-wrap"><div class="tl-prog-track"><div class="tl-prog-fill" style="width:${tlPct}%"></div></div></div>
+  ${tlHtml}
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px">
+  <div class="money-stat"><div class="money-stat-val">${todos.filter(t=>!t.done).length}</div><div class="money-stat-lbl">待完成</div></div>
+  <div class="money-stat" style="background:rgba(229,57,53,.07);border-color:rgba(229,57,53,.2)"><div class="money-stat-val" style="color:#E53935">${overdueCount}</div><div class="money-stat-lbl">已超期</div></div>
+  <div class="money-stat" style="background:rgba(243,156,18,.07);border-color:rgba(243,156,18,.2)"><div class="money-stat-val" style="color:#F39C12">${highPending}</div><div class="money-stat-lbl">高优先</div></div>
+</div>
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">筛选</div>
+  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">${catTags}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:5px">${priTags}</div>
+</div>
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">待办事项 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${pending.length} 项</span></div>
+  ${pRows}
+  ${dRows?`<details style="margin-top:8px"><summary style="font-size:12px;color:var(--ink3);cursor:pointer;list-style:none">▸ 已完成（${done.length}）</summary><div style="margin-top:6px">${dRows}</div></details>`:''}
+</div>
+<div class="card" style="--accent:var(--p3)">
+  <div class="ct">➕ 添加待办</div>
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <input class="inp" id="tdName" placeholder="待办内容…">
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <input class="inp" id="tdDate" type="date" style="width:130px;font-size:12px">
+      <select class="inp" id="tdCat" style="width:80px;font-size:12px">
+        ${TODO_CATS.map(c=>`<option>${c}</option>`).join('')}
+      </select>
+      <select class="inp" id="tdPri" style="width:70px;font-size:12px">
+        ${TODO_PRIS.map(p=>`<option value="${p.k}">${p.label}优先</option>`).join('')}
+      </select>
+    </div>
+    <button class="btn bp bsm" style="width:100%" onclick="addTodo()">+ 添加</button>
+  </div>
+</div>
+<div class="card" style="--accent:var(--p7)">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div class="ct" style="margin:0">早睡打卡</div>
+    <button class="btn bg bxs" onclick="setSleepTarget()">目标 ${sleepTarget}</button>
+  </div>
+  <div style="font-size:11px;color:var(--ink3);margin:5px 0 8px">今日实际入睡时间 ↓ 右侧选择，近7天记录如下</div>
+  ${sleepCardRows}
 </div>`;
 }
+window.lifeFilterCat=function(c){window._lifeCat=c;renderLife();};
+window.lifeFilterPri=function(p){window._lifePri=p;renderLife();};
 window.addTodo=async function(){
   const name=document.getElementById('tdName').value.trim();if(!name)return;
   const dueDate=document.getElementById('tdDate').value||'';
-  await dbPut('todos',{id:'td_'+Date.now(),name,done:false,dueDate,ts:Date.now()});
+  const cat=document.getElementById('tdCat')?.value||'其他';
+  const pri=document.getElementById('tdPri')?.value||'mid';
+  await dbPut('todos',{id:'td_'+Date.now(),name,done:false,dueDate,cat,pri,ts:Date.now()});
   document.getElementById('tdName').value='';document.getElementById('tdDate').value='';
   renderLife();
 };
 window.togTodo=async function(id){const t=await dbGet('todos',id);if(!t)return;t.done=!t.done;await dbPut('todos',t);renderLife();};
+window.togTl=async function(id){
+  const today=todayKey();const key='tl_log_'+today;
+  const log=(await dbGet('todos',key))||{id:key,done:[]};
+  const idx=log.done.indexOf(id);
+  if(idx>-1)log.done.splice(idx,1);else log.done.push(id);
+  await dbPut('todos',log);renderLife();
+};
+window.togTlHome=async function(id){
+  const today=todayKey();const key='tl_log_'+today;
+  const log=(await dbGet('todos',key))||{id:key,done:[]};
+  if(!log.done.includes(id))log.done.push(id);
+  await dbPut('todos',log);renderHome();
+};
+window.saveSleep=async function(date,time){
+  await dbPut('todos',{id:'sleep_'+date,date,time});renderLife();
+};
+window.addTlItem=function(){
+  openMo(`<div class="mt">添加打卡项目</div>
+    <div class="mrow"><span class="ml">分组名称</span><input class="inp" id="tlGroup" placeholder="如：日常习惯"></div>
+    <div class="mrow"><span class="ml">打卡内容</span><input class="inp" id="tlText" placeholder="具体内容…"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveTlItem()">添加</button>`);
+};
+window.saveTlItem=async function(){
+  const group=document.getElementById('tlGroup').value.trim();
+  const text=document.getElementById('tlText').value.trim();
+  if(!group||!text){showToast('请填写完整');return;}
+  const cfg=await dbGet('todos','tl_items')||{id:'tl_items',items:[]};
+  cfg.items.push({id:'tl_'+Date.now(),group,text});
+  await dbPut('todos',cfg);
+  closeMo();renderLife();
+};
+window.delTlItem=async function(id){
+  const cfg=await dbGet('todos','tl_items');if(!cfg)return;
+  cfg.items=cfg.items.filter(it=>it.id!==id);
+  await dbPut('todos',cfg);renderLife();
+};
+window.enterTlEdit=function(){window._tlEditing=true;renderLife();};
+window.saveTlEdit=function(){window._tlEditing=false;renderLife();showToast('打卡内容已保存');};
+window.setSleepTarget=async function(){
+  const cfg=(await dbGet('todos','sleep_cfg'))||{id:'sleep_cfg',target:'23:00'};
+  const val=prompt('目标入睡时间（如 23:00）',cfg.target||'23:00');
+  if(!val||!/^\d{1,2}:\d{2}$/.test(val.trim()))return;
+  cfg.target=val.trim();await dbPut('todos',cfg);renderLife();
+};
 window.delTodo=async function(id){await dbDel('todos',id);renderLife();};
 // ═══ DIET ═══
-const MEALS=['早餐','午餐','晚餐','加餐'];
+const MEALS=['早餐','午餐','晚餐'];
 async function renderDiet(){
   const el=document.getElementById('pg-diet');
   const wdays=['周一','周二','周三','周四','周五','周六','周日'];
@@ -1138,14 +2161,55 @@ async function renderDiet(){
     <div style="margin-top:8px"><span class="ml">今日饮水 ml</span><input class="inp" type="number" value="${waterRec.amount||0}" oninput="saveTodayWater(this.value)"></div>
   </div>`;
 
-  const wlCard=`<div class="card" style="--accent:var(--p3)">
-    <div class="ct">⚖️ 体重记录 <button class="btn badd" onclick="addWeight()">＋</button></div>
-    ${recent.map(e=>`<div class="weight-row">
-      <span style="color:var(--ink2)">${e.date}</span>
+  const wlCard=(()=>{
+    const entries=wl.entries.slice(-14);
+    if(!entries.length)return`<div class="card" style="--accent:var(--p3)">
+      <div class="ct">⚖️ 体重记录 <button class="btn badd" onclick="addWeight()">＋</button></div>
+      <div class="empty">暂无记录</div></div>`;
+    const vals=entries.map(e=>parseFloat(e.w));
+    const minV=Math.min(...vals),maxV=Math.max(...vals);
+    const range=maxV-minV||1;
+    const W=320,H=80,PAD=6,PW=W-PAD*2;
+    const x=(i)=>PAD+i*(PW/(entries.length-1||1));
+    const y=(v)=>PAD+(1-(v-minV)/range)*(H-PAD*2);
+    const pts=entries.map((e,i)=>`${x(i).toFixed(1)},${y(parseFloat(e.w)).toFixed(1)}`).join(' ');
+    const area=`${PAD},${H-PAD} `+entries.map((e,i)=>`${x(i).toFixed(1)},${y(parseFloat(e.w)).toFixed(1)}`).join(' ')+` ${x(entries.length-1).toFixed(1)},${H-PAD}`;
+    const dots=entries.map((e,i)=>{
+      const cx=x(i).toFixed(1),cy=y(parseFloat(e.w)).toFixed(1);
+      const isLast=i===entries.length-1;
+      return`<circle cx="${cx}" cy="${cy}" r="${isLast?4:2.5}" fill="${isLast?'#52BE80':'#7DCEA0'}" stroke="#fff" stroke-width="1.5"/>`;
+    }).join('');
+    const lastE=entries[entries.length-1];
+    const prevE=entries[entries.length-2];
+    const diff=prevE?(parseFloat(lastE.w)-parseFloat(prevE.w)).toFixed(1):null;
+    const diffStr=diff===null?'':(diff>0?`+${diff}`:diff)+' kg';
+    const diffColor=diff>0?'#E53935':'#27AE60';
+    const recentRows=entries.slice(-5).reverse().map(e=>`<div class="weight-row">
+      <span style="color:var(--ink2)">${e.date.slice(5).replace('-','/')}</span>
       <span style="font-weight:700">${e.w} kg</span>
-      ${goal.targetW?`<span style="font-size:12px;color:${parseFloat(e.w)<=parseFloat(goal.targetW)?'#27AE60':'var(--p8)'}">${parseFloat(e.w)<=parseFloat(goal.targetW)?'🎉 达标':'继续加油'}</span>`:''}
-    </div>`).join('')||'<div class="empty">暂无记录</div>'}
-  </div>`;
+      ${goal.targetW?`<span style="font-size:11px;color:${parseFloat(e.w)<=parseFloat(goal.targetW)?'#27AE60':'var(--ink3)'}">${parseFloat(e.w)<=parseFloat(goal.targetW)?'达标':'距目标 '+(parseFloat(e.w)-parseFloat(goal.targetW)).toFixed(1)+'kg'}</span>`:''}
+    </div>`).join('');
+    return`<div class="card" style="--accent:var(--p3)">
+      <div class="ct">⚖️ 体重趋势 <button class="btn badd" onclick="addWeight()">＋</button></div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px">
+        <span style="font-size:28px;font-weight:900;color:var(--ink)">${lastE.w}</span>
+        <span style="font-size:13px;color:var(--ink3)">kg</span>
+        ${diff!==null?`<span style="font-size:12px;font-weight:700;color:${diffColor}">${diffStr}</span>`:''}
+        ${goal.targetW?`<span style="font-size:11px;color:var(--ink3);margin-left:auto">目标 ${goal.targetW}kg</span>`:''}
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:80px;overflow:visible">
+        ${goal.targetW&&minV<=parseFloat(goal.targetW)&&parseFloat(goal.targetW)<=maxV?`<line x1="${PAD}" y1="${y(parseFloat(goal.targetW)).toFixed(1)}" x2="${W-PAD}" y2="${y(parseFloat(goal.targetW)).toFixed(1)}" stroke="#27AE60" stroke-width="1" stroke-dasharray="4,3" opacity=".6"/>`:''}
+        <polyline points="${area}" fill="rgba(125,206,160,.15)" stroke="none"/>
+        <polyline points="${pts}" fill="none" stroke="#7DCEA0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        ${dots}
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin:2px 0 10px;padding:0 ${PAD}px">
+        <span>${entries[0].date.slice(5).replace('-','/')}</span>
+        <span>${entries[entries.length-1].date.slice(5).replace('-','/')}</span>
+      </div>
+      ${recentRows}
+    </div>`;
+  })();
 
   let planH=`<div class="card" style="--accent:var(--p2)"><div class="ct">🍽️ 本周饮食计划</div>`;
   wdays.forEach((d,di)=>{
@@ -1194,6 +2258,22 @@ window.saveMeal=async function(inp){
   const plan=await dbGet('diet_plans','weekly')||{id:'weekly',days:{}};
   const di=inp.dataset.di;if(!plan.days[di])plan.days[di]={};
   plan.days[di][inp.dataset.meal]=inp.value;await dbPut('diet_plans',plan);
+};
+window.saveMealBody=async function(inp){
+  const plan=await dbGet('diet_plans','weekly')||{id:'weekly',days:{}};
+  const di=inp.dataset.di;if(!plan.days[di])plan.days[di]={};
+  plan.days[di][inp.dataset.meal]=inp.value;
+  await dbPut('diet_plans',plan);
+  // update kcal total in place
+  const dd=plan.days[di]||{};
+  const MEALS3=['早餐','午餐','晚餐'];
+  const total=MEALS3.reduce((s,m)=>s+(parseFloat(dd[m+'_k'])||0),0);
+  const el=document.getElementById('bodyKcalTotal');
+  if(el){
+    const deficitGoal=parseInt(el.closest('.card')?.dataset.deficit||0)||0;
+    el.innerHTML=`${total} <span style="font-size:11px;font-weight:400;color:var(--ink3)">kcal</span>`;
+    el.style.color=total>0?'#27AE60':'var(--ink)';
+  }
 };
 window.addWeight=function(){
   openMo(`<div class="mt">⚖️ 记录体重</div>
@@ -1321,9 +2401,724 @@ window.doChangePw=function(){
   if(p1!==p2){showToast('两次不一致');return;}
   localStorage.setItem(PW_KEY,p1);closeMo();showToast(p1?'密码已修改':'密码已取消');renderGarden();
 };
+// ═══ MONEY (记账本) ═══
+const MONEY_CATS=['餐饮','购物','娱乐','交通','美容','聚会','学习','其他'];
+const CAT_COLORS={'餐饮':'#FFB7C5','购物':'#FFCBA4','娱乐':'#D7BDE2','交通':'#AED6F1','美容':'#F1C6E7','聚会':'#B5EAD7','学习':'#FFF0A8','其他':'#E8D5F5'};
+const CAT_DARK={'餐饮':'#E05252','购物':'#D4830A','娱乐':'#9B59B6','交通':'#2980B9','美容':'#C0406A','聚会':'#27AE60','学习':'#B7950B','其他':'#7F8C8D'};
+function buildPieChart(entries){
+  const totals={};MONEY_CATS.forEach(c=>{totals[c]=0;});
+  entries.forEach(e=>{if(totals[e.cat]!==undefined)totals[e.cat]+=e.amount||0;else totals['其他']+=e.amount||0;});
+  const cats=MONEY_CATS.filter(c=>totals[c]>0);
+  if(!cats.length)return'<div class="empty">本月暂无消费数据</div>';
+  const total=cats.reduce((s,c)=>s+totals[c],0);
+  const cx=80,cy=80,r=70;
+  let startAngle=-Math.PI/2;
+  let paths='',labels='';
+  cats.forEach(c=>{
+    const pct=totals[c]/total;
+    const angle=pct*2*Math.PI;
+    const endAngle=startAngle+angle;
+    const x1=cx+r*Math.cos(startAngle),y1=cy+r*Math.sin(startAngle);
+    const x2=cx+r*Math.cos(endAngle),y2=cy+r*Math.sin(endAngle);
+    const lg=angle>Math.PI?1:0;
+    paths+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${CAT_DARK[c]}" stroke="#fff" stroke-width="1.5" opacity=".85"/>`;
+    if(pct>0.07){
+      const midA=startAngle+angle/2;
+      const lx=cx+(r*0.62)*Math.cos(midA),ly=cy+(r*0.62)*Math.sin(midA);
+      labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="9" font-weight="700">${Math.round(pct*100)}%</text>`;
+    }
+    startAngle=endAngle;
+  });
+  const legendItems=cats.map(c=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px">
+    <span style="width:10px;height:10px;border-radius:2px;background:${CAT_DARK[c]};flex-shrink:0;display:inline-block;opacity:.85"></span>
+    <span style="color:var(--ink2)">${c}</span>
+    <span style="color:var(--ink3);margin-left:auto">¥${totals[c].toFixed(0)}</span>
+  </div>`).join('');
+  return`<div style="display:flex;gap:12px;align-items:flex-start">
+    <svg width="160" height="160" viewBox="0 0 160 160" style="flex-shrink:0">${paths}${labels}<circle cx="${cx}" cy="${cy}" r="28" fill="#fff"/><text x="${cx}" y="${cy-5}" text-anchor="middle" font-size="9" fill="var(--ink3)">总计</text><text x="${cx}" y="${cy+9}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--ink)">¥${total.toFixed(0)}</text></svg>
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;padding-top:8px">${legendItems}</div>
+  </div>`;
+}
+async function renderMoney(){
+  const el=document.getElementById('pg-money');
+  const now=new Date();
+  const viewMonth=window._moneyView||(window._moneyView={y:now.getFullYear(),m:now.getMonth()});
+  const ym=`${viewMonth.y}-${String(viewMonth.m+1).padStart(2,'0')}`;
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  const allEntries=await dbAll('ledger');
+  const entries=allEntries.filter(e=>e.id!=='cfg'&&e.date&&e.date.startsWith(ym)).sort((a,b)=>b.date.localeCompare(a.date));
+  const totalSpent=entries.reduce((s,e)=>s+(e.amount||0),0);
+  const totalFixed=(cfg.fixed||[]).reduce((s,f)=>s+(f.amount||0),0);
+  const budget=cfg.budget||0;
+  const remain=budget-totalFixed-totalSpent;
+  const pct=budget>0?Math.min(100,(totalFixed+totalSpent)/budget*100):0;
+  const barColor=pct<60?'#52BE80':pct<85?'#F4D03F':'#E53935';
+  const isThisMonth=viewMonth.y===now.getFullYear()&&viewMonth.m===now.getMonth();
+  const prevM=()=>{let m=viewMonth.m-1,y=viewMonth.y;if(m<0){m=11;y--;}window._moneyView={y,m};renderMoney();};
+  const nextM=()=>{let m=viewMonth.m+1,y=viewMonth.y;if(m>11){m=0;y++;}window._moneyView={y,m};renderMoney();};
+  window.moneyPrev=prevM;window.moneyNext=nextM;
+
+  // extra stats
+  const days=entries.length?[...new Set(entries.map(e=>e.date))].length:1;
+  const dailyAvg=entries.length?(totalSpent/days):0;
+  const maxEntry=entries.length?entries.reduce((a,b)=>(b.amount||0)>(a.amount||0)?b:a,entries[0]):null;
+
+  const entryRows=entries.map(e=>{
+    const cc=CAT_COLORS[e.cat]||'#E8D5F5';
+    return`<div class="money-row">
+      <span class="money-cat-tag" style="background:${cc}44;color:var(--ink2)">${e.cat}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${e.note||e.cat}</div>
+        <div style="font-size:11px;color:var(--ink3)">${e.date}</div>
+      </div>
+      <span style="font-weight:700;font-size:14px;color:var(--ink)">¥${e.amount.toFixed(2)}</span>
+      <button class="tdel" onclick="delMoneyEntry('${e.id}')">×</button>
+    </div>`;
+  }).join('')||'<div class="empty">本月暂无消费记录 ✨</div>';
+
+  const fixedTags=(cfg.fixed||[]).map((f,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(215,189,226,.2);border-radius:8px;padding:3px 8px;font-size:12px">${f.name} ¥${f.amount}<span style="cursor:pointer;color:var(--ink3)" onclick="delFixed(${i})">×</span></span>`).join('');
+
+  el.innerHTML=`
+<div class="ph"><h1>💰 记账本</h1>
+  <button class="btn bg bsm mla" onclick="moneySettings()">⚙️ 设置</button>
+</div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+  <button class="btn bg bxs" onclick="moneyPrev()">◀</button>
+  <span style="flex:1;text-align:center;font-weight:700;font-size:14px">${viewMonth.y}年${viewMonth.m+1}月</span>
+  <button class="btn bg bxs" onclick="moneyNext()" ${isThisMonth?'disabled style="opacity:.4"':''}>▶</button>
+</div>
+<div class="money-summary">
+  <div class="money-stat">
+    <div class="money-stat-val">¥${totalFixed.toFixed(0)}</div>
+    <div class="money-stat-lbl">固定支出</div>
+  </div>
+  <div class="money-stat">
+    <div class="money-stat-val">¥${totalSpent.toFixed(0)}</div>
+    <div class="money-stat-lbl">已消费</div>
+  </div>
+  <div class="money-remain">
+    <div class="money-remain-lbl">本月剩余可支配</div>
+    <div class="money-remain-val" style="color:${remain<0?'#E53935':remain<budget*0.2?'#F4D03F':'var(--ink)'}">${remain>=0?'¥'+remain.toFixed(0):'超支 ¥'+Math.abs(remain).toFixed(0)}</div>
+    ${budget>0?`<div class="money-bar"><div class="money-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+    <div style="font-size:11px;color:rgba(61,38,81,.55);margin-top:4px">月预算 ¥${budget} · 已用 ${pct.toFixed(0)}%</div>`:'<div style="font-size:11px;color:rgba(61,38,81,.55);margin-top:4px">→ 点右上角设置月预算</div>'}
+  </div>
+</div>
+${entries.length?`<div class="card" style="--accent:var(--p5)">
+  <div class="ct">消费分布</div>
+  ${buildPieChart(entries)}
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <div style="flex:1;background:rgba(174,214,241,.15);border-radius:10px;padding:9px;text-align:center">
+      <div style="font-size:15px;font-weight:800;color:var(--ink)">¥${dailyAvg.toFixed(0)}</div>
+      <div style="font-size:10px;color:var(--ink3);margin-top:2px">日均消费</div>
+    </div>
+    ${maxEntry?`<div style="flex:2;background:rgba(255,183,197,.15);border-radius:10px;padding:9px;text-align:center">
+      <div style="font-size:14px;font-weight:800;color:var(--ink)">¥${maxEntry.amount.toFixed(0)}</div>
+      <div style="font-size:10px;color:var(--ink3);margin-top:2px">最大单笔 · ${maxEntry.note||maxEntry.cat}</div>
+    </div>`:''}
+  </div>
+</div>`:''}
+${isThisMonth?`<div class="card" style="--accent:var(--p3)">
+  <div class="ct">✏️ 快速记一笔</div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="mcat-${c}" onclick="selectMCat('${c}')">${c}</span>`).join('')}</div>
+  <div style="display:flex;gap:7px;margin-bottom:7px">
+    <input class="inp" id="mAmount" type="number" placeholder="金额" style="flex:1;min-width:80px">
+    <input class="inp" id="mNote" placeholder="备注（选填）" style="flex:2">
+  </div>
+  <button class="btn bp" style="width:100%" onclick="addMoneyEntry()">+ 记录</button>
+</div>`:''}
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">📋 本月明细 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${entries.length}笔</span></div>
+  ${entryRows}
+</div>
+${cfg.fixed&&cfg.fixed.length?`<div class="card" style="--accent:var(--p4)"><div class="ct">📌 固定支出</div><div style="display:flex;flex-wrap:wrap;gap:6px">${fixedTags}</div></div>`:''}`;
+  // restore selected cat
+  if(window._selMCat)document.getElementById('mcat-'+window._selMCat)?.classList.add('active');
+}
+window.selectMCat=function(c){
+  window._selMCat=c;
+  document.querySelectorAll('[id^=mcat-]').forEach(el=>el.classList.remove('active'));
+  document.getElementById('mcat-'+c)?.classList.add('active');
+};
+window.addMoneyEntry=async function(){
+  const amt=parseFloat(document.getElementById('mAmount')?.value);
+  if(!amt||amt<=0){showToast('请输入金额');return;}
+  const cat=window._selMCat||'其他';
+  const note=document.getElementById('mNote')?.value.trim();
+  await dbPut('ledger',{id:'le_'+Date.now(),date:todayKey(),amount:amt,cat,note});
+  window._selMCat=null;
+  showToast('已记录 ¥'+amt.toFixed(2));
+  renderMoney();
+};
+window.delMoneyEntry=async function(id){
+  await dbDel('ledger',id);renderMoney();
+};
+window.moneySettings=async function(){
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  openMo(`<div class="mt">⚙️ 预算设置</div>
+    <div class="mrow"><span class="ml">月总预算（元）</span><input class="inp" id="mBudget" type="number" value="${cfg.budget||''}"></div>
+    <div class="mrow"><span class="ml">添加固定支出</span>
+      <div style="display:flex;gap:7px">
+        <input class="inp" id="fName" placeholder="名称（如房租）" style="flex:2">
+        <input class="inp" id="fAmt" type="number" placeholder="金额" style="flex:1">
+        <button class="btn bg bsm" onclick="addFixed()">+</button>
+      </div>
+    </div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveMoneyCfg()">💾 保存</button>`);
+};
+window.addFixed=async function(){
+  const name=document.getElementById('fName')?.value.trim();
+  const amt=parseFloat(document.getElementById('fAmt')?.value);
+  if(!name||!amt){showToast('请填写名称和金额');return;}
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  cfg.fixed.push({name,amount:amt});
+  await dbPut('ledger',cfg);
+  showToast('已添加');closeMo();renderMoney();
+};
+window.delFixed=async function(idx){
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  cfg.fixed.splice(idx,1);await dbPut('ledger',cfg);renderMoney();
+};
+window.saveMoneyCfg=async function(){
+  const budget=parseFloat(document.getElementById('mBudget')?.value)||0;
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  cfg.budget=budget;await dbPut('ledger',cfg);
+  closeMo();showToast('设置已保存');renderMoney();
+};
+// ═══ XHS (小红书创作) ═══
+const XHS_TAGS=['英语学习','教资备考','健身','生活','美食','穿搭','自律','其他'];
+// 笨蛋美食博主素材库 — 按主题分类
+const XHS_INSPO_LIB=[
+  {tag:'开箱测评',items:['超市捡漏！3块钱买到的神仙零食🛒','这个饼干我愿意吃一辈子，真的绝了','网红爆款测评：真香还是智商税？']},
+  {tag:'日常吃播',items:['今天失控了！一个人吃了两人份火锅🔥','宿舍小厨房快手晚饭：10分钟搞定两菜一汤','懒人饭No.7：泡面升华版，好吃到舔碗']},
+  {tag:'探店',items:['宝藏小店！这碗面我已经回头三次了','网红店VS路边摊：同款食材谁更香？','城中最便宜的早餐，10元吃到扶墙走']},
+  {tag:'食谱教程',items:['学生党必学！空气炸锅炸薯条全过程🍟','我妈的拿手菜终于被我偷学会了！','三步做出奶茶店同款，省下300块']},
+  {tag:'情绪美食',items:['失恋就该吃这个！治愈系甜品推荐','考完试了！奖励自己一顿大餐🎉','深夜食堂：凌晨两点的泡面竟然是人间美味']},
+  {tag:'比较测评',items:['同款泡面：7-11 vs 超市 vs 品牌店，谁赢了？','30元 vs 300元早饭，差距大到让我窒息','学生党零食月度盘点，踩了3个大雷']},
+  {tag:'生活技巧',items:['这个保存草莓的方法让我悔恨了3年！','外卖点单技巧：同样的钱多吃一倍分量','冰箱大扫除：清出这些食材够吃一个月']},
+];
+function getXhsDailyInspo(){
+  const key='xhs_inspo_'+todayKey();
+  const cached=localStorage.getItem(key);
+  if(cached)return JSON.parse(cached);
+  const pool=[];XHS_INSPO_LIB.forEach(g=>g.items.forEach(item=>pool.push({tag:g.tag,text:item})));
+  const shuffled=pool.sort(()=>Math.random()-.5).slice(0,10);
+  localStorage.setItem(key,JSON.stringify(shuffled));
+  return shuffled;
+}
+async function renderXhs(){
+  const tab=window._xhsTab||'topic';
+  const el=document.getElementById('pg-xhs');
+  const all=await dbAll('xhs_topics');
+  const topics=all.filter(t=>t.id!=='xhs_cfg'&&!t.id.startsWith('mat_'));
+  const materials=all.filter(t=>t.id.startsWith('mat_'));
+  const published=topics.filter(t=>t.status==='done');
+  const wip=topics.filter(t=>t.status==='wip');
+  const ideas=topics.filter(t=>t.status==='idea'||!t.status);
+  const thisMonth=todayKey().slice(0,7);
+  const monthPub=published.filter(t=>t.publishDate&&t.publishDate.startsWith(thisMonth)).length;
+  const tabBar=`<div class="xhs-tabs" style="grid-template-columns:repeat(4,1fr)">
+    <div class="xhs-tab${tab==='topic'?' on':''}" onclick="xhsTab('topic')">选题库</div>
+    <div class="xhs-tab${tab==='inspo'?' on':''}" onclick="xhsTab('inspo')">每日灵感</div>
+    <div class="xhs-tab${tab==='mat'?' on':''}" onclick="xhsTab('mat')">素材库</div>
+    <div class="xhs-tab${tab==='stats'?' on':''}" onclick="xhsTab('stats')">数据统计</div>
+  </div>`;
+  const statsRow=`<div class="xhs-stat-grid">
+    <div class="xhs-stat"><div class="xhs-stat-n">${published.length}</div><div class="xhs-stat-l">累计发布</div></div>
+    <div class="xhs-stat"><div class="xhs-stat-n">${monthPub}</div><div class="xhs-stat-l">本月发布</div></div>
+    <div class="xhs-stat"><div class="xhs-stat-n">${ideas.length}</div><div class="xhs-stat-l">待创作</div></div>
+  </div>`;
+  if(tab==='stats'){
+    const pubRows=published.slice().reverse().slice(0,20).map(t=>`<div class="trow">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${t.title}</div>
+        <div style="font-size:11px;color:var(--ink3)">${t.publishDate||''}${t.tag?' · '+t.tag:''}</div>
+      </div>
+      ${t.likes||t.reads?`<div style="font-size:11px;color:var(--ink2);text-align:right">${t.likes?'❤️'+t.likes:''}${t.reads?' 👁'+t.reads:''}</div>`:''}
+      <button class="tdel" onclick="delXhs('${t.id}')">×</button>
+    </div>`).join('')||'<div class="empty">暂无发布记录</div>';
+    el.innerHTML=`<div class="ph"><h1>小红书创作</h1></div>${tabBar}${statsRow}
+<div class="card" style="--accent:var(--p8)">
+  <div class="ct">发布记录</div>${pubRows}
+</div>`;
+    return;
+  }
+  if(tab==='inspo'){
+    const inspos=getXhsDailyInspo();
+    const savedKey='xhs_inspo_saved_'+todayKey();
+    const savedIdxs=JSON.parse(localStorage.getItem(savedKey)||'[]');
+    const inspoRows=inspos.map((p,i)=>{
+      const saved=savedIdxs.includes(i);
+      return`<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bd)">
+        <div style="flex:1">
+          <div style="font-size:13px;color:var(--ink)">${p.text}</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:2px"># ${p.tag}</div>
+        </div>
+        ${saved
+          ?`<span style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(181,234,215,.5);color:#1E8449;font-weight:700">✓ 已选择</span>`
+          :`<button class="btn bg bxs" onclick="xhsSaveInspo(${i})">＋收藏</button>`
+        }
+      </div>`;
+    }).join('');
+    el.innerHTML=`<div class="ph"><h1>小红书创作</h1></div>${tabBar}
+<div class="card" style="--accent:var(--p1)">
+  <div class="ct">🎲 今日灵感（笨蛋美食风）<button class="btn bg bxs mla" onclick="refreshInspo()" style="font-size:11px">🔄 刷新</button></div>
+  <div style="font-size:12px;color:var(--ink3);background:rgba(255,183,197,.15);border-radius:8px;padding:7px 9px;margin-bottom:8px">每天自动更新10条选题灵感，一键收藏到选题库</div>
+  ${inspoRows}
+</div>`;
+    return;
+  }
+  if(tab==='mat'){
+    const matRows=materials.sort((a,b)=>b.ts-a.ts).map(m=>`<div class="xhs-topic-card">
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">${m.name}</div>
+          ${m.url?`<a href="${m.url}" target="_blank" style="font-size:11px;color:var(--p5);word-break:break-all">${m.url}</a>`:''}
+          ${m.note?`<div style="font-size:12px;color:var(--ink3);margin-top:4px">${m.note}</div>`:''}
+          ${m.tag?`<span style="font-size:10px;padding:1px 6px;border-radius:5px;background:rgba(255,183,197,.3);color:var(--ink2);display:inline-block;margin-top:4px">${m.tag}</span>`:''}
+        </div>
+        <button class="tdel" onclick="delXhsMat('${m.id}')">×</button>
+      </div>
+    </div>`).join('')||'<div class="empty">素材库为空，点 + 添加</div>';
+    el.innerHTML=`<div class="ph"><h1>小红书创作</h1><button class="btn badd mla" onclick="addXhsMat()">＋</button></div>${tabBar}
+<div class="card" style="--accent:var(--p2)">
+  <div class="ct">📚 素材库 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${materials.length}条</span></div>
+  <div style="font-size:12px;color:var(--ink3);background:rgba(255,203,164,.15);border-radius:8px;padding:7px 9px;margin-bottom:8px">收录参考博主、视频链接、灵感笔记</div>
+  ${matRows}
+</div>`;
+    return;
+  }
+  // topic tab
+  const renderGroup=(list,label,status)=>{
+    if(!list.length)return'';
+    const rows=list.map(t=>`<div class="xhs-topic-card">
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px">${t.title}</div>
+          ${t.note?`<div style="font-size:12px;color:var(--ink3);margin-bottom:5px">${t.note}</div>`:''}
+          <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+            <span class="xhs-status ${t.status||'idea'}">${t.status==='wip'?'创作中':t.status==='done'?'已发布':'想法'}</span>
+            ${t.tag?`<span style="font-size:11px;color:var(--ink3)"># ${t.tag}</span>`:''}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${status!=='done'?`<button class="btn bg bxs" onclick="xhsAdvance('${t.id}','${status}')">${status==='idea'?'开始创作':'标记发布'}</button>`:''}
+          <button class="tdel" onclick="delXhs('${t.id}')">×</button>
+        </div>
+      </div>
+    </div>`).join('');
+    return`<div style="margin-bottom:10px"><div class="ci-group-label">${label}（${list.length}）</div>${rows}</div>`;
+  };
+  el.innerHTML=`<div class="ph"><h1>小红书创作</h1><button class="btn badd mla" onclick="addXhsTopic()">＋</button></div>
+${tabBar}${statsRow}
+<div class="card" style="--accent:var(--p1)">
+  <div style="font-size:12px;color:var(--ink2);background:rgba(255,183,197,.15);border-radius:8px;padding:8px 10px;margin-bottom:10px">
+    每周目标：记录选题，坚持输出。想法 → 创作中 → 发布，一步一步来 ✨
+  </div>
+  ${renderGroup(wip,'创作中','wip')}
+  ${renderGroup(ideas,'选题想法','idea')}
+  ${renderGroup(published,'已发布','done')}
+  ${!topics.length?'<div class="empty">还没有选题，点右上角 + 添加第一个</div>':''}
+</div>`;
+}
+window.xhsTab=function(tab){window._xhsTab=tab;renderXhs();};
+window.refreshInspo=function(){
+  localStorage.removeItem('xhs_inspo_'+todayKey());renderXhs();showToast('已刷新灵感 🎲');
+};
+window.xhsSaveInspo=async function(idx){
+  const inspos=getXhsDailyInspo();
+  const p=inspos[idx];if(!p)return;
+  await dbPut('xhs_topics',{id:'xhs_'+Date.now(),title:p.text,tag:p.tag,status:'idea',createdAt:todayKey()});
+  // mark as saved for today
+  const savedKey='xhs_inspo_saved_'+todayKey();
+  const saved=JSON.parse(localStorage.getItem(savedKey)||'[]');
+  if(!saved.includes(idx)){saved.push(idx);localStorage.setItem(savedKey,JSON.stringify(saved));}
+  showToast('已收藏到选题库 ✨');
+  renderXhs();
+};
+window.addXhsMat=function(){
+  openMo(`<div class="mt">📚 添加素材</div>
+    <div class="mrow"><span class="ml">名称/标题</span><input class="inp" id="mName" placeholder="如：@某某博主风格参考"></div>
+    <div class="mrow"><span class="ml">链接（选填）</span><input class="inp" id="mUrl" placeholder="视频/帖子链接"></div>
+    <div class="mrow"><span class="ml">标签</span><select class="inp" id="mMatTag">${XHS_TAGS.map(t=>`<option>${t}</option>`).join('')}</select></div>
+    <div class="mrow"><span class="ml">笔记（选填）</span><textarea class="inp" id="mNote" rows="2" placeholder="值得借鉴的地方…"></textarea></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveXhsMat()">保存</button>`);
+};
+window.saveXhsMat=async function(){
+  const name=document.getElementById('mName')?.value.trim();if(!name){showToast('请填写名称');return;}
+  const url=document.getElementById('mUrl')?.value.trim()||'';
+  const tag=document.getElementById('mMatTag')?.value;
+  const note=document.getElementById('mNote')?.value.trim()||'';
+  await dbPut('xhs_topics',{id:'mat_'+Date.now(),name,url,tag,note,ts:Date.now()});
+  closeMo();renderXhs();showToast('素材已添加 📚');
+};
+window.delXhsMat=async function(id){await dbDel('xhs_topics',id);renderXhs();};
+window.addXhsTopic=function(){
+  openMo(`<div class="mt">新建选题</div>
+    <div class="mrow"><span class="ml">选题标题</span><input class="inp" id="xTitle" placeholder="比如：英语口语练习分享"></div>
+    <div class="mrow"><span class="ml">标签</span><select class="inp" id="xTag">${XHS_TAGS.map(t=>`<option>${t}</option>`).join('')}</select></div>
+    <div class="mrow"><span class="ml">备注/思路（选填）</span><textarea class="inp" id="xNote" rows="2" placeholder="这篇想写什么…"></textarea></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveXhsTopic()">保存选题</button>`);
+};
+window.saveXhsTopic=async function(){
+  const title=document.getElementById('xTitle')?.value.trim();if(!title){showToast('请填写标题');return;}
+  const tag=document.getElementById('xTag')?.value;
+  const note=document.getElementById('xNote')?.value.trim();
+  await dbPut('xhs_topics',{id:'xhs_'+Date.now(),title,tag,note,status:'idea',createdAt:todayKey()});
+  closeMo();renderXhs();showToast('选题已保存');
+};
+window.xhsAdvance=async function(id,curStatus){
+  const t=await dbGet('xhs_topics',id);if(!t)return;
+  if(curStatus==='idea'){t.status='wip';}
+  else if(curStatus==='wip'){
+    // 标记发布：弹出填发布日期和数据
+    openMo(`<div class="mt">标记为已发布</div>
+      <div class="mrow"><span class="ml">发布日期</span><input class="inp" id="xPubDate" type="date" value="${todayKey()}"></div>
+      <div class="mrow"><span class="ml">点赞数（选填）</span><input class="inp" id="xLikes" type="number" placeholder="0"></div>
+      <div class="mrow"><span class="ml">阅读量（选填）</span><input class="inp" id="xReads" type="number" placeholder="0"></div>
+      <button class="btn bp" style="width:100%" onclick="xhsMarkDone('${id}')">确认发布</button>`);
+    return;
+  }
+  await dbPut('xhs_topics',t);renderXhs();
+};
+window.xhsMarkDone=async function(id){
+  const t=await dbGet('xhs_topics',id);if(!t)return;
+  t.status='done';
+  t.publishDate=document.getElementById('xPubDate')?.value||todayKey();
+  const likes=parseInt(document.getElementById('xLikes')?.value)||0;
+  const reads=parseInt(document.getElementById('xReads')?.value)||0;
+  if(likes)t.likes=likes;if(reads)t.reads=reads;
+  await dbPut('xhs_topics',t);closeMo();renderXhs();showToast('已标记发布');
+};
+window.delXhs=async function(id){await dbDel('xhs_topics',id);renderXhs();};
+// ═══ LOVE (浪漫小屋) ═══
+async function renderLove(){
+  const el=document.getElementById('pg-love');
+  const cfg=await dbGet('love_data','cfg')||{id:'cfg',startDate:'',name1:'',name2:''};
+  const photos=await dbAll('love_data');
+  const photoList=photos.filter(p=>p.id!=='cfg'&&p.id.startsWith('photo_'));
+  const anniversaries=photos.filter(p=>p.id.startsWith('anni_'));
+  const wishes=photos.filter(p=>p.id.startsWith('wish_'));
+
+  let daysStr='?';let daysNum=0;
+  if(cfg.startDate){
+    const diff=Math.floor((new Date(todayKey())-new Date(cfg.startDate))/86400000);
+    daysNum=diff;daysStr=diff.toLocaleString();
+  }
+
+  const today=todayKey();
+  const anniRows=anniversaries.sort((a,b)=>(a.month||0)-(b.month||0)||(a.day||0)-(b.day||0)).map(a=>{
+    const thisYear=new Date().getFullYear();
+    const nextDate=new Date(thisYear,a.month-1,a.day);
+    if(nextDate<new Date())nextDate.setFullYear(thisYear+1);
+    const dLeft=Math.ceil((nextDate-new Date())/86400000);
+    return`<div class="love-anniversary">
+      <div class="love-anni-days">${dLeft}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">${a.name}</div>
+      <div style="font-size:11px;color:var(--ink3)">${a.month}月${a.day}日 · 还有${dLeft}天</div></div>
+      <button class="tdel" onclick="delLoveItem('${a.id}')">×</button>
+    </div>`;
+  }).join('')||'<div style="font-size:12px;color:var(--ink3);padding:4px 0">暂无纪念日</div>';
+
+  const wishRows=wishes.sort((a,b)=>{
+    const po={high:0,mid:1,low:2};
+    return (po[a.pri||'mid']||1)-(po[b.pri||'mid']||1)||a.ts-b.ts;
+  }).map(w=>{
+    const priColor={high:'#E05252',mid:'#F4A460',low:'#7DCEA0'}[w.pri||'mid']||'#F4A460';
+    const priLabel={high:'高',mid:'中',low:'低'}[w.pri||'mid']||'中';
+    const budgetStr=w.budget?`¥${w.budget}`:'';
+    const prog=w.progress||0;
+    return`<div class="love-wish">
+      <span class="love-wish-star" onclick="toggleWish('${w.id}')">${w.done?'⭐':'☆'}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;${w.done?'text-decoration:line-through;color:var(--ink3)':''}">${w.text}</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;background:${priColor}22;color:${priColor}">${priLabel}优先</span>
+          ${budgetStr?`<span style="font-size:10px;color:var(--ink3)">${budgetStr}</span>`:''}
+          ${prog>0?`<div style="flex:1;min-width:60px;height:5px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:${prog}%;background:var(--gb);border-radius:3px"></div></div><span style="font-size:10px;color:var(--ink3)">${prog}%</span>`:''}
+        </div>
+      </div>
+      <button class="tdel" onclick="editWish('${w.id}')">✏️</button>
+      <button class="tdel" onclick="delLoveItem('${w.id}')">×</button>
+    </div>`;
+  }).join('')||'<div style="font-size:12px;color:var(--ink3);padding:4px 0">还没有心愿</div>';
+
+  const photoGrid=`<div class="love-photo-grid">
+    ${photoList.slice(0,8).map(p=>`<div class="love-photo" onclick="viewLovePhoto('${p.id}')"><img src="${p.data}" alt=""/></div>`).join('')}
+    ${photoList.length<9?`<label class="love-photo" title="添加照片"><input type="file" accept="image/*" style="display:none" onchange="addLovePhoto(this)"><span class="love-photo-add">＋</span></label>`:''}
+  </div>`;
+
+  el.innerHTML=`
+<div class="ph"><h1>💕 浪漫小屋</h1>
+  <button class="btn bg bsm mla" onclick="loveSetup()">⚙️ 设置</button>
+</div>
+<div class="love-hero">
+  <div class="love-days">${daysStr}</div>
+  <div class="love-days-lbl">${cfg.name1&&cfg.name2?cfg.name1+' & '+cfg.name2+'在一起的第 '+daysStr+' 天':'点右上角设置在一起的日期 💑'}</div>
+  ${cfg.startDate?`<div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:5px">从 ${cfg.startDate} 开始</div>`:''}
+  ${(()=>{
+    if(!anniversaries.length)return'';
+    const upcoming=anniversaries.map(a=>{
+      const thisYear=new Date().getFullYear();
+      const nd=new Date(thisYear,a.month-1,a.day);
+      if(nd<new Date())nd.setFullYear(thisYear+1);
+      return{name:a.name,dLeft:Math.ceil((nd-new Date())/86400000)};
+    }).sort((a,b)=>a.dLeft-b.dLeft)[0];
+    return`<div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.18);border-radius:10px;display:inline-flex;align-items:center;gap:8px">
+      <span style="font-size:18px;font-weight:900;color:#fff">${upcoming.dLeft}</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.85)">天后 · ${upcoming.name}</span>
+    </div>`;
+  })()}
+</div>
+<div class="card" style="--accent:var(--p1)">
+  <div class="ct">📸 照片墙 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${photoList.length}张</span></div>
+  ${photoGrid}
+</div>
+<div class="card" style="--accent:var(--p6)">
+  <div class="ct">🎂 纪念日提醒
+    <button class="btn badd" onclick="addAnniversary()">＋</button>
+  </div>
+  ${anniRows}
+</div>
+<div class="card" style="--accent:var(--p3)">
+  <div class="ct">⭐ 心愿清单
+    <button class="btn badd" onclick="addWish()">＋</button>
+  </div>
+  ${wishRows}
+</div>`;
+}
+window.loveSetup=async function(){
+  const cfg=await dbGet('love_data','cfg')||{id:'cfg',startDate:'',name1:'',name2:''};
+  openMo(`<div class="mt">💑 基本设置</div>
+    <div class="mrow"><span class="ml">在一起日期</span><input class="inp" id="lStart" type="date" value="${cfg.startDate||''}"></div>
+    <div class="mrow"><span class="ml">TA的昵称</span><input class="inp" id="lN1" value="${cfg.name1||''}" placeholder="如：小猪"></div>
+    <div class="mrow"><span class="ml">你的昵称</span><input class="inp" id="lN2" value="${cfg.name2||''}" placeholder="如：小羊"></div>
+    <button class="btn bp" style="width:100%" onclick="saveLoveCfg()">💾 保存</button>`);
+};
+window.saveLoveCfg=async function(){
+  await dbPut('love_data',{id:'cfg',startDate:document.getElementById('lStart').value,name1:document.getElementById('lN1').value.trim(),name2:document.getElementById('lN2').value.trim()});
+  closeMo();renderLove();showToast('已保存 💕');
+};
+window.addLovePhoto=async function(inp){
+  const file=inp.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async function(e){
+    await dbPut('love_data',{id:'photo_'+Date.now(),data:e.target.result,ts:Date.now()});
+    renderLove();showToast('照片已添加 📸');
+  };
+  reader.readAsDataURL(file);
+};
+window.viewLovePhoto=async function(id){
+  const p=await dbGet('love_data',id);if(!p)return;
+  openMo(`<div style="text-align:center"><img src="${p.data}" style="max-width:100%;border-radius:12px;margin-bottom:12px"></div>
+    <button class="btn bdanger" style="width:100%" onclick="delLoveItem('${id}');closeMo()">🗑 删除这张</button>`);
+};
+window.addAnniversary=function(){
+  openMo(`<div class="mt">🎂 添加纪念日</div>
+    <div class="mrow"><span class="ml">名称</span><input class="inp" id="aName" placeholder="如：相识纪念日"></div>
+    <div style="display:flex;gap:7px">
+      <div class="mrow" style="flex:1"><span class="ml">月</span><input class="inp" id="aMon" type="number" min="1" max="12" placeholder="月"></div>
+      <div class="mrow" style="flex:1"><span class="ml">日</span><input class="inp" id="aDay" type="number" min="1" max="31" placeholder="日"></div>
+    </div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveAnniversary()">添加</button>`);
+};
+window.saveAnniversary=async function(){
+  const name=document.getElementById('aName').value.trim();
+  const month=parseInt(document.getElementById('aMon').value);
+  const day=parseInt(document.getElementById('aDay').value);
+  if(!name||!month||!day){showToast('请填写完整');return;}
+  await dbPut('love_data',{id:'anni_'+Date.now(),name,month,day,ts:Date.now()});
+  closeMo();renderLove();showToast('纪念日已添加 🎂');
+};
+window.addWish=function(){
+  openMo(`<div class="mt">⭐ 添加心愿</div>
+    <div class="mrow"><span class="ml">心愿内容</span><input class="inp" id="wishTxt" placeholder="想去哪里旅行，想吃什么…"></div>
+    <div style="display:flex;gap:7px">
+      <div class="mrow" style="flex:1"><span class="ml">优先级</span><select class="inp" id="wishPri"><option value="high">高</option><option value="mid" selected>中</option><option value="low">低</option></select></div>
+      <div class="mrow" style="flex:1"><span class="ml">预算 ¥</span><input class="inp" id="wishBudget" type="number" placeholder="可选"></div>
+    </div>
+    <div class="mrow"><span class="ml">进度 %（0-100）</span><input class="inp" id="wishProg" type="number" min="0" max="100" placeholder="0" value="0"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveWish()">添加</button>`);
+};
+window.saveWish=async function(existingId){
+  const text=document.getElementById('wishTxt').value.trim();if(!text){showToast('请填写心愿');return;}
+  const pri=document.getElementById('wishPri').value||'mid';
+  const budget=document.getElementById('wishBudget').value||'';
+  const progress=Math.min(100,Math.max(0,parseInt(document.getElementById('wishProg').value)||0));
+  const id=existingId||'wish_'+Date.now();
+  const existing=existingId?(await dbGet('love_data',id)):null;
+  await dbPut('love_data',{id,text,pri,budget,progress,done:existing?.done||false,ts:existing?.ts||Date.now()});
+  closeMo();renderLove();showToast(existingId?'心愿已更新 ⭐':'心愿已添加 ⭐');
+};
+window.editWish=async function(id){
+  const w=await dbGet('love_data',id);if(!w)return;
+  openMo(`<div class="mt">✏️ 编辑心愿</div>
+    <div class="mrow"><span class="ml">心愿内容</span><input class="inp" id="wishTxt" value="${w.text||''}"></div>
+    <div style="display:flex;gap:7px">
+      <div class="mrow" style="flex:1"><span class="ml">优先级</span><select class="inp" id="wishPri">
+        <option value="high"${w.pri==='high'?' selected':''}>高</option>
+        <option value="mid"${(!w.pri||w.pri==='mid')?' selected':''}>中</option>
+        <option value="low"${w.pri==='low'?' selected':''}>低</option>
+      </select></div>
+      <div class="mrow" style="flex:1"><span class="ml">预算 ¥</span><input class="inp" id="wishBudget" type="number" value="${w.budget||''}"></div>
+    </div>
+    <div class="mrow"><span class="ml">进度 %（0-100）</span><input class="inp" id="wishProg" type="number" min="0" max="100" value="${w.progress||0}"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveWish('${id}')">保存</button>`);
+};
+window.toggleWish=async function(id){
+  const w=await dbGet('love_data',id);if(!w)return;
+  w.done=!w.done;await dbPut('love_data',w);renderLove();
+};
+window.delLoveItem=async function(id){await dbDel('love_data',id);renderLove();};
+// ═══ JIAOZU (教资备考) ═══
+const JIAOZU_QUESTIONS=[
+  {id:'jz1',q:'教育与生产力的关系',a:'生产力对教育的制约：①决定教育规模和速度；②制约人才培养规格和教育结构；③制约教育内容、方法、组织形式和手段。\n教育对生产力的促进：①教育是劳动力再生产的基本途径；②是科学知识再生产的最有效形式；③是进行技术创新的重要手段。',m:'龟速够防守 / 两再一新促生产'},
+  {id:'jz2',q:'教育与政治经济制度的关系',a:'政治经济制度对教育的制约：①决定教育性质；②决定教育宗旨与目的；③决定教育领导权；④决定受教育权利；⑤决定教育内容和管理体制。\n教育对政治经济制度的反作用：①培养所需人才；②促进政治民主化；③创造社会舆论；④完成年轻一代政治社会化。',m:'体内性质两权一目的 / 人鱼公主促政治'},
+  {id:'jz3',q:'请简述教育对文化的促进作用（教育的文化功能）',a:'①传递和保存文化；②传播、交流与丰富文化；③选择、提升文化；④更新、创造文化。',m:'两传选新促发展'},
+  {id:'jz4',q:'确立我国教育目的的依据',a:'①特定的社会政治、经济、文化背景；②受教育者的身心发展规律；③人们的教育思想；④理论依据是马克思主义关于人的全面发展学说。',m:'马克思是社会人'},
+  {id:'jz5',q:'体育的实施途径',a:'①体育课（基本组织形式）；②早操、课间操；③课外体育锻炼；④运动队训练。',m:'对外体操'},
+  {id:'jz6',q:'简述良好师生关系建立的途径与方法',a:'教师方面：①了解研究学生；②树立正确学生观；③提高自身素质；④发扬教育民主；⑤热爱尊重学生，公平对待；⑥主动沟通交往；⑦正确处理师生矛盾；⑧提高法治意识保护学生合法权利。\n学生方面：正确认识自己和教师。\n环境方面：加强校园文化建设和学风教育。',m:'5生2师1民主'},
+  {id:'jz7',q:'简述问卷法的实施步骤',a:'①编制问卷；②问卷发放；③问卷回收及审查；④问卷分析及整理；⑤归纳总结，撰写报告。',m:'编制发回，分析总结'},
+  {id:'jz8',q:'简述实验法的实施步骤',a:'①确定目的、方法和组织形式，拟订实验计划；②创造条件，准备实验用具；③进行实验，做准确测量和详尽记录；④处理实验结果，慎重核对结论。',m:'计划-准备-实验-结果'},
+  {id:'jz9',q:'简述行动研究法的实施步骤',a:'①确立课题；②查阅文献；③拟订行动计划；④实施行动；⑤总结反思；⑥评价效果。',m:'课文滑动思效果'},
+  {id:'jz10',q:'简述课程内容的文本表现形式',a:'①课程计划：国家教育主管部门制定的有关学校教育教学的指导性文件；②课程标准：以纲要形式编订的学科教学内容指导性文件；③教材：教师与学生据以进行教学活动的材料。',m:'无口诀'},
+  {id:'jz11',q:'简述基础教育课程改革的目标',a:'①改善学生学习方式；②建立与素质教育理念一致的评价与考试制度；③实行三级课程管理制度；④体现课程结构均衡性、综合性和选择性；⑤密切课程内容与生活和时代的联系；⑥实现课程功能的转变。',m:'方平的关节有内功'},
+  {id:'jz12',q:'简述新课程结构的内容',a:'①小学以综合课程为主；②初中设置分科与综合相结合的课程；③高中以分科课程为主，设选修课，积极试行学分制；④从小学至高中设置综合实践活动并作为必修课程；⑤农村中学课程为当地社会经济发展服务。',m:'小综高分初结合，一到十二综必修'},
+  {id:'jz13',q:'简述新版综合实践活动的内容',a:'①义务教育阶段：侧重跨学科研究性学习、社会实践；②普通高中：包括研究性学习、党团活动、军训、社会考察等。',m:'研党军社'},
+  {id:'jz14',q:'简述影响小学综合实践活动设计的因素',a:'①课程目标（具体化，避免抽象化和纯知识化）；②教师方面（旧有观念、知识结构、活动规划设计能力）；③学生方面（已有经验、兴趣爱好）；④学校教育条件（自然资源、文化资源、物质条件和人力资源）。',m:'学校教师根据目标教育学生'},
+  {id:'jz15',q:'简述引起无意注意的因素',a:'①客观条件：刺激物的强度、对比性、新异性和运动变化；②主观条件：需要与兴趣、情绪情感状态、个体知识经验、期待等。',m:'对墙心动（客观）'},
+  {id:'jz16',q:'简述小学儿童注意的培养',a:'①善于运用无意注意的规律；②善于组织和发展有意注意；③善于运用两种注意相互转换的规律；④避免与控制分心。',m:'注意有无新欢'},
+  {id:'jz17',q:'简述观察力的培养',a:'①引导明确观察目的与任务；②充分准备，提出方法，制订计划；③加强个别指导，培养良好观察习惯；④引导记录整理成果，开展讨论交流。',m:'明目准备指导讨论'},
+  {id:'jz18',q:'简述提高记忆能力的方法',a:'①明确记忆目的，增强主动性；②理解材料意义，少用机械记忆；③精细加工材料，促进深度理解；④运用组块化策略；⑤运用多重编码方式；⑥注重复习方法，防止遗忘。',m:'多方精理组目的'},
+  {id:'jz19',q:'简述良好意志品质的培养',a:'①目的性教育，树立理想信念；②养成教育，培养自制能力；③实践活动，在困难中锻炼；④正确对待挫折；⑤针对差异采取不同措施；⑥发挥教师、班集体和榜样的作用；⑦自我锻炼，从点滴做起。',m:'自我难约真异性'},
+  {id:'jz20',q:'简述能力的培养',a:'①注重早期能力培养；②加强知识与技能的学习训练；③针对差异因材施教；④积极培养元认知和创造能力；⑤社会实践是基本途径；⑥注意培养非智力因素。',m:'早早训练，创设财力'},
+  {id:'jz21',q:'简述良好性格的培养',a:'①加强人生观、世界观和价值观教育；②及时强化积极行为；③充分利用榜样作用；④利用集体教育力量；⑤依据性格倾向因材施教；⑥提高学生自我教育能力。',m:'因我集市打观强'},
+  {id:'jz22',q:'学校教育在人身心发展中起主导作用的表现',a:'①对个体发展作出社会性规范；②具有开发特殊才能和发展个性的功能；③影响具有即时和延时的价值；④具有加速个体发展的特殊功能。',m:'严规范，塑个性'},
+  {id:'jz23',q:'简述个体身心发展的规律',a:'①顺序性（由低级到高级，连续不断）；②阶段性（不同年龄面临不同发展任务）；③不平衡性（速度不均匀）；④互补性（身体机能与心理机能互补）；⑤个别差异性（群体差异和个体差异）。',m:'顺阶不补差'},
+  {id:'jz24',q:'简述有意义学习的实质和条件',a:'实质：将新知识与已有知识建立非人为（内在）的和实质性（非字面）的联系。\n条件：①学习材料的逻辑意义；②有意义学习的心向；③认知结构中有适当的旧知识可与新知识联系。',m:'想有意义'},
+  {id:'jz25',q:'简述建构主义学习理论的具体观点',a:'①知识观：知识不是对现实的准确表征，学生基于自己经验背景建构知识；②学生观：强调学生经验世界的丰富性与差异性；③学习观：强调学习的主动建构性、社会互动性和情境性。',m:'无口诀'},
+  {id:'jz26',q:'简述皮亚杰的道德发展理论',a:'①前道德阶段（2-5岁）：规则无约束力；②权威阶段（5-8岁，他律）：服从外部规则，依据后果判断对错；③可逆性阶段（9-11岁，自律）：要求平等，依据动机判断对错；④公正阶段（11岁后）：倾向公正平等，考虑个人特殊情况。',m:'钱权可挣'},
+  {id:'jz27',q:'简述德育过程的基本规律',a:'①促进知、情、意、行互动发展的过程；②组织活动和交往，统一多方面教育影响的过程；③促进思想内部矛盾积极转化的过程；④长期的、反复的、逐步提高的过程。',m:'脚趾长毛'},
+  {id:'jz28',q:'简述运用说服教育法的注意事项',a:'①有明确目的性和针对性；②富有知识性和趣味性；③注意时机，善于捕捉教育契机；④以诚待人。',m:'乘机兴趣'},
+  {id:'jz29',q:'简述运用实际锻炼法的注意事项',a:'①调动学生主动性；②适当指导；③坚持严格要求；④注意检查和坚持。',m:'前调积极性，中指导要求，后检查'},
+  {id:'jz30',q:'简述小学生品德不良的原因',a:'客观原因：①家庭不良教育；②社会不良影响；③学校教育的疏漏。\n主观原因：①缺乏正确道德认识；②表现异常情感反应；③存在意志薄弱；④不良行为习惯；⑤性格缺陷。',m:'无口诀'},
+  {id:'jz31',q:'简述学校美育的功能',a:'①开阔知识视野，发展智力和创造精神；②净化心灵、陶冶情操、完善品德；③促进身体健美发展；④有助于劳动观点的树立和技能的形成。',m:'德智体美'},
+  {id:'jz32',q:'简述教育合力的形成策略',a:'①充分发挥任课教师的教育合力；②充分发挥家庭教育的作用；③充分发挥社区教育的作用。',m:'无口诀'},
+  {id:'jz33',q:'简述在与学生家长沟通时应注意的事项',a:'①尊重家长是第一原则；②有较强的服务意识；③联系时有理性意识；④见面时先扬后抑，让家长心理有适应过程。',m:'抚养尊礼'},
+  {id:'jz34',q:'简述心理辅导的途径',a:'①开设普及心理健康知识课程；②开设专门心理辅导活动课；③在学科教学中渗透心理健康教育；④结合班级、少先队活动开展辅导；⑤开展面向全体兼顾个体的辅导或咨询；⑥开展小组辅导；⑦对家长开展宣传讲座。',m:'开课；辅导；渗透'},
+  {id:'jz35',q:'简述良好班集体的培养措施',a:'①确定班集体发展目标；②建立核心队伍；③建立正常秩序；④组织形式多样的教育活动；⑤培养正确舆论和良好班风。',m:'目标核心，治活班风'},
+  {id:'jz36',q:'简述后进生的教育措施',a:'①关心热爱与严格要求相结合；②培养和激发学习动机；③发掘"闪光点"，增强自信心和集体荣誉感；④因材施教，对症下药；⑤持之以恒。',m:'恒心才发光'},
+  {id:'jz37',q:'简述教学过程的基本规律',a:'①间接经验与直接经验相统一；②掌握知识与发展能力相统一；③教师主导与学生主体相统一；④传授知识与思想教育相统一。',m:'舰长传教'},
+  {id:'jz38',q:'简述理论联系实际教学原则的贯彻要求',a:'①书本知识教学注重联系实际；②重视培养运用知识的能力；③正确处理知识教学与技能训练的关系；④补充必要的乡土教材。',m:'易建联运用知识训练乡土教材'},
+  {id:'jz39',q:'简述直观性教学原则的贯彻要求',a:'①正确选择直观教具和现代化教学手段；②直观教具演示与讲解相结合；③重视运用语言直观；④防止直观不当与滥用。',m:'选择语言不滥用'},
+  {id:'jz40',q:'简述启发性教学原则的贯彻要求',a:'①加强目的性教育，调动学习主动性；②启发独立思考，发展逻辑思维；③让学生动手，培养独立解决问题的能力；④发扬教学民主。',m:'牧民发问'},
+  {id:'jz41',q:'班级授课制的优缺点',a:'优点：①有利于大面积培养人才；②有利于发挥教师主导作用；③有利于发挥学生集体作用；④有利于学生多方面发展。\n缺点：①限制学生主体地位和独立性；②不利于培养探索、创造和实践能力；③难以照顾个别差异；④教学内容和方法灵活性有限。',m:'教师主导集体大多方面 / 个别学生不灵活实践'},
+  {id:'jz42',q:'简述教学实施的环节',a:'①备课（上课前准备工作，教好课的前提）；②上课（中心环节）；③课外作业的布置与批改；④课外辅导（对上课的必要补充）；⑤学业成绩的检查与评定。',m:'备上作导学'},
+  {id:'jz43',q:'一堂好课的标准',a:'①目的明确；②内容正确；③方法得当；④结构合理；⑤语言艺术；⑥气氛热烈；⑦板书有序；⑧态度从容。',m:'慕容芳气购泰语书'},
+  {id:'jz44',q:'布置作业的基本要求',a:'①内容符合课程标准范围和深度，有助于掌握"双基"；②分量适宜，难易适度；③有助于启发学生思维，理论联系实际。',m:'双基难度要启发'},
+  {id:'jz45',q:'课堂提问的基本要求',a:'①提问用语简单明确；②有一定坡度和层次；③富有启发性；④注意保护学生回答问题的积极性。',m:'单层契机'},
+  {id:'jz46',q:'学习动机的培养与激发',a:'培养：①了解满足学生需要；②重视立志教育，进行成就动机训练；③帮助建立正确自我概念，获得自我效能感；④培养努力导致成功的归因观。\n激发：①创设问题情境，实施启发式教学；②根据作业难度控制动机水平；③利用反馈信息，妥善奖惩；④正确指导结果归因。',m:'我需立志努力 / 启发作业，奖惩归因'},
+  {id:'jz47',q:'促进学习迁移的教学',a:'①精选教材；②合理编排教学内容；③合理安排教学程序；④教授学习策略，提高迁移意识性。',m:'二排才艺'},
+  {id:'jz48',q:'操作技能的形成阶段',a:'①操作定向（认知阶段）：理解结构和程序，建立定向映象；②操作模仿：实际再现示范动作或行为模式；③操作整合：各动作依内在联系联结，形成定型一体化动作；④操作熟练：高度程序化、自动化和完善化。',m:'订房证书'},
+  {id:'jz49',q:'操作技能的培养要求',a:'①准确的示范与讲解；②必要而适当的练习；③充分而有效的反馈；④建立稳定清晰的动觉。',m:'试讲练习，反馈动觉'},
+  {id:'jz50',q:'提高问题解决能力的教学',a:'①提高学生知识储备的数量与质量；②教授与训练解决问题的方法与策略；③提供多种练习机会；④培养思考问题的习惯。',m:'思恋良方'}
+];
+async function ensureJiaozuBank(){
+  const existing=await dbAll('jiaozu_bank');
+  if(!existing.length){for(const q of JIAOZU_QUESTIONS)await dbPut('jiaozu_bank',q);}
+}
+async function renderJiaozu(){
+  await ensureJiaozuBank();
+  const el=document.getElementById('pg-jiaozu');
+  const today=todayKey();
+  const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4};
+  const todayLog=(await dbGet('jiaozu_logs','log_'+today))||{id:'log_'+today,date:today,done:[],mastered:[]};
+  const allQ=await dbAll('jiaozu_bank');
+  const mastered=todayLog.mastered||[];
+  const done=todayLog.done||[];
+  const dailyCount=cfg.dailyCount||4;
+  // pick today's questions: sequential by id
+  const sorted=allQ.sort((a,b)=>parseInt(a.id.slice(2))-parseInt(b.id.slice(2)));
+  const totalDone=done.length;
+  const pct=Math.min(100,Math.round(totalDone/dailyCount*100));
+  const isComplete=totalDone>=dailyCount;
+
+  let qHtml='';
+  for(const q of sorted){
+    const isMastered=mastered.includes(q.id);
+    const isDone=done.includes(q.id);
+    const num=q.id.slice(2);
+    const mnemonicHtml=q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic">💡 口诀：${q.m}</div>`:'';
+    qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
+      <div class="jz-q-row" onclick="jzToggleCard('${q.id}')">
+        <div class="jz-num">${num}</div>
+        <div class="jz-q-text">${q.q}</div>
+        <div class="jz-toggle">▾</div>
+      </div>
+      <div class="jz-ans">
+        <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
+        ${mnemonicHtml}
+        <div class="jz-status">
+          <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
+          <button class="jz-btn-status${(!isMastered&&isDone)?' review':''}" onclick="jzMark('${q.id}','review')">↺ 待复习</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  el.innerHTML=`
+<div class="ph"><h1>教资备考</h1>
+  <button class="btn bg bsm mla" onclick="jzSetting()">设置</button>
+</div>
+<div class="jz-day-bar">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--ink)">今日计划 · 科目二简答题</div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:2px">每日 ${dailyCount} 题 · 已完成 ${totalDone} 题${isComplete?' 🎉':''}</div>
+    </div>
+    <div style="font-size:22px;font-weight:900;color:#E8875A">${totalDone}/${dailyCount}</div>
+  </div>
+  <div class="jz-progress-track"><div class="jz-progress-fill" style="width:${pct}%"></div></div>
+  <div style="font-size:11px;color:var(--ink3)">共 ${allQ.length} 题 · 展开题目后标记掌握情况</div>
+</div>
+${qHtml}`;
+}
+window.jzToggleCard=function(id){
+  const card=document.getElementById('jzc-'+id);
+  if(!card)return;
+  card.classList.toggle('open');
+};
+window.jzMark=async function(id,type){
+  const today=todayKey();
+  const log=(await dbGet('jiaozu_logs','log_'+today))||{id:'log_'+today,date:today,done:[],mastered:[]};
+  const alreadyMastered=log.mastered.includes(id);
+  if(type==='good'){
+    if(alreadyMastered){
+      // 取消掌握，同时从 done 移除
+      log.mastered=log.mastered.filter(x=>x!==id);
+      log.done=log.done.filter(x=>x!==id);
+    } else {
+      if(!log.mastered.includes(id))log.mastered.push(id);
+      if(!log.done.includes(id))log.done.push(id);
+    }
+  } else {
+    log.mastered=log.mastered.filter(x=>x!==id);
+    if(!log.done.includes(id))log.done.push(id);
+  }
+  await dbPut('jiaozu_logs',log);
+  renderJiaozu();
+};
+window.jzSetting=async function(){
+  const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4};
+  const val=prompt('每日背诵题数（当前：'+cfg.dailyCount+'）',cfg.dailyCount);
+  const n=parseInt(val);
+  if(!n||n<1||n>50)return;
+  cfg.dailyCount=n;
+  await dbPut('jiaozu_logs',cfg);
+  renderJiaozu();
+};
 // ═══ DATA EXPORT ═══
 async function exportData(){
-  const stores=['weeks','tasks','checkins','study_subjects','sport_plans','weight_log','diet_plans','garden','todos','countdown','study_logs','sport_logs'];
+  const stores=['weeks','tasks','checkins','study_subjects','sport_plans','weight_log','diet_plans','garden','todos','countdown','study_logs','sport_logs','ledger','xhs_topics','love_data','jiaozu_bank','jiaozu_logs'];
   const data={};for(const s of stores)data[s]=await dbAll(s);
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`sheep-backup-${todayKey()}.json`;a.click();
