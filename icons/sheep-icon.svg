@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 背景圆 -->
+  <rect width="512" height="512" rx="112" fill="#FFF0F8"/>
+  <!-- 缩放整体：原SVG 100x100 → 居中放大到512，缩放4.2x，偏移约 46px -->
+  <g transform="translate(46, 30) scale(4.2)">
+    <circle cx="50" cy="42" r="25" fill="#F0E6FF"/>
+    <circle cx="32" cy="48" r="17" fill="#EDD9FF"/>
+    <circle cx="68" cy="48" r="17" fill="#EDD9FF"/>
+    <circle cx="40" cy="30" r="15" fill="#F5EEFF"/>
+    <circle cx="60" cy="30" r="15" fill="#F5EEFF"/>
+    <circle cx="50" cy="26" r="15" fill="#FAF3FF"/>
+    <ellipse cx="50" cy="54" rx="19" ry="16" fill="#FDE8F0"/>
+    <ellipse cx="25" cy="42" rx="7" ry="10" fill="#EDD9FF" transform="rotate(-14 25 42)"/>
+    <ellipse cx="25" cy="42" rx="3.5" ry="6" fill="#FFB7C5" opacity=".6" transform="rotate(-14 25 42)"/>
+    <ellipse cx="75" cy="42" rx="7" ry="10" fill="#EDD9FF" transform="rotate(14 75 42)"/>
+    <ellipse cx="75" cy="42" rx="3.5" ry="6" fill="#FFB7C5" opacity=".6" transform="rotate(14 75 42)"/>
+    <ellipse cx="38" cy="57" rx="5" ry="3" fill="#FFB7C5" opacity=".6"/>
+    <ellipse cx="62" cy="57" rx="5" ry="3" fill="#FFB7C5" opacity=".6"/>
+    <ellipse cx="50" cy="59" rx="3" ry="2" fill="#D7BDE2"/>
+    <!-- 脸 happy -->
+    <ellipse cx="43" cy="52" rx="3.5" ry="4.5" fill="#3D2651"/>
+    <ellipse cx="57" cy="52" rx="3.5" ry="4.5" fill="#3D2651"/>
+    <circle cx="44.5" cy="50.5" r="1.2" fill="#fff"/>
+    <circle cx="58.5" cy="50.5" r="1.2" fill="#fff"/>
+    <path d="M45 62 Q50 66 55 62" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <!-- 腿 -->
+    <ellipse cx="23.8" cy="22.2" rx="1.8" ry="1.1" fill="#FFB7C5" opacity=".65"/>
+    <ellipse cx="19" cy="22.8" rx="1.1" ry=".75" fill="#D7BDE2"/>
+    <ellipse cx="9.5" cy="16" rx="2.8" ry="3.8" fill="#EDD9FF" transform="rotate(-14 9.5 16)"/>
+    <ellipse cx="9.5" cy="16" rx="1.4" ry="2.3" fill="#FFB7C5" opacity=".55" transform="rotate(-14 9.5 16)"/>
+    <ellipse cx="28.5" cy="16" rx="2.8" ry="3.8" fill="#EDD9FF" transform="rotate(14 28.5 16)"/>
+    <ellipse cx="28.5" cy="16" rx="1.4" ry="2.3" fill="#FFB7C5" opacity=".55" transform="rotate(14 28.5 16)"/>
+    <path d="M17.2 9.5 Q19 7.5 20.8 9.5 Q19 11.2 17.2 9.5Z" fill="#FFB7C5"/>
+    <circle cx="19" cy="9.5" r="1.1" fill="#FF9AA2"/>
+    <rect x="14.5" y="27" width="3.2" height="5.5" rx="1.4" fill="#E8D5F5"/>
+    <rect x="20.3" y="27" width="3.2" height="5.5" rx="1.4" fill="#E8D5F5"/>
+    <rect x="14.5" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
+    <rect x="20.3" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
+  </g>
+</svg>
