@@ -3212,6 +3212,230 @@ window.toggleWish=async function(id){
 };
 window.delLoveItem=async function(id){await dbDel('love_data',id);renderLove();};
 // ═══ JIAOZU (教资备考) ═══
+// ── 教资32天学习计划（2026-08-12至2026-09-12）──
+// 简答题：jz21起第一轮（每天5道），背完100道后第二轮jz1起
+// 文学素养：通勤每天2节视频；阶段二起通勤可额外刷题（手机app）；套卷在家整块时间
+const JIAOZU_PLAN=(()=>{
+  const plan=[
+    // ── 阶段一：全面过知识（8/12–8/25，14天）──
+    // D1 8/12
+    {date:'2026-08-12',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第1-2节',
+      '科目一·职业理念：看书精读（含笔记）',
+      '科目一·职业理念：背诵核心考点',
+      '科目二·简答题背诵 jz21–jz25（5道）',
+    ]},
+    // D2 8/13
+    {date:'2026-08-13',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第3-4节',
+      '科目一·职业理念：画思维导图',
+      '科目一·职业理念：练材料分析1篇（职业理念角度）',
+      '科目二·简答题背诵 jz26–jz30（5道）',
+    ]},
+    // D3 8/14
+    {date:'2026-08-14',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第5-6节',
+      '科目一·职业道德：看书精读+背诵',
+      '科目一·职业道德：画思维导图',
+      '科目一·职业道德：练材料分析1篇（职业道德角度）',
+      '科目二·简答题背诵 jz31–jz35（5道）',
+    ]},
+    // D4 8/15
+    {date:'2026-08-15',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第7-8节',
+      '科目二·教育基础（上）：看书第1轮（第1天）',
+      '科目二·教育基础（上）：整理笔记',
+      '科目二·简答题背诵 jz36–jz40（5道）',
+    ]},
+    // D5 8/16
+    {date:'2026-08-16',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第9-10节',
+      '科目二·教育基础（上）：看书第2轮+画思维导图',
+      '科目二·教育基础（上）：刷题（40道）',
+      '科目二·简答题背诵 jz41–jz45（5道）',
+    ]},
+    // D6 8/17
+    {date:'2026-08-17',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第11-12节',
+      '科目二·教育基础（上）：错题复盘+思维导图完善',
+      '科目二·简答题jz21-jz35 快速复习（已背部分）',
+      '科目二·简答题背诵 jz46–jz50（5道）',
+    ]},
+    // D7 8/18
+    {date:'2026-08-18',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第13-14节',
+      '科目二·教育基础（下）：看书第1轮',
+      '科目二·教育基础（下）：整理笔记',
+      '科目二·简答题背诵 jz51–jz55（5道）',
+    ]},
+    // D8 8/19
+    {date:'2026-08-19',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第15-16节',
+      '科目二·教育基础（下）：看书第2轮+画思维导图',
+      '科目二·教育基础（下）：刷题（40道）',
+      '科目二·简答题背诵 jz56–jz60（5道）',
+    ]},
+    // D9 8/20
+    {date:'2026-08-20',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第17-18节',
+      '科目二·学生指导：看书+思维导图',
+      '科目二·学生指导：刷题（40道）',
+      '科目二·简答题背诵 jz61–jz65（5道）',
+    ]},
+    // D10 8/21
+    {date:'2026-08-21',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第19-20节',
+      '科目二·教学实施：看书+思维导图',
+      '科目二·教学实施：刷题（40道）',
+      '科目二·简答题背诵 jz66–jz70（5道）',
+    ]},
+    // D11 8/22
+    {date:'2026-08-22',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第21-22节',
+      '科目二·学校班级管理：看书+思维导图',
+      '科目二·学习心理：看书+思维导图',
+      '科目二·简答题背诵 jz71–jz75（5道）',
+    ]},
+    // D12 8/23
+    {date:'2026-08-23',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第23-24节',
+      '科目一·法律法规：刷题第1轮（40道）',
+      '科目二·班级管理+学习心理：刷题（40道）',
+      '科目二·简答题背诵 jz76–jz80（5道）',
+    ]},
+    // D13 8/24
+    {date:'2026-08-24',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第25-26节',
+      '科目一·法律法规：刷题第2轮（40道）+错题复盘',
+      '科目二·简答题jz36-jz60 快速复习',
+      '科目二·简答题背诵 jz81–jz85（5道）',
+    ]},
+    // D14 8/25
+    {date:'2026-08-25',phase:'阶段一·全面过知识',tasks:[
+      '科目一·文学素养视频 第27-28节',
+      '科目一·信息处理&逻辑推理：刷题第1轮（40道）',
+      '科目二·简答题背诵 jz86–jz90（5道）',
+    ]},
+    // ── 阶段二：专项强化（8/26–9/5，11天）──
+    // D15 8/26
+    {date:'2026-08-26',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第\1-\2节 + 刷题',
+      '科目一·信息处理&逻辑推理：刷题第2轮（40道）+错题复盘',
+      '科目二·简答题背诵 jz91–jz95（5道）',
+    ]},
+    // D16 8/27
+    {date:'2026-08-27',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第31-32节 + 刷题',
+      '科目一·写作练习第1篇（完整写作→对照范文→提炼模板）',
+      '科目二·简答题背诵 jz96–jz100（5道）—— 第一轮完成！',
+    ]},
+    // D17 8/28
+    {date:'2026-08-28',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第33-34节 + 刷题',
+      '科目一·写作练习第2篇',
+      '科目二·简答题第二轮 jz1–jz5 复习（重点背诵）',
+    ]},
+    // D18 8/29
+    {date:'2026-08-29',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第35-36节 + 刷题',
+      '科目一·写作练习第3篇',
+      '科目二·简答题第二轮 jz6–jz10',
+    ]},
+    // D19 8/30
+    {date:'2026-08-30',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第37-38节 + 刷题',
+      '科目二·教学设计练习第1篇',
+      '科目二·简答题第二轮 jz11–jz15',
+    ]},
+    // D20 8/31
+    {date:'2026-08-31',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第39-40节 + 刷题',
+      '科目二·教学设计练习第2篇',
+      '科目二·简答题第二轮 jz16–jz20',
+    ]},
+    // D21 9/1
+    {date:'2026-09-01',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第41-42节 + 刷题',
+      '科目二·材料分析练习（教育观念角度1篇）',
+      '科目二·材料分析练习（教学角度1篇）',
+      '科目二·简答题第二轮 jz21–jz25',
+    ]},
+    // D22 9/2
+    {date:'2026-09-02',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第43-44节 + 刷题',
+      '科目二·材料分析练习（德育角度1篇）',
+      '科目二·材料分析练习（班主任/教师角度各1篇）',
+      '科目二·简答题第二轮 jz26–jz30',
+    ]},
+    // D23 9/3
+    {date:'2026-09-03',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第45-46节 + 刷题',
+      '科目一·阅读理解材料分析练习1篇',
+      '科目二·简答题第二轮 jz31–jz35',
+    ]},
+    // D24 9/4
+    {date:'2026-09-04',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第47-48节 + 刷题',
+      '科目一思维导图总整理（职业理念+职业道德+法律法规）',
+      '科目二·简答题第二轮 jz36–jz40',
+    ]},
+    // D25 9/5
+    {date:'2026-09-05',phase:'阶段二·专项强化',tasks:[
+      '科目一·文学素养视频 第49-50节 + 刷题',
+      '科目二思维导图总整理（教育基础+学生指导+教学实施+班级管理）',
+      '科目二·简答题第二轮 jz41–jz45',
+    ]},
+    // ── 阶段三：冲刺模拟（9/6–9/12，7天）──
+    // D26 9/6
+    {date:'2026-09-06',phase:'阶段三·冲刺模拟',tasks:[
+      '科目一·文学素养视频 第51-52节 + 刷题',
+      '模拟套卷第1套（科目一完整卷，在家做）',
+      '对答案+标错题',
+      '科目二·简答题第二轮 jz46–jz50',
+    ]},
+    // D27 9/7
+    {date:'2026-09-07',phase:'阶段三·冲刺模拟',tasks:[
+      '科目一·文学素养视频 第53-54节 + 刷题',
+      '模拟套卷第2套（科目二完整卷，在家做）',
+      '对答案+标错题',
+      '科目二·简答题第二轮 jz51–jz55',
+    ]},
+    // D28 9/8
+    {date:'2026-09-08',phase:'阶段三·冲刺模拟',tasks:[
+      '科目一·文学素养视频 第55-56节 + 刷题',
+      '模拟套卷第3套（科目一+科目二，在家做）',
+      '对答案+标错题',
+      '科目二·简答题第二轮 jz56–jz60',
+    ]},
+    // D29 9/9
+    {date:'2026-09-09',phase:'阶段三·冲刺模拟',tasks:[
+      '科目一·文学素养视频 第57-58节 + 刷题',
+      '三套卷错题集中复盘',
+      '科目二·简答题第二轮 jz61–jz65',
+      '职业理念/职业道德背诵巩固',
+    ]},
+    // D30 9/10
+    {date:'2026-09-10',phase:'阶段三·冲刺模拟',tasks:[
+      '科目一·文学素养视频 第59-60节 + 刷题',
+      '科目二·简答题第二轮 jz66–jz70',
+      '错题二刷',
+      '思维导图快速过一遍（科目一+科目二）',
+    ]},
+    // D31 9/11
+    {date:'2026-09-11',phase:'阶段三·冲刺模拟',tasks:[
+      '科目一·文学素养视频 第61-62节',
+      '科目二·简答题第二轮 jz71–jz75（轻量）',
+      '职业理念/道德/高频简答 快速过',
+      '早睡，保证状态！',
+    ]},
+    // D32 9/12
+    {date:'2026-09-12',phase:'🎯 考试日',tasks:[
+      '考试加油！把平时学的全部发挥出来 💪',
+    ]},
+  ];
+  return plan;
+})();
+
 const JIAOZU_QUESTIONS=[
   {id:'jz1',q:'教育与生产力的关系',a:'生产力对教育的制约：①决定教育规模和速度；②制约人才培养规格和教育结构；③制约教育内容、方法、组织形式和手段。\n教育对生产力的促进：①教育是劳动力再生产的基本途径；②是科学知识再生产的最有效形式；③是进行技术创新的重要手段。',m:'龟速够防守 / 两再一新促生产'},
   {id:'jz2',q:'教育与政治经济制度的关系',a:'政治经济制度对教育的制约：①决定教育性质；②决定教育宗旨与目的；③决定教育领导权；④决定受教育权利；⑤决定教育内容和管理体制。\n教育对政治经济制度的反作用：①培养所需人才；②促进政治民主化；③创造社会舆论；④完成年轻一代政治社会化。',m:'体内性质两权一目的 / 人鱼公主促政治'},
@@ -3262,7 +3486,70 @@ const JIAOZU_QUESTIONS=[
   {id:'jz47',q:'促进学习迁移的教学',a:'①精选教材；②合理编排教学内容；③合理安排教学程序；④教授学习策略，提高迁移意识性。',m:'二排才艺'},
   {id:'jz48',q:'操作技能的形成阶段',a:'①操作定向（认知阶段）：理解结构和程序，建立定向映象；②操作模仿：实际再现示范动作或行为模式；③操作整合：各动作依内在联系联结，形成定型一体化动作；④操作熟练：高度程序化、自动化和完善化。',m:'订房证书'},
   {id:'jz49',q:'操作技能的培养要求',a:'①准确的示范与讲解；②必要而适当的练习；③充分而有效的反馈；④建立稳定清晰的动觉。',m:'试讲练习，反馈动觉'},
-  {id:'jz50',q:'提高问题解决能力的教学',a:'①提高学生知识储备的数量与质量；②教授与训练解决问题的方法与策略；③提供多种练习机会；④培养思考问题的习惯。',m:'思恋良方'}
+  {id:'jz50',q:'提高问题解决能力的教学',a:'①提高学生知识储备的数量与质量；②教授与训练解决问题的方法与策略；③提供多种练习机会；④培养思考问题的习惯。',m:'思恋良方'},
+  // ── jz51–jz100 科目二简答题（小学·第51-100题）──
+  {id:'jz51',q:'简述小学德育的途径',a:'①政治课及各科教学（基本途径）；②课外活动与校外活动；③劳动；④少先队活动；⑤班主任工作（包括班会）；⑥学校的共青团活动（不含小学）。',m:'课劳队班团'},
+  {id:'jz52',q:'简述小学德育常用方法',a:'①说服法（讲解、报告、谈话、辩论）；②榜样法（以人物、先进集体为榜样）；③锻炼法（实际锻炼、组织活动）；④陶冶法（情感陶冶、环境熏陶）；⑤奖惩法。',m:'说榜锻陶奖'},
+  {id:'jz53',q:'小学德育内容的主要构成',a:'①爱国主义和国际主义教育；②理想教育；③集体主义教育；④劳动教育；⑤遵纪守法教育；⑥辩证唯物主义世界观和人生观教育；⑦道德品质教育。',m:'爱国理想，集劳法辩道'},
+  {id:'jz54',q:'简述教师专业发展的途径',a:'①师范教育（职前培养）；②新教师入职辅导；③在职培训；④自我教育（最直接方式）；⑤教育实践（最基本途径）。',m:'入职在职自我实践'},
+  {id:'jz55',q:'简述教师的职业道德（小学）',a:'①爱国守法；②爱岗敬业；③关爱学生；④教书育人；⑤为人师表；⑥终身学习。',m:'爱国岗生，教书表率终身学'},
+  {id:'jz56',q:'课程目标的依据',a:'①学习者的需要（学生的身心发展特点）；②当代社会生活的需要；③学科知识及其发展。',m:'学生社会学科'},
+  {id:'jz57',q:'影响课程的主要因素',a:'①社会（政治、经济、文化、科技）；②知识（学科知识体系）；③学习者（年龄、身心发展规律、认知风格）。',m:'学子社会有知识'},
+  {id:'jz58',q:'课程实施的影响因素',a:'①课程计划本身的特点；②教师特点（态度、知识、技能）；③学校特点（规模、设施、资源）；④外部环境（政策、支持）。',m:'计划教师学校环境'},
+  {id:'jz59',q:'简述隐性课程的特点',a:'①潜在性（无意识）；②不可预期性；③经验性（通过体验获得）；④广泛性（学校各方面）。',m:'潜移默化广经验'},
+  {id:'jz60',q:'简述课程评价的主要模式',a:'①目标评价模式（泰勒，侧重课程目标的实现程度）；②目的游离评价模式（斯克里文，关注实际效应）；③CIPP评价模式（背景-输入-过程-结果）；④CSE评价模式。',m:'目目CIPP'},
+  {id:'jz61',q:'简述小学体育课的类型',a:'①综合型体育课；②技术（技能）课；③理论课；④考查（考试）课；⑤测验课。',m:'综技理考测'},
+  {id:'jz62',q:'影响体育学习的主要因素',a:'①学生的身心发展水平；②学生的体育基础；③学生的动机；④教师的教学方法和态度；⑤场地设施、器材和自然条件。',m:'身心基础动机，教法场地'},
+  {id:'jz63',q:'小学班主任的工作职责',a:'①了解研究学生；②组织建立班集体；③协调各科教学工作；④组织班会及课外活动；⑤做好德育工作（思想品德教育）；⑥与家长建立联系；⑦综合评定操行成绩；⑧做好行政事务工作。',m:'研究组织协调活动，德育家长评定行政'},
+  {id:'jz64',q:'简述小学生德育评价的方法',a:'①观察法；②问卷法；③谈话法；④品德测验法；⑤档案袋法。',m:'察问谈测档'},
+  {id:'jz65',q:'简述课堂问题行为的处理方式',a:'①非语言暗示（眼神、走近等）；②直接表达感受；③暂时中止课堂讨论；④使用言语暗示；⑤采用幽默方式；⑥给予短暂隔离；⑦采用认知行为矫正策略。',m:'非语中语幽隔认'},
+  {id:'jz66',q:'简述赏识教育的内涵与原则',a:'内涵：教师充分理解、尊重、信任学生，并以赏识的眼光发现和肯定学生的积极方面。\n原则：①尊重差异；②坚持适度；③重在实质；④因人而异。',m:'因差适实'},
+  {id:'jz67',q:'简述影响品德形成的因素',a:'①外部条件：家庭教养方式、社会风气、同伴群体；②内部条件：认知失调（不一致引起学习动机）、态度定势（已有的心向）、道德认知。',m:'认知外家社同，内认失态道'},
+  {id:'jz68',q:'简述强化理论在课堂管理中的应用',a:'①运用正强化增加期望行为；②运用消退减少不期望行为；③运用惩罚控制不良行为；④注意强化的时机与频率；⑤采用代币制等行为矫正技术。',m:'正消惩时代'},
+  {id:'jz69',q:'简述人本主义学习理论的基本观点',a:'①学习是有意义的经验；②强调学习的情感与认知的统一；③强调学习的自我实现与自我评价；④教师是"促进者"，创设有利条件；⑤反对奖惩控制。',m:'有意自我实现促进'},
+  {id:'jz70',q:'简述加德纳多元智能理论的内容',a:'①语言智能；②逻辑—数学智能；③空间智能；④身体—运动智能；⑤音乐智能；⑥人际智能；⑦内省智能；⑧自然探究智能（后增）。',m:'语逻空身乐，人内自然'},
+  {id:'jz71',q:'简述小学教育的特点',a:'①具有基础性；②具有全民性（义务教育）；③具有全面性（德智体美劳）；④具有启蒙性。',m:'基础全民全面启蒙'},
+  {id:'jz72',q:'教师的含义与特征',a:'含义：教师是履行教育教学职责的专业人员，承担教书育人任务。\n特征：①专业性；②示范性；③创造性；④服务性。',m:'专示创服'},
+  {id:'jz73',q:'简述信息加工学习理论的基本观点',a:'①学习是信息的获取与加工过程；②记忆由感觉登记、短时记忆、长时记忆构成；③注意是信息加工的瓶颈；④精细加工有助于长时记忆；⑤元认知对学习具有监控作用。',m:'感短长注精元'},
+  {id:'jz74',q:'简述迁移的类型及联系',a:'①水平迁移（横向，难度相近）与垂直迁移（纵向，难度不同）；②正迁移（促进）与负迁移（抑制）；③顺向迁移与逆向迁移；④一般迁移与具体迁移。联系：正确理解迁移类型有助于合理安排教学内容和顺序。',m:'水垂正负顺逆一具'},
+  {id:'jz75',q:'简述小学阶段学生的思维特点',a:'①从具体形象思维为主向抽象逻辑思维为主过渡（10-11岁为关键期）；②思维的发展具有不平衡性；③思维形式的发展晚于内容；④形象性与逻辑性并存。',m:'从形到逻，10岁转折'},
+  {id:'jz76',q:'简述讲授法的运用要求',a:'①语言清晰，条理分明，重点突出；②讲授要有启发性，引导学生积极思维；③讲授要与直观演示结合；④讲授适当，注意学生接受度。',m:'清启直适'},
+  {id:'jz77',q:'简述讨论法的运用要求',a:'①讨论前做好充分准备，确定题目和计划；②讨论中善于引导，鼓励学生积极发言；③讨论后做好总结。',m:'前备中导后总'},
+  {id:'jz78',q:'简述作业的类型',a:'①阅读作业；②练习作业；③实验和实习作业；④创作作业（写作、图画等）；⑤综合作业（多种形式综合）。',m:'阅练实创综'},
+  {id:'jz79',q:'简述影响遗忘的因素',a:'①识记材料的性质与数量；②学习程度（过度学习约150%最佳）；③记忆任务的长久性；④识记后的干扰（倒摄抑制、前摄抑制）；⑤情绪和动机。',m:'材料过度干扰情绪'},
+  {id:'jz80',q:'克服负迁移的措施',a:'①加强基础知识教学；②编排合理的教学顺序；③注意分析相似内容差异；④鼓励学生进行比较学习；⑤给予适当的元认知指导。',m:'析差元认先基础'},
+  {id:'jz81',q:'简述发现教学法的特点与应用',a:'特点：①强调学生主动探究；②培养解决问题能力；③有利于内部动机形成；④有利于记忆保持。\n应用：创设问题情境→引导探索→总结归纳→应用验证。',m:'主动探究四步'},
+  {id:'jz82',q:'简述合作学习的基本要素',a:'①积极相互依赖；②面对面促进性交互；③个体责任；④小组成员技能；⑤小组自评。',m:'依互责技评'},
+  {id:'jz83',q:'简述教学媒体的选择原则',a:'①目标控制原则（符合教学目标）；②内容适合原则；③对象适宜原则（适合学生特点）；④条件允许原则（设备与经费）；⑤效益原则。',m:'目内对条效'},
+  {id:'jz84',q:'简述影响课堂气氛的因素',a:'①教师领导方式；②教师对学生的期望（皮格马利翁效应）；③教师的情绪状态；④学生的个体差异；⑤班集体的凝聚力。',m:'领期情差凝'},
+  {id:'jz85',q:'简述创造性的培养措施',a:'①创设有利于创造性产生的环境（宽松、安全）；②注重创造性个性的塑造（好奇心、自信）；③开展创造性思维训练（头脑风暴、发散思维）；④保护并激发儿童的好奇心。',m:'境性训奇'},
+  {id:'jz86',q:'简述小学生心理健康教育的内容',a:'①学习心理辅导；②情绪辅导；③人际关系辅导；④性格（个性）辅导；⑤青春期性心理辅导；⑥职业辅导（升学择业）。',m:'学情际性青职'},
+  {id:'jz87',q:'简述埃里克森社会性发展阶段理论',a:'①信任对不信任（0-1.5岁）；②自主对羞怯/怀疑（1.5-3岁）；③主动对内疚（3-6岁）；④勤奋对自卑（6-12岁）；⑤同一性对角色混乱（12-18岁）；⑥亲密对孤独；⑦生殖对停滞；⑧完善对绝望。',m:'信主主勤同亲生完'},
+  {id:'jz88',q:'简述小学生亲社会行为的培养',a:'①理解与认知培养（道德认知发展）；②情感培养（共情能力）；③行为培养（榜样示范、正强化）；④创设有助于亲社会行为的环境；⑤角色扮演与情景模拟。',m:'知情行境角'},
+  {id:'jz89',q:'简述青少年同伴关系的发展特点',a:'①同伴影响日益增大（超过父母）；②更看重忠诚、理解和共同兴趣；③同性同伴关系先于异性；④出现小团体和群体现象；⑤同伴关系影响学业、社会化和心理健康。',m:'亲同性群影响'},
+  {id:'jz90',q:'简述小学生道德发展的特点',a:'①小学生道德发展处于他律向自律过渡（科尔伯格前习俗→习俗水平）；②道德认知与行为渐趋一致；③正义感、集体意识增强；④规则意识逐步内化；⑤受同伴影响明显。',m:'他律习俗，认行一致'},
+  {id:'jz91',q:'简述科尔伯格道德发展三阶段六水平',a:'①前习俗水平：服从惩罚（第1级）、朴素利己（第2级）；②习俗水平：好孩子（第3级）、遵法则（第4级）；③后习俗水平：社会契约（第5级）、普遍伦理（第6级）。',m:'前惩利，习好法，后契伦'},
+  {id:'jz92',q:'简述有效教学的标准',a:'①充分的课前准备；②明确的教学目标；③积极的师生互动；④有效的教学策略运用；⑤合理的教学评价；⑥良好的课堂管理。',m:'备目互策评管'},
+  {id:'jz93',q:'简述学生身心发展的影响因素及其关系',a:'①遗传（物质基础，提供可能性）；②环境（提供现实条件，起决定作用说法不准确）；③教育（主导作用，学校教育最重要）；④个体主观能动性（最高层次，内因）。',m:'遗环教主'},
+  {id:'jz94',q:'简述素质教育的内涵',a:'①以提高国民素质为根本宗旨；②面向全体学生；③促进学生全面发展；④促进学生个性发展；⑤以培养创新精神和实践能力为重点。',m:'全体面向全面发展，创新实践'},
+  {id:'jz95',q:'简述当前基础教育课程改革的背景',a:'①国际教育改革的大背景；②国内政治、经济体制改革的需要；③科技发展和知识经济时代的挑战；④教育内部改革的需求（减负、应试教育问题）；⑤原课程体系弊端。',m:'国际国内科技减负旧弊'},
+  {id:'jz96',q:'新课程倡导的学习方式',a:'①自主学习（发挥主体地位）；②合作学习（互助共进）；③探究学习（主动发现问题）。',m:'自合探'},
+  {id:'jz97',q:'简述评价改革的基本思路',a:'①发挥评价的教育功能，促进学生发展；②建立多元化评价体系；③注重过程评价，形成性与终结性结合；④建立学生综合素质评价档案；⑤减少甄别和选拔功能，突出激励功能。',m:'多元过程档案激励'},
+  {id:'jz98',q:'简述学习困难学生的成因',a:'①智力因素：工作记忆容量小、信息加工速度慢；②非智力因素：动机不足、注意力不集中、学习方法不当；③家庭环境因素；④学校教学因素；⑤其他社会因素。',m:'智非家校社'},
+  {id:'jz99',q:'简述有效备课的基本要求',a:'①了解课程标准和教材；②深入了解学生（已有知识、能力、兴趣）；③确定教学目标（三维目标）；④选择教学内容和方法；⑤设计教学程序；⑥准备教具和媒体。',m:'课材生目内程具'},
+  {id:'jz100',q:'简述小学生情绪发展的特点',a:'①情绪的冲动性和不稳定性逐渐减少；②情绪的内隐性逐渐增强；③高级情感（道德感、理智感、美感）迅速发展；④情绪调控能力增强；⑤小学低年级情绪表现外显、易激动；⑥小学高年级情绪趋向内隐、控制增强。',m:'外显内隐高级情感增'},
+  // ── 科目一材料分析题常见素材 ──
+  {id:'jz_m1',q:'材料分析素材：教育观念角度（素质教育观）',a:'【以学生发展为本】\n①尊重学生主体地位，发挥学生主动性；②因材施教，关注学生个体差异；③注重培养学生创新精神和实践能力；④促进学生全面发展（德智体美劳）。\n\n【素质教育核心要义】\n①面向全体学生（而非少数尖子）；②以学生全面发展为目标；③以培养创新精神和实践能力为重点；④尊重学生个性，发展特长。\n\n【减负观】\n减轻过重课业负担，让学生有充分的时间自主发展，激发内在学习动机。',m:'全面发展+创新实践+面向全体',subject:'S2',qtype:'analysis',topic:'教育观念角度'},
+  {id:'jz_m2',q:'材料分析素材：教育观念角度（学生观）',a:'【"两独一发"学生观】\n①学生是发展中的人（有发展的需要与可能，不能以成人标准要求）；②学生是独特的人（有自身特点、差异，个性独特）；③学生是具有独立意义的人（不是教师的附属，有独立人格和权利）。\n\n【尊重学生权利】\n①受教育权；②人身安全权；③人格尊严权；④隐私权；⑤休息权。\n\n【因材施教】\n承认差异→了解差异→尊重差异→利用差异促进各自发展。',m:'两独一发+尊重权利+因材施教',subject:'S2',qtype:'analysis',topic:'教育观念角度'},
+  {id:'jz_m3',q:'材料分析素材：教学角度（新课程教学观）',a:'【教学观核心变化】\n①教学不只是传授知识，更是促进学生发展；②教学是师生双边互动过程，不是教师单向灌输；③教学以学生为主体，教师为主导；④注重学生自主、合作、探究的学习方式。\n\n【启发式教学原则运用】\n①激发学生思维，提出问题引导探索；②调动学生学习积极性；③让学生主动建构知识，而非被动接受。\n\n【分层教学/差异教学】\n了解学生差异→分层设置目标→个性化指导→多元评价。',m:'师生互动+主体主导+自主合作探究',subject:'S2',qtype:'analysis',topic:'教学角度'},
+  {id:'jz_m4',q:'材料分析素材：教学角度（教学方法与策略）',a:'【讲授法注意事项】\n语言清晰条理、有启发性、与直观结合、控制时间节奏。\n\n【讨论法/合作学习】\n做好前期准备（明确问题）→引导有效讨论→总结提炼；要求：积极依赖、个体责任、面对面互动。\n\n【直观教学原则】\n选择适宜直观教具；直观与讲解结合；语言直观；防止滥用。\n\n【理论联系实际原则】\n联系生活实际；联系学生经验；重视实践操作；补充乡土教材。\n\n【作业布置原则】\n内容符合课标；分量适宜难易适度；启发思维；及时批改反馈。',m:'讨论合作+直观原则+联系实际',subject:'S2',qtype:'analysis',topic:'教学角度'},
+  {id:'jz_m5',q:'材料分析素材：德育角度（德育原则与方法）',a:'【德育原则（常考5条）】\n①正面引导原则（以表扬鼓励为主）；②知行统一原则（认知与行为一致）；③尊重学生与严格要求相结合原则；④因材施教原则（根据学生特点）；⑤集体教育与个别教育相结合原则。\n\n【德育方法运用】\n说服法：要有针对性、知识性、注意时机、以诚待人。\n榜样法：树立榜样→引导分析→激励模仿。\n陶冶法：通过环境、氛围、情感感化学生。\n锻炼法：组织实践活动，在实践中培养品德。\n\n【德育内容优先序】\n爱国教育→理想信念→道德品质→规则意识→自我管理。',m:'正面引导+知行统一+说榜陶锻',subject:'S2',qtype:'analysis',topic:'德育角度'},
+  {id:'jz_m6',q:'材料分析素材：班主任与班级管理角度',a:'【班集体建设四步骤】\n①确定奋斗目标（近期、中期、远期）；②建立核心队伍（班委、小组长）；③建立正常规范秩序；④组织多样活动，培养良好班风。\n\n【后进生转化策略】\n①关爱与严格要求结合；②发现"闪光点"，激发自信；③因材施教，对症下药；④同伴帮助与家校合作；⑤持之以恒，不放弃。\n\n【家校沟通原则】\n①尊重家长为第一原则；②先扬后抑（先肯定再提问题）；③有理性意识，避免情绪化；④建立信任关系。\n\n【班主任工作职责】\n了解学生→建设班集体→协调教学→德育工作→家校联系→综合评价。',m:'目标核心秩序活动+后进闪光点+先扬后抑',subject:'S2',qtype:'analysis',topic:'班主任与班级管理角度'},
+  {id:'jz_m7',q:'材料分析素材：教师角度（职业道德与专业发展）',a:'【教师职业道德六条】\n①爱国守法（底线）；②爱岗敬业（本分）；③关爱学生（核心）；④教书育人（本职）；⑤为人师表（要求）；⑥终身学习（发展）。\n\n【关爱学生具体体现】\n①平等对待每位学生（不歧视）；②尊重学生人格尊严；③保护学生身心安全；④关注后进生和特殊需求学生；⑤维护学生合法权益。\n\n【教师专业发展途径】\n①入职培训；②在职研修；③教育科研（行动研究）；④自我反思（最直接）；⑤教育实践（最基本）。\n\n【教育机智体现】\n随机应变、因势利导、化解矛盾、将突发事件转化为教育资源。',m:'六条职业道德+关爱平等+教育机智',subject:'S2',qtype:'analysis',topic:'教师角度'},
+  // ── 科目一材料分析题背诵素材（3个方向）──
+  {id:'jz_s1_1',q:'科目一材料分析·职业理念答题框架',a:'【答题方向：素质教育观】\n①以学生发展为本，尊重学生主体地位，发挥学生主动性；②面向全体学生，而非只关注尖子生；③促进学生全面发展（德智体美劳）；④尊重学生个体差异，因材施教；⑤以培养创新精神和实践能力为重点。\n\n【答题方向：学生观（两独一发）】\n①学生是发展中的人——有发展需要与可能，不能以成人标准要求；②学生是独特的人——有自身特点和差异；③学生是具有独立意义的人——有独立人格，不是教师附属。\n\n【答题方向：教育观】\n①教育不只传授知识，更要促进全面发展；②注重学生情感、态度、价值观培养；③重视过程性评价，不唯分数论。\n\n【答题套路】\n材料中XX行为→体现了（违背了）XX理念→正确做法应该是XX。',m:'素质教育+两独一发+教育观',subject:'S1',qtype:'analysis',topic:'职业理念'},
+  {id:'jz_s1_2',q:'科目一材料分析·职业道德答题框架',a:'【六条职业道德核心内容】\n①爱国守法：遵守宪法法律、贯彻党的教育方针、依法执教；\n②爱岗敬业：忠诚教育事业，尽职尽责，不得敷衍塞责；\n③关爱学生（核心）：关心爱护全体学生，尊重人格，平等公正，不体罚或变相体罚，不歧视；\n④教书育人：实施素质教育，遵循教育规律，因材施教，促进学生全面发展，不以分数作为评价学生的唯一标准；\n⑤为人师表：坚守高尚情操，廉洁从教，自觉抵制有偿家教，以身作则，作风正派；\n⑥终身学习：崇尚科学精神，树立终身学习理念，不断提高业务能力。\n\n【答题套路】\n材料中教师XX行为→违反了（体现了）教师职业道德中的XX条→正确做法是XX。\n\n【常考违规行为对应】\n体罚/辱骂学生→违反关爱学生；有偿补课→违反为人师表；不备课/敷衍→违反爱岗敬业；泄露学生隐私→违反关爱学生。',m:'爱国岗生教书表终身',subject:'S1',qtype:'analysis',topic:'职业道德'},
+  {id:'jz_s1_3',q:'科目一材料分析·阅读理解答题框架',a:'【考查方向】\n科目一阅读理解材料分析通常考：①判断教师行为是否符合教育理念；②分析材料中教育现象背后的原因；③提出改进建议。\n\n【常用答题结构】\n第一步：概括材料主要内容（1-2句）\n第二步：从理论角度分析（结合职业理念/道德/心理学知识点）\n第三步：给出具体可操作的改进建议\n\n【关键答题词汇积累】\n✦ 正向：体现了…；有利于…；促进了…；符合…原则\n✦ 负向：违背了…；不利于…；忽视了…；片面强调…\n✦ 改进：应当…；需要…；建议…；可以通过…来…\n\n【时间分配建议】\n阅读材料：3分钟；构思框架：2分钟；作答：10分钟；检查：2分钟',m:'概括-分析-建议三步法',subject:'S1',qtype:'analysis',topic:'阅读理解'}
 ];
 async function ensureJiaozuBank(){
   const existing=await dbAll('jiaozu_bank');
@@ -3274,6 +3561,18 @@ async function ensureJiaozuBank(){
     if(!q.subject||!q.qtype){
       q.subject=q.subject||'S2';q.qtype=q.qtype||'short';
       await dbPut('jiaozu_bank',q);
+    }
+  }
+  // ensure jz51-jz100 and jz_m* are present (append only if missing)
+  const ids=new Set(all.map(q=>q.id));
+  for(const q of JIAOZU_QUESTIONS){
+    if(!ids.has(q.id))await dbPut('jiaozu_bank',q);
+  }
+  // force-correct subject on jz_m* records (fix legacy S1 mistake)
+  const allAfter=await dbAll('jiaozu_bank');
+  for(const q of allAfter){
+    if(q.id.startsWith('jz_m')&&q.subject!=='S2'){
+      q.subject='S2';await dbPut('jiaozu_bank',q);
     }
   }
 }
@@ -3293,8 +3592,8 @@ async function renderJiaozu(){
   const S1Q=allQ.filter(q=>q.subject==='S1');
   const S2Q=allQ.filter(q=>q.subject==='S2');
   const subjectQ=activeSubj==='S1'?S1Q:S2Q;
-  const S2Types={single:'单选题',short:'简答题',analysis:'材料分析题',design:'教学设计'};
-  const S1Types={single:'单选题',analysis:'材料分析题',writing:'写作题'};
+  const S2Types={short:'简答题',analysis:'材料分析题'};
+  const S1Types={analysis:'材料分析题'};
   const types=activeSubj==='S1'?S1Types:S2Types;
 
   // progress for this subject
@@ -3415,47 +3714,147 @@ async function renderJiaozu(){
   // ── 今日任务 Tab ──
   let tasksTabHtml='';
   if(activeTab==='tasks'){
-    const wid=getWeekId();
-    const subjects=await dbAll('study_subjects');
-    const allTasks=await dbIndex('tasks','weekId',wid);
-    const allCI=await dbIndex('checkins','weekId',wid);
-    const ciMap={};allCI.forEach(c=>{ciMap[c.taskId+'_'+c.date]=c;});
-    const todayTasks=allTasks.filter(t=>t.taskDate===today||!t.taskDate);
-    if(!subjects.length||!todayTasks.length){
-      tasksTabHtml=`<div class="card"><div style="padding:16px;text-align:center;color:var(--ink3);font-size:13px">今天暂无学习任务<br><span style="font-size:11px">前往「能力提升」添加任务</span></div></div>`;
+    const todayStr=todayKey();
+    const examDate='2026-09-12';
+    const daysLeft=Math.max(0,Math.ceil((new Date(examDate)-new Date(todayStr))/86400000));
+    const totalDays=32;
+    const dayNum=Math.max(0,Math.ceil((new Date(todayStr)-new Date('2026-08-11'))/86400000));
+    const progPct=Math.min(100,Math.round(dayNum/totalDays*100));
+
+    const customPlan=await dbGet('jiaozu_logs','jzplan_'+todayStr);
+    const defaultPlan=JIAOZU_PLAN.find(p=>p.date===todayStr);
+    const activePlan=(customPlan&&customPlan._v===2)?customPlan:defaultPlan;
+    const phase=activePlan?activePlan.phase:(defaultPlan?defaultPlan.phase:'—');
+    const taskLog=(await dbGet('jiaozu_logs','jztask_'+todayStr))||{id:'jztask_'+todayStr,done:[]};
+    const isExamDay=todayStr==='2026-09-12';
+    const isBeforeStart=todayStr<'2026-08-12';
+    const isAfterExam=todayStr>'2026-09-12';
+
+    // ── 进度统计（扫描所有已过去日期的打卡记录）──
+    // 科目一：4个理论模块 + 文学素养（共5个）
+    const S1_MODULES=['职业理念','职业道德','法律法规','信息处理','文学素养'];
+    // 科目二：6个理论模块 + 简答题（共7个）
+    const S2_MODULES=['教育基础（上）','教育基础（下）','学生指导','教学实施','学校班级管理','学习心理','简答题'];
+    const s1Done=new Set(), s2Done=new Set();
+    let litVideoMax=0, jzDoneMax=20;
+    for(const p of JIAOZU_PLAN){
+      if(p.date>todayStr)break;
+      const tLog=(await dbGet('jiaozu_logs','jztask_'+p.date))||{done:[]};
+      const tasks=p.tasks||[];
+      tasks.forEach((t,i)=>{
+        if(!tLog.done.includes(i))return;
+        S1_MODULES.forEach(m=>{if(t.includes(m))s1Done.add(m);});
+        // 科目二模块关键词匹配；简答题单独判断
+        ['教育基础（上）','教育基础（下）','学生指导','教学实施','学校班级管理','学习心理'].forEach(m=>{if(t.includes(m))s2Done.add(m);});
+        if(t.match(/jz\d+[–\-]jz\d+/))s2Done.add('简答题');
+        const litM=t.match(/文学素养视频.*第(\d+)-(\d+)节/);
+        if(litM)litVideoMax=Math.max(litVideoMax,parseInt(litM[2]));
+        const jzM=t.match(/jz(\d+)[–\-]jz(\d+)/);
+        if(jzM)jzDoneMax=Math.max(jzDoneMax,parseInt(jzM[2]));
+      });
+    }
+    const s1Pct=Math.round(s1Done.size/S1_MODULES.length*100);
+    const s2Pct=Math.round(s2Done.size/S2_MODULES.length*100);
+    const litPct=Math.round(litVideoMax/63*100);
+    const jzPct=Math.round(Math.min(jzDoneMax,100)/100*100);
+
+    // ── 顶部倒计时 ──
+    tasksTabHtml+=`<div class="jz-day-bar" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:13px;font-weight:700;color:var(--ink)">${phase}</div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:2px">第 ${dayNum} 天 / 共 32 天</div></div>
+        <div style="text-align:right"><div style="font-size:18px;font-weight:900;color:#E8875A">${daysLeft}</div><div style="font-size:10px;color:var(--ink3)">天后考试</div></div>
+      </div>
+      <div class="jz-progress-track" style="margin:8px 0 10px"><div class="jz-progress-fill" style="width:${progPct}%"></div></div>
+      <button class="btn bg bsm" style="width:100%;font-size:12px" onclick="jzShowFullPlan()">📅 查看 / 编辑完整32天计划</button>
+    </div>`;
+
+    // ── 备考进度卡片 ──
+    const mkBar=(pct,color)=>`<div style="height:4px;background:var(--bd);border-radius:2px;margin-top:5px"><div style="height:4px;background:${color};border-radius:2px;width:${pct}%"></div></div>`;
+    tasksTabHtml+=`<div class="card" style="margin-bottom:10px">
+      <div class="ct" style="margin:0 0 10px">📊 备考进度</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(174,214,241,.15);border-radius:10px;padding:8px 10px">
+          <div style="font-size:10px;color:var(--ink3);margin-bottom:2px">📖 科目一复习</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">${s1Done.size}<span style="font-size:11px;font-weight:400;color:var(--ink3)"> / ${S1_MODULES.length}</span></div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:1px">${[...s1Done].join(' · ')||'未开始'}</div>
+          ${mkBar(s1Pct,'#5DADE2')}
+        </div>
+        <div style="background:rgba(215,189,226,.15);border-radius:10px;padding:8px 10px">
+          <div style="font-size:10px;color:var(--ink3);margin-bottom:2px">📚 科目二复习</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">${s2Done.size}<span style="font-size:11px;font-weight:400;color:var(--ink3)"> / ${S2_MODULES.length}</span></div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:1px">${s2Done.size?[...s2Done].join(' · '):'未开始'}</div>
+          ${mkBar(s2Pct,'#A569BD')}
+        </div>
+        <div style="background:rgba(181,234,215,.15);border-radius:10px;padding:8px 10px">
+          <div style="font-size:10px;color:var(--ink3);margin-bottom:2px">🎬 文学素养视频</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">${litVideoMax}<span style="font-size:11px;font-weight:400;color:var(--ink3)"> / 63 节</span></div>
+          ${mkBar(litPct,'#52BE80')}
+        </div>
+        <div style="background:rgba(253,216,53,.1);border-radius:10px;padding:8px 10px">
+          <div style="font-size:10px;color:var(--ink3);margin-bottom:2px">✏️ 简答题背诵</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">jz${jzDoneMax}<span style="font-size:11px;font-weight:400;color:var(--ink3)"> / 100</span></div>
+          ${mkBar(jzPct,'#E8875A')}
+        </div>
+      </div>
+    </div>`;
+
+    if(isBeforeStart){
+      tasksTabHtml+=`<div class="card"><div style="padding:12px;text-align:center;color:var(--ink3);font-size:13px">备考计划 8月12日开始<br><span style="font-size:11px">先把基础知识过一遍，做好准备💪</span></div></div>`;
+    } else if(isAfterExam){
+      tasksTabHtml+=`<div class="card"><div style="padding:16px;text-align:center;font-size:13px">考试已结束，辛苦了！🎉</div></div>`;
+    } else if(isExamDay){
+      tasksTabHtml+=`<div class="card" style="text-align:center;padding:20px"><div style="font-size:28px">🎯</div><div style="font-size:15px;font-weight:700;margin-top:8px">今天是考试日</div><div style="font-size:12px;color:var(--ink3);margin-top:4px">把平时学的全部发挥出来！加油 💪</div></div>`;
     } else {
-      let totalT=0,doneT=0;
-      for(const subj of subjects.sort((a,b)=>a.order-b.order)){
-        const sTasks=todayTasks.filter(t=>t.subjectId===subj.id);
-        if(!sTasks.length)continue;
-        const sDone=sTasks.filter(t=>{const ci=ciMap[t.id+'_'+(t.taskDate||today)];return ci?.done;});
-        totalT+=sTasks.length;doneT+=sDone.length;
-        const pctS=Math.round(sDone.length/sTasks.length*100);
-        tasksTabHtml+=`<div class="card" style="--accent:${subj.color||'var(--p4)'}">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-            <div class="ct" style="margin:0">${subj.icon||'📖'} ${subj.label}</div>
-            <span style="font-size:13px;font-weight:800;color:${sDone.length===sTasks.length?'#52BE80':'var(--ink2)'}">${sDone.length}/${sTasks.length}</span>
+      // ── 今日任务 ──
+      const mainTasks=(activePlan?activePlan.tasks:[])||[];
+      const doneIdx=taskLog.done||[];
+      const doneCnt=doneIdx.length;
+      const totalCnt=mainTasks.length;
+      const taskPct=totalCnt?Math.round(doneCnt/totalCnt*100):0;
+      tasksTabHtml+=`<div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="ct" style="margin:0">📋 今日任务</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:13px;font-weight:800;color:${doneCnt===totalCnt&&totalCnt?'#52BE80':'var(--ink2)'}">${doneCnt}/${totalCnt}</span>
+            <button class="btn bg bsm" style="font-size:11px;padding:2px 8px" onclick="jzEditDayPlan('${todayStr}')">✏️</button>
           </div>
-          <div class="tl-prog-wrap" style="margin-bottom:8px"><div class="tl-prog-track"><div class="tl-prog-fill" style="width:${pctS}%"></div></div></div>`;
-        for(const t of sTasks){
-          const ciKey=t.id+'_'+(t.taskDate||today);
-          const isDone=ciMap[ciKey]?.done||false;
+        </div>
+        <div class="tl-prog-wrap" style="margin-bottom:8px"><div class="tl-prog-track"><div class="tl-prog-fill" style="width:${taskPct}%"></div></div></div>`;
+      if(!mainTasks.length){
+        tasksTabHtml+=`<div style="padding:8px 0;text-align:center;color:var(--ink3);font-size:12px">今天暂无任务 — 点「✏️」添加</div>`;
+      } else {
+        mainTasks.forEach((t,i)=>{
+          const isDone=doneIdx.includes(i);
           tasksTabHtml+=`<div class="trow">
-            <button class="tchk${isDone?' done':''}" onclick="toggleStudyCI('${t.id}','${t.taskDate||today}')">${isDone?'✓':''}</button>
-            <span class="tname${isDone?' done':''}" style="flex:1">${t.name}</span>
+            <button class="tchk${isDone?' done':''}" onclick="jzToggleDayTask('${todayStr}',${i})">${isDone?'✓':''}</button>
+            <span class="tname${isDone?' done':''}" style="flex:1">${t}</span>
           </div>`;
-        }
+        });
+      }
+      tasksTabHtml+=`</div>`;
+    }
+
+    // ── 明日预览（始终显示，不限于正常日期）──
+    const tomorrowStr=(()=>{const d=new Date(todayStr);d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
+    if(tomorrowStr<='2026-09-12'&&!isAfterExam){
+      const tmCustom=await dbGet('jiaozu_logs','jzplan_'+tomorrowStr);
+      const tmDefault=JIAOZU_PLAN.find(p=>p.date===tomorrowStr);
+      const tmPlan=(tmCustom&&tmCustom._v===2)?tmCustom:tmDefault;
+      const tmTasks=(tmPlan?tmPlan.tasks:[])||[];
+      if(tmTasks.length){
+        const td=new Date(tomorrowStr);
+        const tmLabel=`${td.getMonth()+1}月${td.getDate()}日（${['日','一','二','三','四','五','六'][td.getDay()]}）`;
+        tasksTabHtml+=`<div class="card" style="border-style:dashed;opacity:.9">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="ct" style="margin:0;font-size:12px;color:var(--ink3)">🗓 明日计划 · ${tmLabel}</div>
+            <button class="btn bg bsm" style="font-size:10px;padding:1px 8px" onclick="jzEditDayPlan('${tomorrowStr}')">✏️</button>
+          </div>`;
+        tmTasks.forEach(t=>{
+          tasksTabHtml+=`<div style="display:flex;gap:8px;padding:3px 0;font-size:12px;color:var(--ink3)"><span style="flex-shrink:0;color:var(--p4)">·</span><span>${t}</span></div>`;
+        });
         tasksTabHtml+=`</div>`;
       }
-      const totalPct=totalT?Math.round(doneT/totalT*100):0;
-      tasksTabHtml=`<div class="jz-day-bar" style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-size:13px;font-weight:700;color:var(--ink)">今日学习完成度</div>
-          <div style="font-size:11px;color:var(--ink3);margin-top:2px">${doneT}/${totalT} 项任务</div></div>
-          <div style="font-size:22px;font-weight:900;color:#E8875A">${totalPct}%</div>
-        </div>
-        <div class="jz-progress-track"><div class="jz-progress-fill" style="width:${totalPct}%"></div></div>
-      </div>`+tasksTabHtml;
     }
   }
 
@@ -3472,18 +3871,8 @@ async function renderJiaozu(){
       return`<span class="gym-anchor${activeType===k?' active':''}" onclick="jzSetType('${k}')" style="font-size:11px">${v}(${mc}/${cnt})</span>`;
     }).join('');
     bankTabHtml=`
-<div class="jz-day-bar">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <div><div style="font-size:13px;font-weight:700;color:var(--ink)">背诵进度</div>
-    <div style="font-size:12px;color:var(--ink3);margin-top:2px">每日 ${dailyCount} 题目标 · 已完成 ${totalDoneToday} 题</div></div>
-    <div style="font-size:22px;font-weight:900;color:#E8875A">${totalDoneToday}/${dailyCount}</div>
-  </div>
-  <div class="jz-progress-track"><div class="jz-progress-fill" style="width:${pct}%"></div></div>
-  ${gapLines.length?`<div style="margin-top:6px;font-size:11px;color:#E05252">⚠️ 薄弱题型：${gapLines.join('、')}</div>`:''}
-</div>
 ${subjTabs}
 <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">${typeTabs}</div>
-<div style="font-size:11px;color:var(--ink3);margin-bottom:8px">共 ${filtered.length} 题 · 本题型已掌握 ${mastered.filter(id=>filtered.find(q=>q.id===id)).length} 题</div>
 ${qHtml}
 <div style="padding:10px 0;text-align:center">
   <button class="btn bg bsm" onclick="jzAddQ()">＋ 添加题目</button>
@@ -3506,6 +3895,87 @@ ${cfg.examDate?`<div style="background:linear-gradient(135deg,#AED6F1,#D7BDE2);b
 ${activeTab==='tasks'?tasksTabHtml:bankTabHtml}`;
 }
 window.jzTabSwitch=function(tab){window._jzTab=tab;renderJiaozu();};
+window.jzToggleDayTask=async function(dateStr,idx){
+  const log=(await dbGet('jiaozu_logs','jztask_'+dateStr))||{id:'jztask_'+dateStr,done:[]};
+  const i=log.done.indexOf(idx);
+  if(i>=0)log.done.splice(i,1);else log.done.push(idx);
+  await dbPut('jiaozu_logs',log);renderJiaozu();
+};
+window.jzToggleFixedTask=async function(dateStr,idx){
+  const log=(await dbGet('jiaozu_logs','jzfix_'+dateStr))||{id:'jzfix_'+dateStr,done:[]};
+  const i=log.done.indexOf(idx);
+  if(i>=0)log.done.splice(i,1);else log.done.push(idx);
+  await dbPut('jiaozu_logs',log);renderJiaozu();
+};
+
+// 完整32天计划列表 modal
+window.jzShowFullPlan=async function(){
+  const todayStr=todayKey();
+  let html=`<div class="mt">📅 完整32天备考计划</div>
+  <div style="font-size:11px;color:var(--ink3);margin-bottom:12px">点每天的「编辑」可以修改任务内容</div>`;
+  let lastPhase='';
+  for(const p of JIAOZU_PLAN){
+    const custom=await dbGet('jiaozu_logs','jzplan_'+p.date);
+    const tasks=((custom&&custom._v===2)?custom.tasks:p.tasks)||[];
+    const taskLog=(await dbGet('jiaozu_logs','jztask_'+p.date))||{done:[]};
+    const doneCnt=taskLog.done.length;
+    const isToday=p.date===todayStr;
+    const isPast=p.date<todayStr;
+    const allDone=tasks.length>0&&doneCnt>=tasks.length;
+    if(p.phase!==lastPhase){
+      html+=`<div style="margin:12px 0 6px;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px">${p.phase}</div>`;
+      lastPhase=p.phase;
+    }
+    const d=new Date(p.date);
+    const label=`${d.getMonth()+1}/${d.getDate()}（${['日','一','二','三','四','五','六'][d.getDay()]}）`;
+    const dotColor=allDone?'#52BE80':isPast?'#E8875A':isToday?'var(--p4)':'var(--bd)';
+    html+=`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd)">
+      <div style="width:8px;height:8px;border-radius:50%;background:${dotColor};margin-top:5px;flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:${isToday?'700':'500'};color:${isToday?'var(--p4)':'var(--ink2)'}">${label}${isToday?' 今天':''}</span>
+          <button class="btn bg bsm" style="font-size:10px;padding:1px 7px" onclick="closeMo();jzEditDayPlan('${p.date}')">✏️</button>
+        </div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:2px">${tasks.join(' · ')||'—'}</div>
+        ${tasks.length?`<div style="font-size:10px;color:${allDone?'#52BE80':'var(--ink3)'};margin-top:1px">${doneCnt}/${tasks.length} 完成</div>`:''}
+      </div>
+    </div>`;
+  }
+  html+=`<div style="height:8px"></div>`;
+  openMo(html);
+};
+
+// 编辑某天的任务
+window.jzEditDayPlan=async function(dateStr){
+  const defaultPlan=JIAOZU_PLAN.find(p=>p.date===dateStr);
+  const custom=await dbGet('jiaozu_logs','jzplan_'+dateStr);
+  const tasks=((custom&&custom._v===2)?custom.tasks:(defaultPlan?defaultPlan.tasks:[]))||[];
+  const phase=defaultPlan?defaultPlan.phase:'';
+  const d=new Date(dateStr);
+  const label=`${d.getMonth()+1}月${d.getDate()}日`;
+  openMo(`<div class="mt">✏️ 编辑 ${label} 任务</div>
+    <div style="font-size:11px;color:var(--ink3);margin-bottom:10px">每行一个任务，空行会被忽略</div>
+    <textarea class="inp" id="jzEditTA" style="height:160px;resize:vertical;white-space:pre;font-size:13px">${tasks.join('\n')}</textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn bg bsm" style="flex:1" onclick="jzResetDayPlan('${dateStr}')">↩ 恢复默认</button>
+      <button class="btn bp bsm" style="flex:1" onclick="jzSaveDayPlan('${dateStr}','${encodeURIComponent(phase)}')">保存</button>
+    </div>`);
+};
+window.jzSaveDayPlan=async function(dateStr,encodedPhase){
+  const ta=document.getElementById('jzEditTA');
+  if(!ta)return;
+  const tasks=ta.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const phase=decodeURIComponent(encodedPhase);
+  await dbPut('jiaozu_logs',{id:'jzplan_'+dateStr,date:dateStr,phase,tasks,_v:2});
+  // reset checkin done indices since task list changed
+  await dbPut('jiaozu_logs',{id:'jztask_'+dateStr,done:[]});
+  closeMo();renderJiaozu();showToast('计划已更新');
+};
+window.jzResetDayPlan=async function(dateStr){
+  await dbDel('jiaozu_logs','jzplan_'+dateStr);
+  await dbPut('jiaozu_logs',{id:'jztask_'+dateStr,done:[]});
+  closeMo();renderJiaozu();showToast('已恢复默认计划');
+};
 window.jzDeleteAll=async function(){
   if(!confirm('确定删除整个教资备考模块的所有数据？此操作不可恢复。'))return;
   const allQ=await dbAll('jiaozu_bank');for(const q of allQ)await dbDel('jiaozu_bank',q.id);
@@ -3555,11 +4025,16 @@ window.saveJzSetting=async function(){
   await dbPut('jiaozu_logs',cfg);
   closeMo();renderJiaozu();showToast('设置已保存');
 };
-window.jzSetSubj=function(s){window._jzSubj=s;window._jzType=s==='S1'?'single':'short';renderJiaozu();};
+window.jzSetSubj=function(s){window._jzSubj=s;window._jzType=s==='S1'?'analysis':'short';renderJiaozu();};
 window.jzSetType=function(t){window._jzType=t;renderJiaozu();};
 window.jzAddQ=async function(){
   const subj=window._jzSubj||'S2';
   const type=window._jzType||'short';
+  // 科目一只有材料分析；科目二只有简答题+材料分析
+  const typeOpts=subj==='S1'
+    ?`<option value="analysis" selected>材料分析题</option>`
+    :`<option value="short"${type==='short'?' selected':''}>简答题</option>
+      <option value="analysis"${type==='analysis'?' selected':''}>材料分析题</option>`;
   openMo(`<div class="mt">添加题目</div>
     <div class="mrow"><span class="ml">科目</span>
       <select class="inp" id="jzQSubj" onchange="jzAddQSubjChange(this.value)">
@@ -3568,43 +4043,33 @@ window.jzAddQ=async function(){
       </select>
     </div>
     <div class="mrow"><span class="ml">题型</span>
-      <select class="inp" id="jzQType" onchange="jzAddQTypeChange(this.value)">
-        <option value="short"${type==='short'?' selected':''}>简答题</option>
-        <option value="single"${type==='single'?' selected':''}>单选题</option>
-        <option value="analysis"${type==='analysis'?' selected':''}>材料分析题</option>
-        <option value="design"${type==='design'?' selected':''}>教学设计</option>
-        <option value="writing"${subj==='S1'&&type==='writing'?' selected':''}>写作题（科目一）</option>
-      </select>
+      <select class="inp" id="jzQType" onchange="jzAddQTypeChange(this.value)">${typeOpts}</select>
     </div>
-    <div class="mrow" id="jzTopicRow" style="display:${type==='analysis'?'flex':'none'}">
-      <span class="ml">考点分类</span><input class="inp" id="jzQTopic" placeholder="如：德育原则、课程理论…">
-    </div>
-    <div class="mrow" id="jzGenreRow" style="display:${type==='writing'?'flex':'none'}">
-      <span class="ml">文体</span><input class="inp" id="jzQGenre" placeholder="如：议论文、应用文…">
-    </div>
-    <div class="mrow" id="jzTipRow" style="display:${type==='design'?'flex':'none'}">
-      <span class="ml">设计要点</span><input class="inp" id="jzQTip" placeholder="关键评分要点…">
+    <div class="mrow" id="jzTopicRow" style="display:${(type==='analysis'||subj==='S1')?'flex':'none'}">
+      <span class="ml">考点分类</span><input class="inp" id="jzQTopic" placeholder="如：职业理念、德育原则…">
     </div>
     <div class="mrow"><span class="ml">题目</span><textarea class="inp" id="jzQQ" style="height:60px;resize:vertical" placeholder="题目内容…"></textarea></div>
     <div class="mrow"><span class="ml">答案</span><textarea class="inp" id="jzQA" style="height:80px;resize:vertical" placeholder="答案/参考框架…"></textarea></div>
-    <div class="mrow" id="jzMRow" style="display:${(type==='short'||type==='single')?' flex':'none'}">
+    <div class="mrow" id="jzMRow" style="display:${type==='short'?'flex':'none'}">
       <span class="ml">口诀</span><input class="inp" id="jzQM" placeholder="记忆口诀（可选）">
     </div>
     <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveJzQ()">添加</button>`);
 };
 window.jzAddQTypeChange=function(v){
   document.getElementById('jzTopicRow').style.display=v==='analysis'?'flex':'none';
-  document.getElementById('jzGenreRow').style.display=v==='writing'?'flex':'none';
-  document.getElementById('jzTipRow').style.display=v==='design'?'flex':'none';
-  document.getElementById('jzMRow').style.display=(v==='short'||v==='single')?'flex':'none';
+  document.getElementById('jzMRow').style.display=v==='short'?'flex':'none';
 };
 window.jzAddQSubjChange=function(v){
   const sel=document.getElementById('jzQType');
+  // 重建选项
   if(v==='S1'){
-    // 确保有 writing 选项
-    if(![...sel.options].find(o=>o.value==='writing')){
-      const o=document.createElement('option');o.value='writing';o.textContent='写作题（科目一）';sel.appendChild(o);
-    }
+    sel.innerHTML=`<option value="analysis" selected>材料分析题</option>`;
+    document.getElementById('jzTopicRow').style.display='flex';
+    document.getElementById('jzMRow').style.display='none';
+  } else {
+    sel.innerHTML=`<option value="short" selected>简答题</option><option value="analysis">材料分析题</option>`;
+    document.getElementById('jzTopicRow').style.display='none';
+    document.getElementById('jzMRow').style.display='flex';
   }
 };
 window.saveJzQ=async function(){
