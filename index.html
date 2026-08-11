@@ -3293,8 +3293,8 @@ async function renderJiaozu(){
   const S1Q=allQ.filter(q=>q.subject==='S1');
   const S2Q=allQ.filter(q=>q.subject==='S2');
   const subjectQ=activeSubj==='S1'?S1Q:S2Q;
-  const S2Types={single:'单选题',short:'简答题',analysis:'材料分析题'};
-  const S1Types={single:'单选题',analysis:'材料分析题'};
+  const S2Types={single:'单选题',short:'简答题',analysis:'材料分析题',design:'教学设计'};
+  const S1Types={single:'单选题',analysis:'材料分析题',writing:'写作题'};
   const types=activeSubj==='S1'?S1Types:S2Types;
 
   // progress for this subject
@@ -3317,7 +3317,75 @@ async function renderJiaozu(){
 
   let qHtml='';
   if(!filtered.length){
-    qHtml=`<div class="card"><div style="padding:12px;text-align:center;color:var(--ink3);font-size:13px">该题型暂无题目 → 前往「添加」录入</div></div>`;
+    qHtml=`<div class="card"><div style="padding:12px;text-align:center;color:var(--ink3);font-size:13px">该题型暂无题目 → 点下方「添加」录入</div></div>`;
+  } else if(activeType==='analysis'){
+    // 材料分析题按考点分组
+    const topicMap={};
+    sorted.forEach(q=>{const t=q.topic||'未分类';if(!topicMap[t])topicMap[t]=[];topicMap[t].push(q);});
+    for(const [topic,qs] of Object.entries(topicMap)){
+      const tMastered=qs.filter(q=>mastered.includes(q.id)).length;
+      qHtml+=`<div style="margin:8px 0 4px;padding:4px 10px;border-radius:8px;background:rgba(215,189,226,.2);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;font-weight:700;color:var(--ink2)">📌 ${topic}</span>
+        <span style="font-size:10px;color:var(--ink3)">${tMastered}/${qs.length} 掌握</span>
+      </div>`;
+      for(const q of qs){
+        const isMastered=mastered.includes(q.id);const isDone=done.includes(q.id);
+        const num=q.id.replace(/\D/g,'');
+        qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
+          <div class="jz-q-row" onclick="jzToggleCard('${q.id}')">
+            <div class="jz-num">${num}</div><div class="jz-q-text">${q.q}</div><div class="jz-toggle">▾</div>
+          </div>
+          <div class="jz-ans">
+            <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
+            ${q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic">💡 口诀：${q.m}</div>`:''}
+            <div class="jz-status">
+              <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
+              <button class="jz-btn-status${(!isMastered&&isDone)?' review':''}" onclick="jzMark('${q.id}','review')">↺ 待复习</button>
+            </div>
+          </div>
+        </div>`;
+      }
+    }
+  } else if(activeType==='design'){
+    // 教学设计：显示课题+环节结构
+    for(const q of sorted){
+      const isMastered=mastered.includes(q.id);const isDone=done.includes(q.id);
+      const num=q.id.replace(/\D/g,'');
+      qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
+        <div class="jz-q-row" onclick="jzToggleCard('${q.id}')">
+          <div style="width:28px;height:20px;border-radius:5px;background:var(--gb);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${num}</div>
+          <div class="jz-q-text">${q.q}</div><div class="jz-toggle">▾</div>
+        </div>
+        <div class="jz-ans">
+          <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
+          ${q.tip?`<div style="background:rgba(181,234,215,.2);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:12px;color:var(--ink2)">💡 设计要点：${q.tip}</div>`:''}
+          <div class="jz-status">
+            <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
+            <button class="jz-btn-status${(!isMastered&&isDone)?' review':''}" onclick="jzMark('${q.id}','review')">↺ 待复习</button>
+          </div>
+        </div>
+      </div>`;
+    }
+  } else if(activeType==='writing'){
+    // 写作题：显示文体+参考要点
+    for(const q of sorted){
+      const isMastered=mastered.includes(q.id);const isDone=done.includes(q.id);
+      const num=q.id.replace(/\D/g,'');
+      qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
+        <div class="jz-q-row" onclick="jzToggleCard('${q.id}')">
+          <div style="width:28px;height:20px;border-radius:5px;background:var(--gd);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${num}</div>
+          <div class="jz-q-text">${q.q}${q.genre?` <span style="font-size:10px;background:rgba(255,183,197,.3);padding:1px 5px;border-radius:4px">${q.genre}</span>`:''}</div>
+          <div class="jz-toggle">▾</div>
+        </div>
+        <div class="jz-ans">
+          <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
+          <div class="jz-status">
+            <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
+            <button class="jz-btn-status${(!isMastered&&isDone)?' review':''}" onclick="jzMark('${q.id}','review')">↺ 待复习</button>
+          </div>
+        </div>
+      </div>`;
+    }
   } else {
     for(const q of sorted){
       const isMastered=mastered.includes(q.id);
@@ -3424,22 +3492,52 @@ window.jzSetType=function(t){window._jzType=t;renderJiaozu();};
 window.jzAddQ=async function(){
   const subj=window._jzSubj||'S2';
   const type=window._jzType||'short';
-  const typeLabels={single:'单选题',short:'简答题',analysis:'材料分析题'};
   openMo(`<div class="mt">添加题目</div>
     <div class="mrow"><span class="ml">科目</span>
-      <select class="inp" id="jzQSubj"><option value="S2"${subj==='S2'?' selected':''}>科目二</option><option value="S1"${subj==='S1'?' selected':''}>科目一</option></select>
+      <select class="inp" id="jzQSubj" onchange="jzAddQSubjChange(this.value)">
+        <option value="S2"${subj==='S2'?' selected':''}>科目二（小学）</option>
+        <option value="S1"${subj==='S1'?' selected':''}>科目一</option>
+      </select>
     </div>
     <div class="mrow"><span class="ml">题型</span>
-      <select class="inp" id="jzQType">
+      <select class="inp" id="jzQType" onchange="jzAddQTypeChange(this.value)">
         <option value="short"${type==='short'?' selected':''}>简答题</option>
         <option value="single"${type==='single'?' selected':''}>单选题</option>
         <option value="analysis"${type==='analysis'?' selected':''}>材料分析题</option>
+        <option value="design"${type==='design'?' selected':''}>教学设计</option>
+        <option value="writing"${subj==='S1'&&type==='writing'?' selected':''}>写作题（科目一）</option>
       </select>
     </div>
+    <div class="mrow" id="jzTopicRow" style="display:${type==='analysis'?'flex':'none'}">
+      <span class="ml">考点分类</span><input class="inp" id="jzQTopic" placeholder="如：德育原则、课程理论…">
+    </div>
+    <div class="mrow" id="jzGenreRow" style="display:${type==='writing'?'flex':'none'}">
+      <span class="ml">文体</span><input class="inp" id="jzQGenre" placeholder="如：议论文、应用文…">
+    </div>
+    <div class="mrow" id="jzTipRow" style="display:${type==='design'?'flex':'none'}">
+      <span class="ml">设计要点</span><input class="inp" id="jzQTip" placeholder="关键评分要点…">
+    </div>
     <div class="mrow"><span class="ml">题目</span><textarea class="inp" id="jzQQ" style="height:60px;resize:vertical" placeholder="题目内容…"></textarea></div>
-    <div class="mrow"><span class="ml">答案</span><textarea class="inp" id="jzQA" style="height:80px;resize:vertical" placeholder="答案内容…"></textarea></div>
-    <div class="mrow"><span class="ml">口诀</span><input class="inp" id="jzQM" placeholder="记忆口诀（可选）"></div>
+    <div class="mrow"><span class="ml">答案</span><textarea class="inp" id="jzQA" style="height:80px;resize:vertical" placeholder="答案/参考框架…"></textarea></div>
+    <div class="mrow" id="jzMRow" style="display:${(type==='short'||type==='single')?' flex':'none'}">
+      <span class="ml">口诀</span><input class="inp" id="jzQM" placeholder="记忆口诀（可选）">
+    </div>
     <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveJzQ()">添加</button>`);
+};
+window.jzAddQTypeChange=function(v){
+  document.getElementById('jzTopicRow').style.display=v==='analysis'?'flex':'none';
+  document.getElementById('jzGenreRow').style.display=v==='writing'?'flex':'none';
+  document.getElementById('jzTipRow').style.display=v==='design'?'flex':'none';
+  document.getElementById('jzMRow').style.display=(v==='short'||v==='single')?'flex':'none';
+};
+window.jzAddQSubjChange=function(v){
+  const sel=document.getElementById('jzQType');
+  if(v==='S1'){
+    // 确保有 writing 选项
+    if(![...sel.options].find(o=>o.value==='writing')){
+      const o=document.createElement('option');o.value='writing';o.textContent='写作题（科目一）';sel.appendChild(o);
+    }
+  }
 };
 window.saveJzQ=async function(){
   const q=document.getElementById('jzQQ').value.trim();
@@ -3447,9 +3545,16 @@ window.saveJzQ=async function(){
   if(!q||!a){showToast('题目和答案必填');return;}
   const subject=document.getElementById('jzQSubj').value;
   const qtype=document.getElementById('jzQType').value;
-  const m=document.getElementById('jzQM').value.trim()||'无口诀';
+  const m=document.getElementById('jzQM')?.value.trim()||'无口诀';
+  const topic=document.getElementById('jzQTopic')?.value.trim()||'';
+  const tip=document.getElementById('jzQTip')?.value.trim()||'';
+  const genre=document.getElementById('jzQGenre')?.value.trim()||'';
   const id='jzx_'+Date.now();
-  await dbPut('jiaozu_bank',{id,q,a,m,subject,qtype});
+  const rec={id,q,a,m,subject,qtype};
+  if(topic)rec.topic=topic;
+  if(tip)rec.tip=tip;
+  if(genre)rec.genre=genre;
+  await dbPut('jiaozu_bank',rec);
   closeMo();renderJiaozu();showToast('题目已添加');
 };
 // ═══ DATA EXPORT ═══
