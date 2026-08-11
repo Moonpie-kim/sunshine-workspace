@@ -3410,27 +3410,71 @@ async function renderJiaozu(){
     }
   }
 
-  const subjTabs=`<div style="display:flex;gap:7px;margin-bottom:10px">
-    <button class="btn bsm${activeSubj==='S1'?' bp':' bg'}" onclick="jzSetSubj('S1')">科目一</button>
-    <button class="btn bsm${activeSubj==='S2'?' bp':' bg'}" onclick="jzSetSubj('S2')">科目二（小学）</button>
-  </div>`;
-  const typeTabs=Object.entries(types).map(([k,v])=>{
-    const cnt=subjectQ.filter(q=>q.qtype===k).length;
-    const mc=mastered.filter(id=>subjectQ.filter(q=>q.qtype===k).find(q=>q.id===id)).length;
-    return`<span class="gym-anchor${activeType===k?' active':''}" onclick="jzSetType('${k}')" style="font-size:11px">${v}(${mc}/${cnt})</span>`;
-  }).join('');
+  const activeTab=window._jzTab||'tasks';
 
-  el.innerHTML=`
-<div class="ph"><h1>📚 教资备考</h1>
-  <button class="btn bg bsm mla" onclick="jzSetting()">设置</button>
-</div>
-${cfg.examDate?`<div style="background:linear-gradient(135deg,#AED6F1,#D7BDE2);border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
-  <span style="font-size:12px;font-weight:700;color:rgba(0,0,0,.6)">📅 考试倒计时</span>
-  <span style="font-size:20px;font-weight:900;color:#3D2651">${Math.max(0,Math.ceil((new Date(cfg.examDate)-new Date())/86400000))} 天</span>
-</div>`:''}
+  // ── 今日任务 Tab ──
+  let tasksTabHtml='';
+  if(activeTab==='tasks'){
+    const wid=getWeekId();
+    const subjects=await dbAll('study_subjects');
+    const allTasks=await dbIndex('tasks','weekId',wid);
+    const allCI=await dbIndex('checkins','weekId',wid);
+    const ciMap={};allCI.forEach(c=>{ciMap[c.taskId+'_'+c.date]=c;});
+    const todayTasks=allTasks.filter(t=>t.taskDate===today||!t.taskDate);
+    if(!subjects.length||!todayTasks.length){
+      tasksTabHtml=`<div class="card"><div style="padding:16px;text-align:center;color:var(--ink3);font-size:13px">今天暂无学习任务<br><span style="font-size:11px">前往「能力提升」添加任务</span></div></div>`;
+    } else {
+      let totalT=0,doneT=0;
+      for(const subj of subjects.sort((a,b)=>a.order-b.order)){
+        const sTasks=todayTasks.filter(t=>t.subjectId===subj.id);
+        if(!sTasks.length)continue;
+        const sDone=sTasks.filter(t=>{const ci=ciMap[t.id+'_'+(t.taskDate||today)];return ci?.done;});
+        totalT+=sTasks.length;doneT+=sDone.length;
+        const pctS=Math.round(sDone.length/sTasks.length*100);
+        tasksTabHtml+=`<div class="card" style="--accent:${subj.color||'var(--p4)'}">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div class="ct" style="margin:0">${subj.icon||'📖'} ${subj.label}</div>
+            <span style="font-size:13px;font-weight:800;color:${sDone.length===sTasks.length?'#52BE80':'var(--ink2)'}">${sDone.length}/${sTasks.length}</span>
+          </div>
+          <div class="tl-prog-wrap" style="margin-bottom:8px"><div class="tl-prog-track"><div class="tl-prog-fill" style="width:${pctS}%"></div></div></div>`;
+        for(const t of sTasks){
+          const ciKey=t.id+'_'+(t.taskDate||today);
+          const isDone=ciMap[ciKey]?.done||false;
+          tasksTabHtml+=`<div class="trow">
+            <button class="tchk${isDone?' done':''}" onclick="toggleStudyCI('${t.id}','${t.taskDate||today}')">${isDone?'✓':''}</button>
+            <span class="tname${isDone?' done':''}" style="flex:1">${t.name}</span>
+          </div>`;
+        }
+        tasksTabHtml+=`</div>`;
+      }
+      const totalPct=totalT?Math.round(doneT/totalT*100):0;
+      tasksTabHtml=`<div class="jz-day-bar" style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:13px;font-weight:700;color:var(--ink)">今日学习完成度</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:2px">${doneT}/${totalT} 项任务</div></div>
+          <div style="font-size:22px;font-weight:900;color:#E8875A">${totalPct}%</div>
+        </div>
+        <div class="jz-progress-track"><div class="jz-progress-fill" style="width:${totalPct}%"></div></div>
+      </div>`+tasksTabHtml;
+    }
+  }
+
+  // ── 题目背诵 Tab ──
+  let bankTabHtml='';
+  if(activeTab==='bank'){
+    const subjTabs=`<div style="display:flex;gap:7px;margin-bottom:10px">
+      <button class="btn bsm${activeSubj==='S1'?' bp':' bg'}" onclick="jzSetSubj('S1')">科目一</button>
+      <button class="btn bsm${activeSubj==='S2'?' bp':' bg'}" onclick="jzSetSubj('S2')">科目二（小学）</button>
+    </div>`;
+    const typeTabs=Object.entries(types).map(([k,v])=>{
+      const cnt=subjectQ.filter(q=>q.qtype===k).length;
+      const mc=mastered.filter(id=>subjectQ.filter(q=>q.qtype===k).find(q=>q.id===id)).length;
+      return`<span class="gym-anchor${activeType===k?' active':''}" onclick="jzSetType('${k}')" style="font-size:11px">${v}(${mc}/${cnt})</span>`;
+    }).join('');
+    bankTabHtml=`
 <div class="jz-day-bar">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <div><div style="font-size:13px;font-weight:700;color:var(--ink)">今日进度</div>
+    <div><div style="font-size:13px;font-weight:700;color:var(--ink)">背诵进度</div>
     <div style="font-size:12px;color:var(--ink3);margin-top:2px">每日 ${dailyCount} 题目标 · 已完成 ${totalDoneToday} 题</div></div>
     <div style="font-size:22px;font-weight:900;color:#E8875A">${totalDoneToday}/${dailyCount}</div>
   </div>
@@ -3444,7 +3488,31 @@ ${qHtml}
 <div style="padding:10px 0;text-align:center">
   <button class="btn bg bsm" onclick="jzAddQ()">＋ 添加题目</button>
 </div>`;
+  }
+
+  el.innerHTML=`
+<div class="ph"><h1>📚 教资备考</h1>
+  <button class="btn bg bsm mla" onclick="jzSetting()">设置</button>
+  <button class="btn bsm" style="background:rgba(229,57,53,.1);color:#E53935;margin-left:6px" onclick="jzDeleteAll()">🗑 删除</button>
+</div>
+${cfg.examDate?`<div style="background:linear-gradient(135deg,#AED6F1,#D7BDE2);border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-size:12px;font-weight:700;color:rgba(0,0,0,.6)">📅 考试倒计时</span>
+  <span style="font-size:20px;font-weight:900;color:#3D2651">${Math.max(0,Math.ceil((new Date(cfg.examDate)-new Date())/86400000))} 天</span>
+</div>`:''}
+<div style="display:flex;gap:7px;margin-bottom:12px">
+  <button class="btn bsm${activeTab==='tasks'?' bp':' bg'}" style="flex:1" onclick="jzTabSwitch('tasks')">📋 今日任务</button>
+  <button class="btn bsm${activeTab==='bank'?' bp':' bg'}" style="flex:1" onclick="jzTabSwitch('bank')">📖 题目背诵</button>
+</div>
+${activeTab==='tasks'?tasksTabHtml:bankTabHtml}`;
 }
+window.jzTabSwitch=function(tab){window._jzTab=tab;renderJiaozu();};
+window.jzDeleteAll=async function(){
+  if(!confirm('确定删除整个教资备考模块的所有数据？此操作不可恢复。'))return;
+  const allQ=await dbAll('jiaozu_bank');for(const q of allQ)await dbDel('jiaozu_bank',q.id);
+  const allL=await dbAll('jiaozu_logs');for(const l of allL)await dbDel('jiaozu_logs',l.id);
+  window._jzTab='tasks';window._jzSubj='S2';window._jzType='short';
+  renderJiaozu();showToast('教资数据已清空');
+};
 window.jzToggleCard=function(id){
   const card=document.getElementById('jzc-'+id);
   if(!card)return;
