@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="112" fill="#FFF0F8"/>
-  <!-- scale=5.0, 小羊中心(50,48) → 居中: tx=512/2-50*5=6, ty=512/2-48*5=16 -->
-  <g transform="translate(6, 20) scale(5.0)">
+  <!-- 与首页 SVG 完全一致的小羊，scale=4.8 居中 -->
+  <g transform="translate(26, 36) scale(4.8)">
     <circle cx="50" cy="42" r="25" fill="#F0E6FF"/>
     <circle cx="32" cy="48" r="17" fill="#EDD9FF"/>
     <circle cx="68" cy="48" r="17" fill="#EDD9FF"/>
@@ -21,17 +21,9 @@
     <circle cx="44.5" cy="50.5" r="1.2" fill="#fff"/>
     <circle cx="58.5" cy="50.5" r="1.2" fill="#fff"/>
     <path d="M45 62 Q50 66 55 62" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-    <ellipse cx="23.8" cy="22.2" rx="1.8" ry="1.1" fill="#FFB7C5" opacity=".65"/>
-    <ellipse cx="19" cy="22.8" rx="1.1" ry=".75" fill="#D7BDE2"/>
-    <ellipse cx="9.5" cy="16" rx="2.8" ry="3.8" fill="#EDD9FF" transform="rotate(-14 9.5 16)"/>
-    <ellipse cx="9.5" cy="16" rx="1.4" ry="2.3" fill="#FFB7C5" opacity=".55" transform="rotate(-14 9.5 16)"/>
-    <ellipse cx="28.5" cy="16" rx="2.8" ry="3.8" fill="#EDD9FF" transform="rotate(14 28.5 16)"/>
-    <ellipse cx="28.5" cy="16" rx="1.4" ry="2.3" fill="#FFB7C5" opacity=".55" transform="rotate(14 28.5 16)"/>
-    <path d="M17.2 9.5 Q19 7.5 20.8 9.5 Q19 11.2 17.2 9.5Z" fill="#FFB7C5"/>
-    <circle cx="19" cy="9.5" r="1.1" fill="#FF9AA2"/>
-    <rect x="14.5" y="27" width="3.2" height="5.5" rx="1.4" fill="#E8D5F5"/>
-    <rect x="20.3" y="27" width="3.2" height="5.5" rx="1.4" fill="#E8D5F5"/>
-    <rect x="14.5" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
-    <rect x="20.3" y="31.5" width="3.2" height="1.8" rx=".9" fill="#D7BDE2"/>
+    <rect x="37" y="68" width="8" height="14" rx="3.5" fill="#E8D5F5"/>
+    <rect x="55" y="68" width="8" height="14" rx="3.5" fill="#E8D5F5"/>
+    <rect x="37" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
+    <rect x="55" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
   </g>
 </svg>
