@@ -295,6 +295,19 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .love-photo{aspect-ratio:1;border-radius:12px;background:rgba(215,189,226,.2);border:1.5px solid var(--bd);overflow:hidden;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .love-photo img{width:100%;height:100%;object-fit:cover;}
 .love-photo-add{font-size:24px;color:var(--ink3);}
+/* carousel */
+.love-carousel{position:relative;border-radius:18px;overflow:hidden;background:rgba(215,189,226,.15);aspect-ratio:4/3;margin-top:8px;}
+.love-carousel-track{display:flex;height:100%;transition:transform .4s ease;}
+.love-carousel-slide{flex:0 0 100%;position:relative;overflow:hidden;}
+.love-carousel-slide img{width:100%;height:100%;object-fit:cover;}
+.love-carousel-cap{position:absolute;bottom:0;left:0;right:0;padding:8px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.45));color:#fff;display:flex;justify-content:space-between;align-items:flex-end;}
+.love-carousel-cap-text{font-size:13px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.4);}
+.love-carousel-cap-date{font-size:10px;opacity:.8;}
+.love-carousel-dots{display:flex;justify-content:center;gap:5px;margin-top:8px;}
+.love-cd{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.15);transition:all .2s;}
+.love-cd.act{background:var(--p1);width:14px;border-radius:3px;}
+.love-carousel-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.5);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.love-carousel-nav.prev{left:6px;}.love-carousel-nav.next{right:6px;}
 .love-anniversary{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,183,197,.12);border:1px solid var(--bd);margin-bottom:7px;}
 .love-anni-days{font-size:20px;font-weight:800;color:var(--p8);min-width:44px;text-align:center;}
 .love-wish{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bd);}
@@ -325,13 +338,18 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .tl-prog-wrap{margin:8px 0 4px;}
 .tl-prog-track{height:6px;background:rgba(0,0,0,.06);border-radius:3px;}
 .tl-prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7DCEA0,#52BE80);transition:width .4s;}
-.sleep-row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);}
-.sleep-row:last-child{border-bottom:none;}
-.sleep-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.sleep-dot.ok{background:#7DCEA0;}
-.sleep-dot.late{background:#F4A460;}
-.sleep-dot.none{background:rgba(0,0,0,.1);}
+.sheep-prog-wrap{margin:10px 0 6px;position:relative;height:28px;}
+.sheep-prog-track{height:6px;background:rgba(0,0,0,.06);border-radius:3px;position:absolute;top:11px;left:0;right:0;}
+.sheep-prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#FFB7C5,#D7BDE2);transition:width .5s;}
+.sheep-prog-icon{position:absolute;top:-2px;font-size:20px;transform:translateX(-50%);transition:left .5s;line-height:1;}
 .love-wish-star{font-size:18px;cursor:pointer;flex-shrink:0;}
+/* ─ SPLASH ─ */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#FFF0F8 0%,#EDE7FF 100%);transition:opacity .5s,visibility .5s;}
+#splash.hide{opacity:0;visibility:hidden;}
+.splash-sheep{width:110px;height:110px;animation:splashSway 1.2s ease-in-out infinite;}
+@keyframes splashSway{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(6deg);}}
+.splash-title{font-size:22px;font-weight:900;color:#3D2651;margin-top:18px;letter-spacing:.04em;}
+.splash-sub{font-size:13px;color:#9B7FBB;margin-top:8px;font-weight:500;}
 /* ─ HOME DASHBOARD ─ */
 .home-date-bar{border-radius:var(--r);padding:16px 18px;background:linear-gradient(135deg,#FFB7C5 0%,#D7BDE2 100%);margin-bottom:11px;position:relative;overflow:hidden;}
 .home-date-bar::after{content:'';position:absolute;right:-25px;top:-25px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.12);}
@@ -390,6 +408,34 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 </style>
 </head>
 <body>
+<div id="splash">
+  <svg class="splash-sheep" viewBox="0 0 100 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="42" r="25" fill="#F0E6FF"/>
+    <circle cx="32" cy="48" r="17" fill="#EDD9FF"/>
+    <circle cx="68" cy="48" r="17" fill="#EDD9FF"/>
+    <circle cx="40" cy="30" r="15" fill="#F5EEFF"/>
+    <circle cx="60" cy="30" r="15" fill="#F5EEFF"/>
+    <circle cx="50" cy="26" r="15" fill="#FAF3FF"/>
+    <ellipse cx="50" cy="54" rx="19" ry="16" fill="#FDE8F0"/>
+    <ellipse cx="25" cy="42" rx="7" ry="10" fill="#EDD9FF" transform="rotate(-14 25 42)"/>
+    <ellipse cx="25" cy="42" rx="3.5" ry="6" fill="#FFB7C5" opacity=".6" transform="rotate(-14 25 42)"/>
+    <ellipse cx="75" cy="42" rx="7" ry="10" fill="#EDD9FF" transform="rotate(14 75 42)"/>
+    <ellipse cx="75" cy="42" rx="3.5" ry="6" fill="#FFB7C5" opacity=".6" transform="rotate(14 75 42)"/>
+    <ellipse cx="38" cy="57" rx="5" ry="3" fill="#FFB7C5" opacity=".6"/>
+    <ellipse cx="62" cy="57" rx="5" ry="3" fill="#FFB7C5" opacity=".6"/>
+    <ellipse cx="43" cy="52" rx="3.5" ry="4.5" fill="#3D2651"/>
+    <ellipse cx="57" cy="52" rx="3.5" ry="4.5" fill="#3D2651"/>
+    <circle cx="44.5" cy="50.5" r="1.2" fill="#fff"/>
+    <circle cx="58.5" cy="50.5" r="1.2" fill="#fff"/>
+    <path d="M45 62 Q50 66 55 62" stroke="#D7BDE2" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <rect x="37" y="68" width="8" height="14" rx="3.5" fill="#E8D5F5"/>
+    <rect x="55" y="68" width="8" height="14" rx="3.5" fill="#E8D5F5"/>
+    <rect x="37" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
+    <rect x="55" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
+  </svg>
+  <div class="splash-title">小羊梦工厂</div>
+  <div class="splash-sub" id="splashSub">今天也要元气满满 ✨</div>
+</div>
 <div id="app">
 <nav id="sb">
   <div class="sbh">
@@ -773,11 +819,28 @@ async function renderHome(){
     }
   }
 
-  // habits + 每日调理打卡（未完成项）
-  const habits=await dbAll('todos');
-  const habitItems=habits.filter(t=>t.isHabit);
+  // habits + 今日打卡（未完成项）
+  const allTodosHome=await dbAll('todos');
+  const habitItems=allTodosHome.filter(t=>t.isHabit);
+  // 今日待办（未完成普通 todo）
+  const todayTodosHome=allTodosHome.filter(t=>t.id&&t.id.startsWith('td_')&&!t.done);
+  const todayTodosHome_overdue=todayTodosHome.filter(t=>t.dueDate&&t.dueDate<today);
+  const todayTodosHome_today=todayTodosHome.filter(t=>!t.dueDate||t.dueDate>=today);
+  const sortedHomeTodos=[...todayTodosHome_overdue,...todayTodosHome_today].slice(0,6);
+  let homeTodoH='';
+  if(!sortedHomeTodos.length){homeTodoH='<div style="font-size:12px;color:var(--ink3);padding:4px 0">暂无待办 ✨</div>';}
+  else{
+    for(const t of sortedHomeTodos){
+      const od=t.dueDate&&t.dueDate<today;
+      homeTodoH+=`<div class="trow">
+        <button class="tchk" onclick="homeTodoDone('${t.id}')"></button>
+        <span class="tname" style="color:${od?'#E53935':'var(--ink)'};flex:1">${t.name}${od?` <span style="font-size:10px">⚠️${t.dueDate}</span>`:''}</span>
+      </div>`;
+    }
+    if(todayTodosHome.length>6)homeTodoH+=`<div style="font-size:11px;color:var(--ink3);padding:2px 4px">还有 ${todayTodosHome.length-6} 项 → 前往「日常生活」查看</div>`;
+  }
   let habitH='';
-  // 每日调理打卡未完成项
+  // 今日打卡未完成项
   const tlCfgHome=await dbGet('todos','tl_items');
   const tlItemsHome=tlCfgHome?.items||[];
   const tlLogHome=(await dbGet('todos','tl_log_'+today))||{id:'tl_log_'+today,done:[]};
@@ -906,10 +969,18 @@ async function renderHome(){
   <div class="ct">🏋️ 今日运动计划</div>
   ${sportH}
 </div>
+<div class="card" style="--accent:var(--p2)">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <div class="ct" style="margin:0">📋 今日待办</div>
+    <a onclick="navTo('life')" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
+  </div>
+  ${homeTodoH}
+</div>
 <div class="card" style="--accent:var(--p3)">
   <div class="ct">🔥 今日打卡习惯
     <button class="btn badd" onclick="addHabit()" title="添加习惯">＋</button>
   </div>
+  <div class="sheep-prog-wrap"><div class="sheep-prog-track"><div class="sheep-prog-fill" style="width:${tlItemsHome.length?Math.round(tlDoneHome.length/tlItemsHome.length*100):0}%"></div></div><div class="sheep-prog-icon" style="left:${tlItemsHome.length?Math.max(2,Math.min(98,Math.round(tlDoneHome.length/tlItemsHome.length*100))):2}%">🐑</div></div>
   <div id="habitList">${habitH}</div>
 </div>
 <div class="card" style="--accent:var(--p2)">
@@ -1812,6 +1883,32 @@ window.importAIPlan=async function(){
   closeMo();renderSport();renderHome();showToast('AI 计划已导入 💪');
 };
 // ═══ GYM (动作库) ═══
+const TRAINING_PACKAGES=[
+  {id:'pkg_glute',label:'🍑 臀腿日',color:'#FFB7C5',exercises:[
+    {name:'深蹲（标准）',duration:'4组×12次',desc:GLUTE_LIB.find(x=>x.name==='深蹲（标准）')?.desc||'',tips:'全程脚掌贴地，膝盖朝脚尖方向，起立时夹臀发力，不要用腰代偿。',errors:'膝内扣、踮脚尖、腰部过度前倾。'},
+    {name:'臀桥',duration:'4组×20次',desc:GLUTE_LIB.find(x=>x.name==='臀桥')?.desc||'',tips:'顶峰时臀部用力夹紧，停留2秒，缓慢下落，感受臀肌全程收缩。',errors:'靠腰部弹力拱起而非臀肌发力。'},
+    {name:'弓步蹲',duration:'3组×12次/腿',desc:GLUTE_LIB.find(x=>x.name==='弓步蹲')?.desc||'',tips:'前脚膝盖不超脚尖，躯干直立，重心集中在前腿。',errors:'上身前倾过多，后腿膝盖猛砸地面。'},
+    {name:'侧卧抬腿',duration:'3组×20次/侧',desc:GLUTE_LIB.find(x=>x.name==='侧卧抬腿')?.desc||'',tips:'脚尖朝前，髋部不旋转，动作缓慢感受臀中肌。',errors:'骨盆翻转代偿，抬腿幅度过大。'},
+  ]},
+  {id:'pkg_back',label:'💪 背部日',color:'#B5EAD7',exercises:[
+    {name:'猫牛伸展',duration:'3组×15次',desc:BACK_LIB.find(x=>x.name==='猫牛伸展')?.desc||'',tips:'动作配合呼吸，吸气塌腰，呼气拱背，充分热身激活脊柱。',errors:'幅度太小，背部完全未参与。'},
+    {name:'哑铃单臂划船',duration:'3组×12次/侧',desc:BACK_LIB.find(x=>x.name==='哑铃单臂划船')?.desc||'',tips:'用肘关节带动而非手腕，全程肩胛骨主动向中间夹紧。',errors:'用手臂拉而不是背阔肌发力，上身随重量旋转。'},
+    {name:'俯身哑铃划船',duration:'3组×12次',desc:BACK_LIB.find(x=>x.name==='俯身哑铃划船')?.desc||'',tips:'背部始终平直，动作顶峰夹紧肩胛骨保持1秒，再缓放。',errors:'弓腰耸肩，靠反弹甩重量。'},
+    {name:'背伸展（超人式）',duration:'3组×15次',desc:BACK_LIB.find(x=>x.name==='背伸展（超人式）')?.desc||'',tips:'收缩时臀部和背部同时发力，下颈部别过度后仰。',errors:'只抬手臂而不激活背肌，颈部过度用力。'},
+  ]},
+  {id:'pkg_core',label:'🔥 核心日',color:'#FFF0A8',exercises:[
+    {name:'平板支撑',duration:'4组×45秒',desc:CORE_LIB.find(x=>x.name==='平板支撑')?.desc||'',tips:'收腹夹臀，不要憋气，均匀腹式呼吸，眼睛看地面前方。',errors:'塌腰翘臀，肩关节超出肘部前方。'},
+    {name:'卷腹',duration:'4组×20次',desc:CORE_LIB.find(x=>x.name==='卷腹')?.desc||'',tips:'呼气卷起，吸气下落，用腹肌卷起而非颈部用力。',errors:'双手抱头猛拉颈部，起身幅度过大。'},
+    {name:'自行车卷腹',duration:'3组×20次',desc:CORE_LIB.find(x=>x.name==='自行车卷腹')?.desc||'',tips:'肩膀离地，对侧肘膝相对，速度不要太快感受腹斜肌。',errors:'肩膀贴地只动手肘，颈部代偿。'},
+    {name:'死虫式',duration:'3组×10次/侧',desc:CORE_LIB.find(x=>x.name==='死虫式')?.desc||'',tips:'腰背全程压实地面，对侧手脚缓慢下放，控制不触地。',errors:'腰部离地拱起，肢体下放速度过快。'},
+  ]},
+  {id:'pkg_upper',label:'🏋️ 上肢日',color:'#D7BDE2',exercises:[
+    {name:'俯卧撑',duration:'4组×12次',desc:UPPER_LIB.find(x=>x.name==='俯卧撑')?.desc||'',tips:'身体保持一条直线，胸部近地面后爆发推起，核心全程收紧。',errors:'塌腰、屁股翘起、肘关节外展过大。'},
+    {name:'哑铃侧平举',duration:'3组×15次',desc:UPPER_LIB.find(x=>x.name==='哑铃侧平举')?.desc||'',tips:'"倒水"姿势，动作顶峰拇指侧略低于小指侧，感受三角肌中束。',errors:'耸肩借力，速度过快靠惯性甩起。'},
+    {name:'哑铃弯举',duration:'3组×12次',desc:UPPER_LIB.find(x=>x.name==='哑铃弯举')?.desc||'',tips:'上臂固定不晃动，顶峰停1秒，缓慢下落4秒感受离心。',errors:'身体后仰借力，上臂随重量前后摆动。'},
+    {name:'哑铃肩推',duration:'3组×12次',desc:UPPER_LIB.find(x=>x.name==='哑铃肩推')?.desc||'',tips:'坐姿背靠支撑，核心收紧，推到顶端不锁死，感受全肩发力。',errors:'腰部过度前弓，头颈前伸，肘过分外展。'},
+  ]},
+];
 function renderGym(){
   const el=document.getElementById('pg-gym');
   const wdays=['周一','周二','周三','周四','周五','周六','周日'];
@@ -1823,7 +1920,28 @@ function renderGym(){
     {id:'upper',label:'上肢',color:'#D7BDE2',lib:UPPER_LIB,type:'strength'},
     {id:'func',label:'功能性训练',color:'#FFCBA4',lib:null,plans:FUNCTIONAL_PLANS},
   ];
-  const anchors=categories.map(c=>`<span class="gym-anchor" onclick="gymScrollTo('gym-cat-${c.id}')">${c.label}</span>`).join('');
+  const anchors=['#pkg-section',...categories.map(c=>`gym-cat-${c.id}`)].map((id,i)=>`<span class="gym-anchor" onclick="gymScrollTo('${id}')">${i===0?'训练包':categories[i-1]?.label||''}</span>`).join('');
+
+  // training packages section
+  let pkgHtml=`<div id="pkg-section" style="scroll-margin-top:60px"><div class="ct">🏋️ 训练包</div>`;
+  for(const pkg of TRAINING_PACKAGES){
+    pkgHtml+=`<div class="card" style="--accent:var(--p1);margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:14px;font-weight:800">${pkg.label}</div>
+        <button class="btn bsm" style="background:${pkg.color};color:#3D2651;font-weight:700" onclick="gymAddPackage('${pkg.id}')">+ 加入计划</button>
+      </div>`;
+    pkg.exercises.forEach(ex=>{
+      pkgHtml+=`<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid var(--bd)">
+        <div style="flex:1">
+          <span style="font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)" onclick="gymShowDetail(${JSON.stringify({name:ex.name,duration:ex.duration,desc:ex.desc,tips:ex.tips||'',errors:ex.errors||''}).replace(/"/g,"'").replace(/\n/g,'\\n')})">${ex.name} <span style="font-size:10px;color:var(--p1)">详情</span></span>
+          <span style="font-size:11px;color:var(--ink3);margin-left:6px">${ex.duration}</span>
+        </div>
+      </div>`;
+    });
+    pkgHtml+=`</div>`;
+  }
+  pkgHtml+=`</div>`;
+
   let sectHtml='';
   for(const cat of categories){
     sectHtml+=`<div id="gym-cat-${cat.id}" style="scroll-margin-top:60px">
@@ -1832,7 +1950,7 @@ function renderGym(){
       cat.lib.forEach((ex,idx)=>{
         sectHtml+=`<div class="gym-ex-card">
           <div style="display:flex;align-items:center;gap:8px">
-            <div class="gym-ex-name">${idx+1}. ${ex.name}</div>
+            <div class="gym-ex-name" style="cursor:pointer" onclick="gymShowDetail({name:'${ex.name.replace(/'/g,"\\'")}',duration:'${ex.duration}',desc:'${ex.desc.replace(/'/g,"\\'").replace(/\n/g,'\\n')}',tips:'',errors:''})">${idx+1}. ${ex.name}</div>
             <span class="gym-ex-dur" style="margin-left:auto">${ex.duration}</span>
           </div>
           <div class="gym-ex-desc">${ex.desc}</div>
@@ -1860,13 +1978,48 @@ function renderGym(){
     }
     sectHtml+='</div>';
   }
+  const anchorBar=`<div class="gym-anchor-bar">${['训练包',...categories.map(c=>c.label)].map((lbl,i)=>`<span class="gym-anchor" onclick="gymScrollTo('${i===0?'pkg-section':'gym-cat-'+categories[i-1]?.id}')">${lbl}</span>`).join('')}</div>`;
   el.innerHTML=`
 <div class="ph"><h1>💪 动作库</h1></div>
-<div class="gym-anchor-bar">${anchors}</div>
+${anchorBar}
+${pkgHtml}
 ${sectHtml}`;
 }
 window.gymScrollTo=function(id){
   const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+};
+window.gymShowDetail=function(ex){
+  const e=typeof ex==='string'?JSON.parse(ex.replace(/'/g,'"')):ex;
+  const desc=(e.desc||'').replace(/\\n/g,'\n');
+  const tips=e.tips?(e.tips||'').replace(/\\n/g,'\n'):'';
+  const errors=e.errors?(e.errors||'').replace(/\\n/g,'\n'):'';
+  openMo(`<div class="mt">${e.name}</div>
+    <div style="font-size:12px;color:var(--ink3);margin-bottom:4px">${e.duration}</div>
+    <div style="font-size:13px;line-height:1.7;margin-bottom:10px">${desc}</div>
+    ${tips?`<div style="background:rgba(181,234,215,.2);border-radius:10px;padding:9px 12px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:#52BE80;margin-bottom:3px">✅ 要点</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.7">${tips}</div>
+    </div>`:''}
+    ${errors?`<div style="background:rgba(229,57,53,.06);border-radius:10px;padding:9px 12px">
+      <div style="font-size:11px;font-weight:700;color:#E53935;margin-bottom:3px">⚠️ 常见错误</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.7">${errors}</div>
+    </div>`:''}`);
+};
+window.gymAddPackage=function(pkgId){
+  const pkg=TRAINING_PACKAGES.find(p=>p.id===pkgId);if(!pkg)return;
+  const wdays=['周一','周二','周三','周四','周五','周六','周日'];
+  const opts=wdays.map((d,i)=>`<button class="btn bg bsm" style="flex:1" onclick="gymDoAddPackage(${i},'${pkgId}')">+${d}</button>`).join('');
+  openMo(`<div class="mt">📅 加入哪天计划？</div>
+    <div style="font-weight:700;font-size:14px;margin-bottom:12px">${pkg.label}（${pkg.exercises.length}个动作）</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${opts}</div>`);
+};
+window.gymDoAddPackage=async function(day,pkgId){
+  const pkg=TRAINING_PACKAGES.find(p=>p.id===pkgId);if(!pkg)return;
+  const wid=getWeekId();await ensureWeek();
+  const cur=await dbGet('sport_plans',wid)||{id:wid,items:[],cardioMins:0,strengthMins:0};
+  pkg.exercises.forEach(ex=>{cur.items.push({id:'sp_pkg_'+Date.now()+'_'+Math.random().toString(36).slice(2),day,type:'strength',name:ex.name,duration:ex.duration});});
+  await dbPut('sport_plans',cur);
+  closeMo();showToast(`${pkg.label}已加入${['周一','周二','周三','周四','周五','周六','周日'][day]} 💪`);
 };
 window.gymAddExercise=function(exStr){
   const ex=typeof exStr==='string'?JSON.parse(exStr.replace(/'/g,'"')):exStr;
@@ -1945,13 +2098,23 @@ async function renderLife(){
   TL_ITEMS.forEach(it=>{if(!groups[it.group])groups[it.group]=[];groups[it.group].push(it);});
   let tlHtml='';
   for(const [gname,items] of Object.entries(groups)){
-    tlHtml+=`<div class="tl-group-label">${gname}</div>`;
+    if(editing){
+      tlHtml+=`<div class="tl-group-label" style="display:flex;align-items:center;justify-content:space-between">
+        <span>${gname}</span>
+        <span style="display:flex;gap:4px">
+          <button class="btn bg bxs" style="font-size:10px;padding:2px 6px" onclick="renameTlGroup('${gname.replace(/'/g,"\\'")}')">改名</button>
+          <button class="tdel" onclick="delTlGroup('${gname.replace(/'/g,"\\'")}')">×</button>
+        </span>
+      </div>`;
+    } else {
+      tlHtml+=`<div class="tl-group-label">${gname}</div>`;
+    }
     items.forEach(it=>{
       const done=tlDone.includes(it.id);
       if(editing){
-        tlHtml+=`<div class="tl-item">
-          <div style="width:6px;height:6px;border-radius:50%;background:var(--bd);flex-shrink:0;margin-top:6px"></div>
-          <div class="tl-text" style="flex:1">${it.text}</div>
+        tlHtml+=`<div class="tl-item" draggable="true" data-tlid="${it.id}" ondragstart="tlDragStart(event,'${it.id}')" ondragover="tlDragOver(event)" ondrop="tlDrop(event,'${it.id}')" style="cursor:grab">
+          <span style="color:var(--ink3);font-size:14px;flex-shrink:0;cursor:grab">⠿</span>
+          <input class="inp" style="flex:1;font-size:13px;padding:4px 6px;height:auto" value="${it.text.replace(/"/g,'&quot;')}" onchange="updateTlText('${it.id}',this.value)">
           <button class="tdel" onclick="delTlItem('${it.id}')" style="flex-shrink:0">×</button>
         </div>`;
       } else {
@@ -2010,54 +2173,10 @@ async function renderLife(){
   const highPending=todos.filter(t=>!t.done&&t.pri==='high').length;
   const overdueCount=todos.filter(t=>!t.done&&overdue(t)).length;
 
-  // ── 早睡打卡 ──
-  const sleepCfg=(await dbGet('todos','sleep_cfg'))||{id:'sleep_cfg',target:'23:00'};
-  const sleepTarget=sleepCfg.target||'23:00';
-  const sleepRows=(()=>{
-    const rows=[];
-    for(let i=6;i>=0;i--){
-      const d=new Date();d.setDate(d.getDate()-i);
-      const dk=d.toISOString().slice(0,10);
-      const label=['日','一','二','三','四','五','六'][d.getDay()];
-      rows.push({dk,label});
-    }
-    return rows;
-  })();
-  const sleepLogs=await Promise.all(sleepRows.map(r=>dbGet('todos','sleep_'+r.dk)));
-  const sleepCardRows=sleepRows.map((r,i)=>{
-    const log=sleepLogs[i];const actual=log?.time||'';const isToday=r.dk===today;
-    let dotClass='none',statusTxt='未记录';
-    if(actual){
-      const [sh,sm]=actual.split(':').map(Number);
-      const [th,tm]=sleepTarget.split(':').map(Number);
-      const late=(sh*60+sm)>(th*60+tm)&&!(sh>=0&&sh<6);
-      dotClass=late?'late':'ok';statusTxt=actual+(late?' 偏晚':' 准时');
-    }
-    return`<div class="sleep-row">
-      <div class="sleep-dot ${dotClass}"></div>
-      <div style="flex:1;font-size:13px;color:var(--ink)">周${r.label} <span style="font-size:11px;color:var(--ink3)">${r.dk.slice(5).replace('-','/')}</span></div>
-      <div style="font-size:12px;color:${dotClass==='ok'?'#27AE60':dotClass==='late'?'#C46B2A':'var(--ink3)'}">${statusTxt}</div>
-      ${isToday?`<input type="time" class="inp" value="${actual}" style="width:90px;font-size:12px;padding:4px 7px" onchange="saveSleep('${r.dk}',this.value)">`:''}
-    </div>`;
-  }).join('');
+  // ── 早睡打卡已移除 ──
 
   el.innerHTML=`
 <div class="ph"><h1>✅ 日常生活</h1></div>
-<div class="card" style="--accent:var(--p4)">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-    <div class="ct" style="margin:0">每日调理打卡</div>
-    <div style="display:flex;align-items:center;gap:8px">
-      ${editing
-        ? `<button class="btn badd" onclick="addTlItem()">＋ 添加</button>
-           <button class="btn bg bsm" style="background:var(--p4);color:#fff" onclick="saveTlEdit()">保存</button>`
-        : `<div style="font-size:13px;font-weight:800;color:#52BE80">${tlDoneCount}/${tlTotal}</div>
-           <button class="btn bg bxs" onclick="enterTlEdit()">编辑</button>`
-      }
-    </div>
-  </div>
-  <div class="tl-prog-wrap"><div class="tl-prog-track"><div class="tl-prog-fill" style="width:${tlPct}%"></div></div></div>
-  ${tlHtml}
-</div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px">
   <div class="money-stat"><div class="money-stat-val">${todos.filter(t=>!t.done).length}</div><div class="money-stat-lbl">待完成</div></div>
   <div class="money-stat" style="background:rgba(229,57,53,.07);border-color:rgba(229,57,53,.2)"><div class="money-stat-val" style="color:#E53935">${overdueCount}</div><div class="money-stat-lbl">已超期</div></div>
@@ -2089,13 +2208,20 @@ async function renderLife(){
     <button class="btn bp bsm" style="width:100%" onclick="addTodo()">+ 添加</button>
   </div>
 </div>
-<div class="card" style="--accent:var(--p7)">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <div class="ct" style="margin:0">早睡打卡</div>
-    <button class="btn bg bxs" onclick="setSleepTarget()">目标 ${sleepTarget}</button>
+<div class="card" style="--accent:var(--p4)">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="ct" style="margin:0">今日打卡</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      ${editing
+        ? `<button class="btn badd" onclick="addTlItem()">＋ 添加</button>
+           <button class="btn bg bsm" style="background:var(--p4);color:#fff" onclick="saveTlEdit()">保存</button>`
+        : `<div style="font-size:13px;font-weight:800;color:#52BE80">${tlDoneCount}/${tlTotal}</div>
+           <button class="btn bg bxs" onclick="enterTlEdit()">编辑</button>`
+      }
+    </div>
   </div>
-  <div style="font-size:11px;color:var(--ink3);margin:5px 0 8px">今日实际入睡时间 ↓ 右侧选择，近7天记录如下</div>
-  ${sleepCardRows}
+  <div class="sheep-prog-wrap"><div class="sheep-prog-track"><div class="sheep-prog-fill" style="width:${tlPct}%"></div></div><div class="sheep-prog-icon" style="left:${Math.max(2,Math.min(98,tlPct))}%">🐑</div></div>
+  ${tlHtml}
 </div>`;
 }
 window.lifeFilterCat=function(c){window._lifeCat=c;renderLife();};
@@ -2110,6 +2236,7 @@ window.addTodo=async function(){
   renderLife();
 };
 window.togTodo=async function(id){const t=await dbGet('todos',id);if(!t)return;t.done=!t.done;await dbPut('todos',t);renderLife();};
+window.homeTodoDone=async function(id){const t=await dbGet('todos',id);if(!t)return;t.done=true;await dbPut('todos',t);renderHome();showToast('✅ 完成！');};
 window.togTl=async function(id){
   const today=todayKey();const key='tl_log_'+today;
   const log=(await dbGet('todos',key))||{id:key,done:[]};
@@ -2123,17 +2250,24 @@ window.togTlHome=async function(id){
   if(!log.done.includes(id))log.done.push(id);
   await dbPut('todos',log);renderHome();
 };
-window.saveSleep=async function(date,time){
-  await dbPut('todos',{id:'sleep_'+date,date,time});renderLife();
-};
-window.addTlItem=function(){
+window.addTlItem=async function(){
+  const cfg=await dbGet('todos','tl_items')||{id:'tl_items',items:[]};
+  const groups=[...new Set((cfg.items||[]).map(it=>it.group))];
+  const opts=groups.map(g=>`<option value="${g}">${g}</option>`).join('');
   openMo(`<div class="mt">添加打卡项目</div>
-    <div class="mrow"><span class="ml">分组名称</span><input class="inp" id="tlGroup" placeholder="如：日常习惯"></div>
+    <div class="mrow"><span class="ml">分组</span>
+      <select class="inp" id="tlGroup" style="flex:1" onchange="document.getElementById('tlNewGrpRow').style.display=this.value==='__new__'?'flex':'none'">
+        ${opts}
+        <option value="__new__">＋ 新建分组…</option>
+      </select>
+    </div>
+    <div class="mrow" id="tlNewGrpRow" style="display:none"><span class="ml">新分组名</span><input class="inp" id="tlNewGrp" placeholder="如：健康管理"></div>
     <div class="mrow"><span class="ml">打卡内容</span><input class="inp" id="tlText" placeholder="具体内容…"></div>
     <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveTlItem()">添加</button>`);
 };
 window.saveTlItem=async function(){
-  const group=document.getElementById('tlGroup').value.trim();
+  let group=document.getElementById('tlGroup').value.trim();
+  if(group==='__new__')group=(document.getElementById('tlNewGrp')||{}).value.trim();
   const text=document.getElementById('tlText').value.trim();
   if(!group||!text){showToast('请填写完整');return;}
   const cfg=await dbGet('todos','tl_items')||{id:'tl_items',items:[]};
@@ -2146,13 +2280,37 @@ window.delTlItem=async function(id){
   cfg.items=cfg.items.filter(it=>it.id!==id);
   await dbPut('todos',cfg);renderLife();
 };
-window.enterTlEdit=function(){window._tlEditing=true;renderLife();};
+window.updateTlText=async function(id,val){
+  const cfg=await dbGet('todos','tl_items');if(!cfg)return;
+  const it=cfg.items.find(x=>x.id===id);if(it)it.text=val.trim();
+  await dbPut('todos',cfg);
+};
+window.renameTlGroup=async function(oldName){
+  const nv=prompt('新分组名称',oldName);if(!nv||!nv.trim()||nv.trim()===oldName)return;
+  const cfg=await dbGet('todos','tl_items');if(!cfg)return;
+  cfg.items.forEach(it=>{if(it.group===oldName)it.group=nv.trim();});
+  await dbPut('todos',cfg);renderLife();
+};
+window.delTlGroup=async function(gname){
+  if(!confirm(`删除「${gname}」分组及其所有打卡项？`))return;
+  const cfg=await dbGet('todos','tl_items');if(!cfg)return;
+  cfg.items=cfg.items.filter(it=>it.group!==gname);
+  await dbPut('todos',cfg);renderLife();
+};
+window.enterTlEdit=function(){window._tlDrag=null;window._tlEditing=true;renderLife();};
 window.saveTlEdit=function(){window._tlEditing=false;renderLife();showToast('打卡内容已保存');};
-window.setSleepTarget=async function(){
-  const cfg=(await dbGet('todos','sleep_cfg'))||{id:'sleep_cfg',target:'23:00'};
-  const val=prompt('目标入睡时间（如 23:00）',cfg.target||'23:00');
-  if(!val||!/^\d{1,2}:\d{2}$/.test(val.trim()))return;
-  cfg.target=val.trim();await dbPut('todos',cfg);renderLife();
+window.tlDragStart=function(e,id){window._tlDrag=id;e.dataTransfer.effectAllowed='move';};
+window.tlDragOver=function(e){e.preventDefault();e.dataTransfer.dropEffect='move';};
+window.tlDrop=async function(e,targetId){
+  e.preventDefault();
+  const dragId=window._tlDrag;if(!dragId||dragId===targetId)return;
+  const cfg=await dbGet('todos','tl_items');if(!cfg)return;
+  const items=cfg.items;
+  const fi=items.findIndex(x=>x.id===dragId);
+  const ti=items.findIndex(x=>x.id===targetId);
+  if(fi<0||ti<0)return;
+  const [moved]=items.splice(fi,1);items.splice(ti,0,moved);
+  await dbPut('todos',cfg);renderLife();
 };
 window.delTodo=async function(id){await dbDel('todos',id);renderLife();};
 // ═══ DIET ═══
@@ -2491,6 +2649,7 @@ async function renderMoney(){
         <div style="font-size:11px;color:var(--ink3)">${e.date}</div>
       </div>
       <span style="font-weight:700;font-size:14px;color:var(--ink)">¥${e.amount.toFixed(2)}</span>
+      <button class="tdel" style="background:none;color:var(--ink3);font-size:13px" onclick="editMoneyEntry('${e.id}')">✏️</button>
       <button class="tdel" onclick="delMoneyEntry('${e.id}')">×</button>
     </div>`;
   }).join('')||'<div class="empty">本月暂无消费记录 ✨</div>';
@@ -2539,9 +2698,10 @@ ${entries.length?`<div class="card" style="--accent:var(--p5)">
 ${isThisMonth?`<div class="card" style="--accent:var(--p3)">
   <div class="ct">✏️ 快速记一笔</div>
   <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="mcat-${c}" onclick="selectMCat('${c}')">${c}</span>`).join('')}</div>
-  <div style="display:flex;gap:7px;margin-bottom:7px">
+  <div style="display:flex;gap:7px;margin-bottom:7px;flex-wrap:wrap">
     <input class="inp" id="mAmount" type="number" placeholder="金额" style="flex:1;min-width:80px">
     <input class="inp" id="mNote" placeholder="备注（选填）" style="flex:2">
+    <input class="inp" id="mDate" type="date" value="${todayKey()}" style="width:130px;font-size:12px">
   </div>
   <button class="btn bp" style="width:100%" onclick="addMoneyEntry()">+ 记录</button>
 </div>`:''}
@@ -2563,13 +2723,35 @@ window.addMoneyEntry=async function(){
   if(!amt||amt<=0){showToast('请输入金额');return;}
   const cat=window._selMCat||'其他';
   const note=document.getElementById('mNote')?.value.trim();
-  await dbPut('ledger',{id:'le_'+Date.now(),date:todayKey(),amount:amt,cat,note});
+  const date=document.getElementById('mDate')?.value||todayKey();
+  await dbPut('ledger',{id:'le_'+Date.now(),date,amount:amt,cat,note});
   window._selMCat=null;
   showToast('已记录 ¥'+amt.toFixed(2));
   renderMoney();
 };
 window.delMoneyEntry=async function(id){
   await dbDel('ledger',id);renderMoney();
+};
+window.editMoneyEntry=async function(id){
+  const e=await dbGet('ledger',id);if(!e)return;
+  openMo(`<div class="mt">✏️ 编辑记录</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">${MONEY_CATS.map(c=>`<span class="gym-anchor${e.cat===c?' active':''}" id="emecat-${c}" onclick="document.querySelectorAll('[id^=emecat-]').forEach(x=>x.classList.remove('active'));this.classList.add('active');window._emeCat='${c}'">${c}</span>`).join('')}</div>
+    <div class="mrow"><span class="ml">金额</span><input class="inp" id="emeAmt" type="number" value="${e.amount}"></div>
+    <div class="mrow"><span class="ml">备注</span><input class="inp" id="emeNote" value="${e.note||''}"></div>
+    <div class="mrow"><span class="ml">日期</span><input class="inp" id="emeDate" type="date" value="${e.date||todayKey()}"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveMoneyEdit('${id}')">保存</button>`);
+  window._emeCat=e.cat;
+};
+window.saveMoneyEdit=async function(id){
+  const e=await dbGet('ledger',id);if(!e)return;
+  const amt=parseFloat(document.getElementById('emeAmt').value);
+  if(!amt||amt<=0){showToast('请输入金额');return;}
+  e.amount=amt;
+  e.cat=window._emeCat||e.cat;
+  e.note=document.getElementById('emeNote').value.trim();
+  e.date=document.getElementById('emeDate').value||e.date;
+  await dbPut('ledger',e);
+  closeMo();renderMoney();showToast('已更新');
 };
 window.moneySettings=async function(){
   const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
@@ -2861,10 +3043,21 @@ async function renderLove(){
     </div>`;
   }).join('')||'<div style="font-size:12px;color:var(--ink3);padding:4px 0">还没有心愿</div>';
 
-  const photoGrid=`<div class="love-photo-grid">
-    ${photoList.slice(0,8).map(p=>`<div class="love-photo" onclick="viewLovePhoto('${p.id}')"><img src="${p.data}" alt=""/></div>`).join('')}
-    ${photoList.length<9?`<label class="love-photo" title="添加照片"><input type="file" accept="image/*" style="display:none" onchange="addLovePhoto(this)"><span class="love-photo-add">＋</span></label>`:''}
-  </div>`;
+  const dots=photoList.map((_,i)=>`<div class="love-cd${i===0?' act':''}" id="lcdot-${i}"></div>`).join('');
+  const slides=photoList.map((p,i)=>`<div class="love-carousel-slide" onclick="viewLovePhoto('${p.id}')">
+    <img src="${p.data}" alt=""/>
+    <div class="love-carousel-cap">
+      <span class="love-carousel-cap-text">${p.caption||'📸'}</span>
+      <span class="love-carousel-cap-date">${p.date||p.ts?new Date(p.date||(p.ts)).toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'}):''}</span>
+    </div>
+  </div>`).join('');
+  const photoSection=photoList.length
+    ?`<div class="love-carousel" id="loveCarousel">
+        <div class="love-carousel-track" id="loveTrack" style="transform:translateX(0%)">${slides}</div>
+        ${photoList.length>1?`<button class="love-carousel-nav prev" onclick="loveSlide(-1)">‹</button><button class="love-carousel-nav next" onclick="loveSlide(1)">›</button>`:''}
+      </div>
+      <div class="love-carousel-dots">${dots}</div>`
+    :`<div style="padding:20px;text-align:center;color:var(--ink3);font-size:13px">还没有照片，上传第一张 📸</div>`;
 
   el.innerHTML=`
 <div class="ph"><h1>💕 浪漫小屋</h1>
@@ -2889,8 +3082,13 @@ async function renderLove(){
   })()}
 </div>
 <div class="card" style="--accent:var(--p1)">
-  <div class="ct">📸 照片墙 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${photoList.length}张</span></div>
-  ${photoGrid}
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div class="ct" style="margin:0">📸 照片墙 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${photoList.length}张</span></div>
+    <label style="background:var(--p1);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;cursor:pointer;flex-shrink:0">
+      ＋ 添加<input type="file" accept="image/*" style="display:none" onchange="addLovePhoto(this)">
+    </label>
+  </div>
+  ${photoSection}
 </div>
 <div class="card" style="--accent:var(--p6)">
   <div class="ct">🎂 纪念日提醒
@@ -2904,6 +3102,8 @@ async function renderLove(){
   </div>
   ${wishRows}
 </div>`;
+  _loveSlideIdx=0;
+  setTimeout(loveAutoPlay,400);
 }
 window.loveSetup=async function(){
   const cfg=await dbGet('love_data','cfg')||{id:'cfg',startDate:'',name1:'',name2:''};
@@ -2917,18 +3117,41 @@ window.saveLoveCfg=async function(){
   await dbPut('love_data',{id:'cfg',startDate:document.getElementById('lStart').value,name1:document.getElementById('lN1').value.trim(),name2:document.getElementById('lN2').value.trim()});
   closeMo();renderLove();showToast('已保存 💕');
 };
+let _loveSlideIdx=0,_loveSlideTimer=null;
+window.loveSlide=function(dir){
+  const track=document.getElementById('loveTrack');if(!track)return;
+  const count=track.children.length;if(!count)return;
+  _loveSlideIdx=(_loveSlideIdx+dir+count)%count;
+  track.style.transform=`translateX(-${_loveSlideIdx*100}%)`;
+  document.querySelectorAll('.love-cd').forEach((d,i)=>d.classList.toggle('act',i===_loveSlideIdx));
+};
+function loveAutoPlay(){
+  if(_loveSlideTimer)clearInterval(_loveSlideTimer);
+  _loveSlideTimer=setInterval(()=>{
+    const track=document.getElementById('loveTrack');
+    if(track&&track.children.length>1)loveSlide(1);
+    else clearInterval(_loveSlideTimer);
+  },3500);
+}
 window.addLovePhoto=async function(inp){
   const file=inp.files[0];if(!file)return;
+  const caption=prompt('给这张照片写一句话（不超过10字）','');
+  if(caption!==null&&caption.length>10){showToast('超过10字啦，已截取');}
+  const capText=(caption||'').slice(0,10);
   const reader=new FileReader();
   reader.onload=async function(e){
-    await dbPut('love_data',{id:'photo_'+Date.now(),data:e.target.result,ts:Date.now()});
+    const dateStr=todayKey();
+    await dbPut('love_data',{id:'photo_'+Date.now(),data:e.target.result,caption:capText,date:dateStr,ts:Date.now()});
     renderLove();showToast('照片已添加 📸');
   };
   reader.readAsDataURL(file);
 };
 window.viewLovePhoto=async function(id){
   const p=await dbGet('love_data',id);if(!p)return;
-  openMo(`<div style="text-align:center"><img src="${p.data}" style="max-width:100%;border-radius:12px;margin-bottom:12px"></div>
+  openMo(`<div style="text-align:center"><img src="${p.data}" style="max-width:100%;border-radius:12px;margin-bottom:8px">
+    ${p.caption?`<div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px">${p.caption}</div>`:''}
+    ${p.date?`<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">${p.date}</div>`:''}
+    </div>
     <button class="btn bdanger" style="width:100%" onclick="delLoveItem('${id}');closeMo()">🗑 删除这张</button>`);
 };
 window.addAnniversary=function(){
@@ -3043,63 +3266,116 @@ const JIAOZU_QUESTIONS=[
 ];
 async function ensureJiaozuBank(){
   const existing=await dbAll('jiaozu_bank');
+  // seed default questions if empty
   if(!existing.length){for(const q of JIAOZU_QUESTIONS)await dbPut('jiaozu_bank',q);}
+  // patch legacy records without subject/type
+  const all=await dbAll('jiaozu_bank');
+  for(const q of all){
+    if(!q.subject||!q.qtype){
+      q.subject=q.subject||'S2';q.qtype=q.qtype||'short';
+      await dbPut('jiaozu_bank',q);
+    }
+  }
 }
 async function renderJiaozu(){
   await ensureJiaozuBank();
   const el=document.getElementById('pg-jiaozu');
   const today=todayKey();
-  const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4};
+  const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4,examDate:'',targetScore:0};
   const todayLog=(await dbGet('jiaozu_logs','log_'+today))||{id:'log_'+today,date:today,done:[],mastered:[]};
   const allQ=await dbAll('jiaozu_bank');
   const mastered=todayLog.mastered||[];
   const done=todayLog.done||[];
   const dailyCount=cfg.dailyCount||4;
-  // pick today's questions: sequential by id
-  const sorted=allQ.sort((a,b)=>parseInt(a.id.slice(2))-parseInt(b.id.slice(2)));
-  const totalDone=done.length;
-  const pct=Math.min(100,Math.round(totalDone/dailyCount*100));
-  const isComplete=totalDone>=dailyCount;
+  const activeSubj=window._jzSubj||'S2';
+  const activeType=window._jzType||'short';
 
-  let qHtml='';
-  for(const q of sorted){
-    const isMastered=mastered.includes(q.id);
-    const isDone=done.includes(q.id);
-    const num=q.id.slice(2);
-    const mnemonicHtml=q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic">💡 口诀：${q.m}</div>`:'';
-    qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
-      <div class="jz-q-row" onclick="jzToggleCard('${q.id}')">
-        <div class="jz-num">${num}</div>
-        <div class="jz-q-text">${q.q}</div>
-        <div class="jz-toggle">▾</div>
-      </div>
-      <div class="jz-ans">
-        <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
-        ${mnemonicHtml}
-        <div class="jz-status">
-          <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
-          <button class="jz-btn-status${(!isMastered&&isDone)?' review':''}" onclick="jzMark('${q.id}','review')">↺ 待复习</button>
-        </div>
-      </div>
-    </div>`;
+  const S1Q=allQ.filter(q=>q.subject==='S1');
+  const S2Q=allQ.filter(q=>q.subject==='S2');
+  const subjectQ=activeSubj==='S1'?S1Q:S2Q;
+  const S2Types={single:'单选题',short:'简答题',analysis:'材料分析题'};
+  const S1Types={single:'单选题',analysis:'材料分析题'};
+  const types=activeSubj==='S1'?S1Types:S2Types;
+
+  // progress for this subject
+  const subjectMastered=mastered.filter(id=>subjectQ.find(q=>q.id===id));
+  const subjectDone=done.filter(id=>subjectQ.find(q=>q.id===id));
+  const totalDoneToday=done.length;
+  const pct=Math.min(100,Math.round(totalDoneToday/dailyCount*100));
+
+  // type-filtered questions
+  const filtered=subjectQ.filter(q=>q.qtype===activeType);
+  const sorted=filtered.sort((a,b)=>parseInt(a.id.replace(/\D/g,''))-parseInt(b.id.replace(/\D/g,'')));
+
+  // gap analysis: question types with 0 mastered
+  const gapLines=[];
+  for(const [k,label] of Object.entries(activeSubj==='S1'?S1Types:S2Types)){
+    const tq=subjectQ.filter(q=>q.qtype===k);
+    const tm=mastered.filter(id=>tq.find(q=>q.id===id));
+    if(tq.length&&tm.length===0)gapLines.push(label);
   }
 
+  let qHtml='';
+  if(!filtered.length){
+    qHtml=`<div class="card"><div style="padding:12px;text-align:center;color:var(--ink3);font-size:13px">该题型暂无题目 → 前往「添加」录入</div></div>`;
+  } else {
+    for(const q of sorted){
+      const isMastered=mastered.includes(q.id);
+      const isDone=done.includes(q.id);
+      const num=q.id.replace(/\D/g,'');
+      const mnemonicHtml=q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic">💡 口诀：${q.m}</div>`:'';
+      qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
+        <div class="jz-q-row" onclick="jzToggleCard('${q.id}')">
+          <div class="jz-num">${num}</div>
+          <div class="jz-q-text">${q.q}</div>
+          <div class="jz-toggle">▾</div>
+        </div>
+        <div class="jz-ans">
+          <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
+          ${mnemonicHtml}
+          <div class="jz-status">
+            <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
+            <button class="jz-btn-status${(!isMastered&&isDone)?' review':''}" onclick="jzMark('${q.id}','review')">↺ 待复习</button>
+          </div>
+        </div>
+      </div>`;
+    }
+  }
+
+  const subjTabs=`<div style="display:flex;gap:7px;margin-bottom:10px">
+    <button class="btn bsm${activeSubj==='S1'?' bp':' bg'}" onclick="jzSetSubj('S1')">科目一</button>
+    <button class="btn bsm${activeSubj==='S2'?' bp':' bg'}" onclick="jzSetSubj('S2')">科目二（小学）</button>
+  </div>`;
+  const typeTabs=Object.entries(types).map(([k,v])=>{
+    const cnt=subjectQ.filter(q=>q.qtype===k).length;
+    const mc=mastered.filter(id=>subjectQ.filter(q=>q.qtype===k).find(q=>q.id===id)).length;
+    return`<span class="gym-anchor${activeType===k?' active':''}" onclick="jzSetType('${k}')" style="font-size:11px">${v}(${mc}/${cnt})</span>`;
+  }).join('');
+
   el.innerHTML=`
-<div class="ph"><h1>教资备考</h1>
+<div class="ph"><h1>📚 教资备考</h1>
   <button class="btn bg bsm mla" onclick="jzSetting()">设置</button>
 </div>
+${cfg.examDate?`<div style="background:linear-gradient(135deg,#AED6F1,#D7BDE2);border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-size:12px;font-weight:700;color:rgba(0,0,0,.6)">📅 考试倒计时</span>
+  <span style="font-size:20px;font-weight:900;color:#3D2651">${Math.max(0,Math.ceil((new Date(cfg.examDate)-new Date())/86400000))} 天</span>
+</div>`:''}
 <div class="jz-day-bar">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <div>
-      <div style="font-size:13px;font-weight:700;color:var(--ink)">今日计划 · 科目二简答题</div>
-      <div style="font-size:12px;color:var(--ink3);margin-top:2px">每日 ${dailyCount} 题 · 已完成 ${totalDone} 题${isComplete?' 🎉':''}</div>
-    </div>
-    <div style="font-size:22px;font-weight:900;color:#E8875A">${totalDone}/${dailyCount}</div>
+    <div><div style="font-size:13px;font-weight:700;color:var(--ink)">今日进度</div>
+    <div style="font-size:12px;color:var(--ink3);margin-top:2px">每日 ${dailyCount} 题目标 · 已完成 ${totalDoneToday} 题</div></div>
+    <div style="font-size:22px;font-weight:900;color:#E8875A">${totalDoneToday}/${dailyCount}</div>
   </div>
   <div class="jz-progress-track"><div class="jz-progress-fill" style="width:${pct}%"></div></div>
-  <div style="font-size:11px;color:var(--ink3)">共 ${allQ.length} 题 · 展开题目后标记掌握情况</div>
+  ${gapLines.length?`<div style="margin-top:6px;font-size:11px;color:#E05252">⚠️ 薄弱题型：${gapLines.join('、')}</div>`:''}
 </div>
-${qHtml}`;
+${subjTabs}
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">${typeTabs}</div>
+<div style="font-size:11px;color:var(--ink3);margin-bottom:8px">共 ${filtered.length} 题 · 本题型已掌握 ${mastered.filter(id=>filtered.find(q=>q.id===id)).length} 题</div>
+${qHtml}
+<div style="padding:10px 0;text-align:center">
+  <button class="btn bg bsm" onclick="jzAddQ()">＋ 添加题目</button>
+</div>`;
 }
 window.jzToggleCard=function(id){
   const card=document.getElementById('jzc-'+id);
@@ -3127,13 +3403,54 @@ window.jzMark=async function(id,type){
   renderJiaozu();
 };
 window.jzSetting=async function(){
+  const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4,examDate:'',targetScore:0};
+  openMo(`<div class="mt">教资备考设置</div>
+    <div class="mrow"><span class="ml">每日题目数</span><input class="inp" id="jzDC" type="number" value="${cfg.dailyCount||4}" min="1" max="50"></div>
+    <div class="mrow"><span class="ml">考试日期</span><input class="inp" id="jzExam" type="date" value="${cfg.examDate||''}"></div>
+    <div class="mrow"><span class="ml">目标分数</span><input class="inp" id="jzScore" type="number" value="${cfg.targetScore||0}" placeholder="如：70"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveJzSetting()">保存</button>`);
+};
+window.saveJzSetting=async function(){
   const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4};
-  const val=prompt('每日背诵题数（当前：'+cfg.dailyCount+'）',cfg.dailyCount);
-  const n=parseInt(val);
-  if(!n||n<1||n>50)return;
-  cfg.dailyCount=n;
+  const n=parseInt(document.getElementById('jzDC').value);
+  if(n&&n>=1&&n<=50)cfg.dailyCount=n;
+  cfg.examDate=document.getElementById('jzExam').value||'';
+  cfg.targetScore=parseInt(document.getElementById('jzScore').value)||0;
   await dbPut('jiaozu_logs',cfg);
-  renderJiaozu();
+  closeMo();renderJiaozu();showToast('设置已保存');
+};
+window.jzSetSubj=function(s){window._jzSubj=s;window._jzType=s==='S1'?'single':'short';renderJiaozu();};
+window.jzSetType=function(t){window._jzType=t;renderJiaozu();};
+window.jzAddQ=async function(){
+  const subj=window._jzSubj||'S2';
+  const type=window._jzType||'short';
+  const typeLabels={single:'单选题',short:'简答题',analysis:'材料分析题'};
+  openMo(`<div class="mt">添加题目</div>
+    <div class="mrow"><span class="ml">科目</span>
+      <select class="inp" id="jzQSubj"><option value="S2"${subj==='S2'?' selected':''}>科目二</option><option value="S1"${subj==='S1'?' selected':''}>科目一</option></select>
+    </div>
+    <div class="mrow"><span class="ml">题型</span>
+      <select class="inp" id="jzQType">
+        <option value="short"${type==='short'?' selected':''}>简答题</option>
+        <option value="single"${type==='single'?' selected':''}>单选题</option>
+        <option value="analysis"${type==='analysis'?' selected':''}>材料分析题</option>
+      </select>
+    </div>
+    <div class="mrow"><span class="ml">题目</span><textarea class="inp" id="jzQQ" style="height:60px;resize:vertical" placeholder="题目内容…"></textarea></div>
+    <div class="mrow"><span class="ml">答案</span><textarea class="inp" id="jzQA" style="height:80px;resize:vertical" placeholder="答案内容…"></textarea></div>
+    <div class="mrow"><span class="ml">口诀</span><input class="inp" id="jzQM" placeholder="记忆口诀（可选）"></div>
+    <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveJzQ()">添加</button>`);
+};
+window.saveJzQ=async function(){
+  const q=document.getElementById('jzQQ').value.trim();
+  const a=document.getElementById('jzQA').value.trim();
+  if(!q||!a){showToast('题目和答案必填');return;}
+  const subject=document.getElementById('jzQSubj').value;
+  const qtype=document.getElementById('jzQType').value;
+  const m=document.getElementById('jzQM').value.trim()||'无口诀';
+  const id='jzx_'+Date.now();
+  await dbPut('jiaozu_bank',{id,q,a,m,subject,qtype});
+  closeMo();renderJiaozu();showToast('题目已添加');
 };
 // ═══ DATA EXPORT ═══
 async function exportData(){
@@ -3144,8 +3461,12 @@ async function exportData(){
   showToast('数据已导出 💾');
 }
 // ═══ INIT ═══
+const SPLASH_MSGS=['今天也要元气满满 ✨','加油加油，你最棒 💪','每一天都是新开始 🌸','小羊陪你，一起冲 🐑','今日事今日毕，加油！','你好，今天也要努力呀 💕'];
 async function init(){
   try{
+    // random splash text
+    const sp=document.getElementById('splashSub');
+    if(sp)sp.textContent=SPLASH_MSGS[Math.floor(Math.random()*SPLASH_MSGS.length)];
     await openDB();
     await ensureSubjects();
     await ensureWeek();
@@ -3153,8 +3474,11 @@ async function init(){
     if(!localStorage.getItem('sheep_claude_key'))localStorage.setItem('sheep_claude_key','sk-mg-4kgp5kplr2pgivg7okdgqyzjre3kyh2rkcaejai');
     await renderHome();
     if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+    // dismiss splash
+    setTimeout(()=>{const s=document.getElementById('splash');if(s)s.classList.add('hide');},1600);
   }catch(err){
     console.error('Init error:',err);
+    const s=document.getElementById('splash');if(s)s.classList.add('hide');
     document.getElementById('pg-home').innerHTML='<div style="padding:20px;color:red;font-size:13px">加载失败：'+err.message+'<br><button onclick="location.reload()" style="margin-top:10px;padding:8px 16px;background:#FFB7C5;border:none;border-radius:8px;cursor:pointer">重新加载</button></div>';
   }
 }
