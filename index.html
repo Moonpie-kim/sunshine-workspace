@@ -3735,6 +3735,22 @@ async function renderJiaozu(){
     const S1_MODULES=['职业理念','职业道德','法律法规','信息处理'];
     // 科目二理论模块：6个（简答题单独用题号判断）
     const S2_MODULES=['教育基础（上）','教育基础（下）','学生指导','教学实施','学校班级管理','学习心理'];
+    // 统计每个模块在整个计划里的总任务数（含截止今天）
+    const s1ModTotal={}, s2ModTotal={};
+    S1_MODULES.forEach(m=>{s1ModTotal[m]=0;});
+    S2_MODULES.forEach(m=>{s2ModTotal[m]=0;});
+    for(const p of JIAOZU_PLAN){
+      const customP2=await dbGet('jiaozu_logs','jzplan_'+p.date);
+      const planTasks=((customP2&&customP2._v===2)?customP2.tasks:p.tasks)||[];
+      planTasks.forEach(t=>{
+        S1_MODULES.forEach(m=>{if(t.includes(m))s1ModTotal[m]++;});
+        S2_MODULES.forEach(m=>{if(t.includes(m))s2ModTotal[m]++;});
+      });
+    }
+    // 统计已打卡的每个模块任务数
+    const s1ModDone={}, s2ModDone={};
+    S1_MODULES.forEach(m=>{s1ModDone[m]=0;});
+    S2_MODULES.forEach(m=>{s2ModDone[m]=0;});
     const s1Done=new Set(), s2Done=new Set();
     let litVideoMax=0, jzDoneMax=20;
     for(const p of JIAOZU_PLAN){
@@ -3745,9 +3761,8 @@ async function renderJiaozu(){
       const tasks=((customP&&customP._v===2)?customP.tasks:p.tasks)||[];
       tasks.forEach((t,i)=>{
         if(!tLog.done.includes(i))return;
-        // 理论模块：打卡即计入
-        S1_MODULES.forEach(m=>{if(t.includes(m))s1Done.add(m);});
-        S2_MODULES.forEach(m=>{if(t.includes(m))s2Done.add(m);});
+        S1_MODULES.forEach(m=>{if(t.includes(m))s1ModDone[m]++;});
+        S2_MODULES.forEach(m=>{if(t.includes(m))s2ModDone[m]++;});
         // 文学素养：从实际任务文字里提取节次（支持 第X-Y节 或 第X节）
         const litRange=t.match(/文学素养.*第(\d+)-(\d+)节/);
         if(litRange)litVideoMax=Math.max(litVideoMax,parseInt(litRange[2]));
@@ -3760,6 +3775,9 @@ async function renderJiaozu(){
         if(jzSingle&&!jzM)jzSingle.forEach(x=>{ const n=parseInt(x.replace('jz',''));if(n>jzDoneMax)jzDoneMax=n;});
       });
     }
+    // 模块全部任务打卡完才算完成
+    S1_MODULES.forEach(m=>{if(s1ModTotal[m]>0&&s1ModDone[m]>=s1ModTotal[m])s1Done.add(m);});
+    S2_MODULES.forEach(m=>{if(s2ModTotal[m]>0&&s2ModDone[m]>=s2ModTotal[m])s2Done.add(m);});
     // 文学素养：看完63节才算完成；简答题：背完100道第一轮才算完成
     if(litVideoMax>=63)s1Done.add('文学素养');
     if(jzDoneMax>=100)s2Done.add('简答题');
