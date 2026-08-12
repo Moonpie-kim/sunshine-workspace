@@ -786,6 +786,27 @@ async function renderHome(){
   // calendar
   calView={year:now.getFullYear(),month:now.getMonth()};
 
+  // 教资今日任务
+  let jzTodayH='';
+  {
+    const jzPlan=JIAOZU_PLAN.find(p=>p.date===today);
+    if(jzPlan){
+      const customJz=await dbGet('jiaozu_logs','jzplan_'+today);
+      const jzTasks=((customJz&&customJz._v===2)?customJz.tasks:jzPlan.tasks)||[];
+      const jzLog=(await dbGet('jiaozu_logs','jztask_'+today))||{done:[]};
+      if(jzTasks.length){
+        jzTodayH+=`<div class="ci-group-label">📝 教资备考</div>`;
+        jzTasks.forEach((t,i)=>{
+          const done=jzLog.done.includes(i);
+          jzTodayH+=`<div class="trow">
+            <button class="tchk${done?' done':''}" onclick="homeToggleJzTask(${i})">${done?'✓':''}</button>
+            <span class="tname${done?' done':''}">${t}</span>
+          </div>`;
+        });
+      }
+    }
+  }
+
   // study tasks — today only
   let studyH='';
   for(const subj of subjects.sort((a,b)=>a.order-b.order)){
@@ -963,7 +984,7 @@ async function renderHome(){
 </div>
 <div class="card" style="--accent:var(--p4)">
   <div class="ct">🎓 今日学习任务</div>
-  ${studyH||'<div class="empty">暂无学习任务</div>'}
+  ${jzTodayH}${studyH||(!jzTodayH?'<div class="empty">暂无学习任务</div>':'')}
 </div>
 <div class="card" style="--accent:var(--p5)">
   <div class="ct">🏋️ 今日运动计划</div>
@@ -2237,6 +2258,15 @@ window.addTodo=async function(){
 };
 window.togTodo=async function(id){const t=await dbGet('todos',id);if(!t)return;t.done=!t.done;await dbPut('todos',t);renderLife();};
 window.homeTodoDone=async function(id){const t=await dbGet('todos',id);if(!t)return;t.done=true;await dbPut('todos',t);renderHome();showToast('✅ 完成！');};
+window.homeToggleJzTask=async function(idx){
+  const today=todayKey();const key='jztask_'+today;
+  const log=(await dbGet('jiaozu_logs',key))||{id:key,done:[]};
+  const i=log.done.indexOf(idx);
+  if(i>-1)log.done.splice(i,1);else log.done.push(idx);
+  await dbPut('jiaozu_logs',log);
+  renderHome();
+  if(window.currentPage==='jiaozu')renderJiaozu();
+};
 window.togTl=async function(id){
   const today=todayKey();const key='tl_log_'+today;
   const log=(await dbGet('todos',key))||{id:key,done:[]};
