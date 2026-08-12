@@ -3319,7 +3319,7 @@ const JIAOZU_PLAN=(()=>{
     // ── 阶段二：专项强化（8/26–9/5，11天）──
     // D15 8/26
     {date:'2026-08-26',phase:'阶段二·专项强化',tasks:[
-      '科目一·文学素养视频 第\1-\2节 + 刷题',
+      '科目一·文学素养视频 第29-30节 + 刷题',
       '科目一·信息处理&逻辑推理：刷题第2轮（40道）+错题复盘',
       '科目二·简答题背诵 jz91–jz95（5道）',
     ]},
@@ -3731,31 +3731,43 @@ async function renderJiaozu(){
     const isAfterExam=todayStr>'2026-09-12';
 
     // ── 进度统计（扫描所有已过去日期的打卡记录）──
-    // 科目一：4个理论模块 + 文学素养（共5个）
-    const S1_MODULES=['职业理念','职业道德','法律法规','信息处理','文学素养'];
-    // 科目二：6个理论模块 + 简答题（共7个）
-    const S2_MODULES=['教育基础（上）','教育基础（下）','学生指导','教学实施','学校班级管理','学习心理','简答题'];
+    // 科目一理论模块：4个（文学素养单独用节次判断）
+    const S1_MODULES=['职业理念','职业道德','法律法规','信息处理'];
+    // 科目二理论模块：6个（简答题单独用题号判断）
+    const S2_MODULES=['教育基础（上）','教育基础（下）','学生指导','教学实施','学校班级管理','学习心理'];
     const s1Done=new Set(), s2Done=new Set();
     let litVideoMax=0, jzDoneMax=20;
     for(const p of JIAOZU_PLAN){
       if(p.date>todayStr)break;
       const tLog=(await dbGet('jiaozu_logs','jztask_'+p.date))||{done:[]};
-      const tasks=p.tasks||[];
+      // 读取用户实际打卡时的任务文字（可能已编辑），优先读自定义
+      const customP=await dbGet('jiaozu_logs','jzplan_'+p.date);
+      const tasks=((customP&&customP._v===2)?customP.tasks:p.tasks)||[];
       tasks.forEach((t,i)=>{
         if(!tLog.done.includes(i))return;
+        // 理论模块：打卡即计入
         S1_MODULES.forEach(m=>{if(t.includes(m))s1Done.add(m);});
-        // 科目二模块关键词匹配；简答题单独判断
-        ['教育基础（上）','教育基础（下）','学生指导','教学实施','学校班级管理','学习心理'].forEach(m=>{if(t.includes(m))s2Done.add(m);});
-        if(t.match(/jz\d+[–\-]jz\d+/))s2Done.add('简答题');
-        const litM=t.match(/文学素养视频.*第(\d+)-(\d+)节/);
-        if(litM)litVideoMax=Math.max(litVideoMax,parseInt(litM[2]));
+        S2_MODULES.forEach(m=>{if(t.includes(m))s2Done.add(m);});
+        // 文学素养：从实际任务文字里提取节次（支持 第X-Y节 或 第X节）
+        const litRange=t.match(/文学素养.*第(\d+)-(\d+)节/);
+        if(litRange)litVideoMax=Math.max(litVideoMax,parseInt(litRange[2]));
+        const litSingle=t.match(/文学素养.*第(\d+)节/);
+        if(litSingle&&!litRange)litVideoMax=Math.max(litVideoMax,parseInt(litSingle[1]));
+        // 简答题：从实际任务文字里提取最大题号
         const jzM=t.match(/jz(\d+)[–\-]jz(\d+)/);
         if(jzM)jzDoneMax=Math.max(jzDoneMax,parseInt(jzM[2]));
+        const jzSingle=t.match(/jz(\d+)/g);
+        if(jzSingle&&!jzM)jzSingle.forEach(x=>{ const n=parseInt(x.replace('jz',''));if(n>jzDoneMax)jzDoneMax=n;});
       });
     }
-    const s1Pct=Math.round(s1Done.size/S1_MODULES.length*100);
-    const s2Pct=Math.round(s2Done.size/S2_MODULES.length*100);
-    const litPct=Math.round(litVideoMax/63*100);
+    // 文学素养：看完63节才算完成；简答题：背完100道第一轮才算完成
+    if(litVideoMax>=63)s1Done.add('文学素养');
+    if(jzDoneMax>=100)s2Done.add('简答题');
+    const s1Total=S1_MODULES.length+1; // +文学素养
+    const s2Total=S2_MODULES.length+1; // +简答题
+    const s1Pct=Math.round((s1Done.size)/s1Total*100);
+    const s2Pct=Math.round((s2Done.size)/s2Total*100);
+    const litPct=Math.round(Math.min(litVideoMax,63)/63*100);
     const jzPct=Math.round(Math.min(jzDoneMax,100)/100*100);
 
     // ── 顶部倒计时 ──
