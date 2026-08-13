@@ -1196,6 +1196,10 @@ async function renderHome(){
     <a onclick="navTo('study')" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
   </div>
   ${studyH}
+  ${jzTaskTotal>0?`<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--sep);display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:11px;color:var(--ink3)">📚 教资备考</span>
+    <span style="font-size:11px;font-weight:700;color:${jzTaskDone===jzTaskTotal?'#27AE60':'var(--ink2)'}">${jzTaskDone===jzTaskTotal?'✅ 全部完成':jzTaskDone+'/'+jzTaskTotal+' 完成'}</span>
+  </div>`:''}
 </div>
 
 <!-- 今日运动 一行 -->
@@ -4624,10 +4628,6 @@ function renderHabits(log, streaks, fullStreak){
         </div>
       </div>`
   }
-  ${jzTaskTotal>0?`<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--sep);display:flex;align-items:center;justify-content:space-between">
-    <span style="font-size:12px;color:var(--ink2)">📚 教资今日任务</span>
-    <span style="font-size:12px;font-weight:700;color:${jzTaskDone===jzTaskTotal?'#27AE60':'var(--ink2)'}">${jzTaskDone===jzTaskTotal?'✅ 全部完成':jzTaskDone+'/'+jzTaskTotal+' 完成'}</span>
-  </div>`:''}
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
