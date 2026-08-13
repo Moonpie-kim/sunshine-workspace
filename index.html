@@ -274,18 +274,18 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 @keyframes sheepSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 .sheep-mood-label{margin-top:8px;font-size:13px;font-weight:700;color:var(--ink2);text-align:center;}
 /* 气泡容器：以小羊SVG为中心 */
-.sheep-bubble-ring{position:relative;width:190px;height:140px;margin:0 auto;}
+.sheep-bubble-ring{position:relative;width:220px;height:220px;margin:0 auto;}
 .sheep-bubble-ring .sheep-svg-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
-.mood-bubble{position:absolute;border:none;cursor:pointer;font-size:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);box-shadow:0 3px 10px rgba(0,0,0,.1);transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center;}
-.mood-bubble:hover{transform:scale(1.2) !important;}
-.mood-bubble.active{background:var(--ga);box-shadow:0 4px 14px rgba(255,154,162,.45);}
-@keyframes bubbleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.mood-bubble:nth-child(1){animation:bubbleFloat 2.8s ease-in-out infinite;}
-.mood-bubble:nth-child(2){animation:bubbleFloat 3.1s ease-in-out infinite .4s;}
-.mood-bubble:nth-child(3){animation:bubbleFloat 2.6s ease-in-out infinite .8s;}
-.mood-bubble:nth-child(4){animation:bubbleFloat 3.3s ease-in-out infinite .2s;}
-.mood-bubble:nth-child(5){animation:bubbleFloat 2.9s ease-in-out infinite .6s;}
-.mood-bubble:nth-child(6){animation:bubbleFloat 3.0s ease-in-out infinite 1s;}
+.mood-bubble{position:absolute;border:none;cursor:pointer;font-size:22px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.88);backdrop-filter:blur(4px);box-shadow:0 3px 12px rgba(0,0,0,.12);transition:transform .18s,box-shadow .18s;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);}
+.mood-bubble:hover{transform:translate(-50%,-50%) scale(1.22) !important;}
+.mood-bubble.active{background:var(--ga);box-shadow:0 4px 14px rgba(255,154,162,.5);}
+@keyframes bubbleFloat{0%,100%{margin-top:0}50%{margin-top:-5px}}
+.mood-bubble:nth-child(1){animation:bubbleFloat 2.8s ease-in-out infinite 0s;}
+.mood-bubble:nth-child(2){animation:bubbleFloat 3.1s ease-in-out infinite .5s;}
+.mood-bubble:nth-child(3){animation:bubbleFloat 2.6s ease-in-out infinite 1.0s;}
+.mood-bubble:nth-child(4){animation:bubbleFloat 3.3s ease-in-out infinite .25s;}
+.mood-bubble:nth-child(5){animation:bubbleFloat 2.9s ease-in-out infinite .75s;}
+.mood-bubble:nth-child(6){animation:bubbleFloat 3.0s ease-in-out infinite 1.25s;}
 /* ─ TODO CARDS ─ */
 .todo-card{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border-radius:12px;background:var(--card);border:1.5px solid var(--bd);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
 .todo-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:12px 0 0 12px;}
@@ -295,18 +295,42 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .todo-card:not(.todo-overdue)::before{background:var(--ga);}
 .todo-card-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd);flex-shrink:0;margin-top:1px;transition:all .2s;background:transparent;}
 /* ─ MONEY ─ */
-.money-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;}
+/* ─ MONEY 3.0 ─ */
 .money-stat{background:var(--card);border-radius:var(--rs);padding:11px 12px;border:1.5px solid var(--bd);text-align:center;}
 .money-stat-val{font-size:20px;font-weight:800;color:var(--ink);}
 .money-stat-lbl{font-size:11px;color:var(--ink3);margin-top:2px;}
-.money-remain{grid-column:1/-1;background:var(--gc);border:none;border-radius:var(--r);padding:14px;text-align:center;box-shadow:0 4px 14px rgba(255,203,164,.3);}
-.money-remain-val{font-size:28px;font-weight:800;color:var(--ink);}
-.money-remain-lbl{font-size:12px;color:var(--ink2);margin-top:3px;}
-.money-bar{height:8px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden;margin-top:8px;}
-.money-bar-fill{height:100%;border-radius:4px;transition:width .4s;}
 .money-cat-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;}
 .money-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);}
 .money-row:last-child{border-bottom:none;}
+/* 健康指示器 */
+.money-health{background:var(--gc);border:none;border-radius:var(--r);padding:14px 16px;box-shadow:0 4px 14px rgba(255,203,164,.3);margin-bottom:10px;}
+.money-health-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.money-health-amt{font-size:28px;font-weight:900;line-height:1;}
+.money-health-label{font-size:12px;color:var(--ink2);margin-top:2px;}
+.money-seg-bar{height:10px;border-radius:5px;background:rgba(0,0,0,.08);overflow:hidden;position:relative;margin-bottom:6px;}
+.money-seg-fill{height:100%;border-radius:5px;transition:width .6s cubic-bezier(.34,1.56,.64,1);}
+/* 分类条形图 */
+.money-cat-bar-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--sep);}
+.money-cat-bar-row:last-child{border-bottom:none;}
+.money-cat-bar-track{flex:1;height:7px;border-radius:4px;background:rgba(0,0,0,.07);overflow:hidden;}
+.money-cat-bar-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+/* 记账快速入口 */
+.money-quick-cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.money-quick-cats::-webkit-scrollbar{display:none;}
+.money-qcat{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:12px;border:2px solid transparent;background:rgba(215,189,226,.15);cursor:pointer;transition:all .18s;}
+.money-qcat.active{border-color:var(--p1);background:rgba(255,183,197,.2);transform:scale(1.05);}
+.money-qcat-icon{font-size:22px;}
+.money-qcat-label{font-size:10px;font-weight:700;color:var(--ink2);}
+/* 周预算行 */
+.money-week-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--sep);}
+.money-week-row:last-child{border-bottom:none;}
+.money-week-row.current{background:rgba(255,183,197,.08);border-radius:8px;padding:6px 6px;}
+/* 明细分组 */
+.money-day-group{margin-bottom:8px;}
+.money-day-hd{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--ink3);padding:4px 0 2px;border-bottom:1px solid var(--sep);margin-bottom:4px;}
+/* 编辑模式 */
+.money-edit-bar{background:#FFF3CD;border:1.5px solid #FFCA28;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;font-weight:700;color:#856404;}
+@keyframes moneyConfirm{0%{transform:scale(1)}50%{transform:scale(.94)}100%{transform:scale(1)}}
 /* ─ XHS ─ */
 .xhs-tabs{display:flex;gap:4px;padding:4px;background:rgba(215,189,226,.18);border-radius:14px;margin-bottom:14px;}
 .xhs-tab{flex:1;padding:7px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .2s;}
@@ -334,23 +358,13 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .love-hero::before{content:'';position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12);}
 .love-days{font-size:54px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(255,100,150,.25);}
 .love-days-lbl{font-size:13px;color:rgba(255,255,255,.85);margin-top:4px;font-weight:600;}
-.love-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-.love-photo{aspect-ratio:1;border-radius:12px;background:rgba(215,189,226,.2);border:1.5px solid var(--bd);overflow:hidden;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.love-photo img{width:100%;height:100%;object-fit:cover;}
-.love-photo-add{font-size:24px;color:var(--ink3);}
-/* carousel */
-.love-carousel{position:relative;border-radius:18px;overflow:hidden;background:rgba(215,189,226,.15);aspect-ratio:4/3;margin-top:8px;}
-.love-carousel-track{display:flex;height:100%;transition:transform .4s ease;}
-.love-carousel-slide{flex:0 0 100%;position:relative;overflow:hidden;}
-.love-carousel-slide img{width:100%;height:100%;object-fit:cover;}
-.love-carousel-cap{position:absolute;bottom:0;left:0;right:0;padding:8px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.45));color:#fff;display:flex;justify-content:space-between;align-items:flex-end;}
-.love-carousel-cap-text{font-size:13px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.4);}
-.love-carousel-cap-date{font-size:10px;opacity:.8;}
-.love-carousel-dots{display:flex;justify-content:center;gap:5px;margin-top:8px;}
-.love-cd{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.15);transition:all .2s;}
-.love-cd.act{background:var(--p1);width:14px;border-radius:3px;}
-.love-carousel-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.5);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-.love-carousel-nav.prev{left:6px;}.love-carousel-nav.next{right:6px;}
+/* ─ LOVE PHOTO CANVAS ─ */
+.love-canvas{background:#f5f0e8;border-radius:16px;padding:16px 12px 12px;border:1.5px solid #e8dfc8;box-shadow:inset 0 2px 8px rgba(0,0,0,.06);margin-top:8px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;min-height:120px;}
+.love-polaroid{background:#fff;padding:8px 8px 28px;border-radius:3px;box-shadow:0 4px 14px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.1);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;flex-shrink:0;}
+.love-polaroid:hover{box-shadow:0 8px 24px rgba(0,0,0,.22);transform:scale(1.04) rotate(0deg) !important;}
+.love-polaroid img{width:100px;height:100px;object-fit:cover;display:block;border-radius:1px;}
+.love-polaroid .love-pol-cap{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-size:10px;color:#555;font-weight:600;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.love-canvas-empty{width:100%;text-align:center;padding:24px 0;color:#b0a898;font-size:13px;}
 .love-anniversary{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,183,197,.12);border:1px solid var(--bd);margin-bottom:7px;}
 .love-anni-days{font-size:20px;font-weight:800;color:var(--p8);min-width:44px;text-align:center;}
 .love-wish{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bd);}
@@ -957,7 +971,7 @@ async function renderHome(){
         :`<div class="trow"><button class="tchk" onclick="toggleCI('${item.id}','study')"></button><span class="tname">${item.label}</span></div>`
       ).join('');
       studyH+=`<div id="studyMore" style="display:none">${moreHtml}</div>
-        <div style="font-size:11px;color:var(--p4);padding:3px 4px;cursor:pointer;font-weight:600" onclick="this.style.display='none';document.getElementById('studyMore').style.display='block'">还有 ${moreLines.length} 条未完成 ▾</div>`;
+        <div id="studyMoreBtn" style="font-size:11px;color:var(--p4);padding:3px 4px;cursor:pointer;font-weight:600" onclick="(function(){var m=document.getElementById('studyMore'),b=document.getElementById('studyMoreBtn');var open=m.style.display!=='none';m.style.display=open?'none':'block';b.textContent=open?'还有 ${moreLines.length} 条未完成 ▾':'收起 ▴';})()">还有 ${moreLines.length} 条未完成 ▾</div>`;
     }
   }
 
@@ -993,7 +1007,7 @@ async function renderHome(){
         </div>
       </div>`).join('');
       sportH+=`<div id="sportMore" style="display:none">${moreHtml}</div>
-        <div style="font-size:11px;color:var(--p5);padding:3px 4px;cursor:pointer;font-weight:600" onclick="this.style.display='none';document.getElementById('sportMore').style.display='block'">还有 ${moreSport.length} 条未完成 ▾</div>`;
+        <div id="sportMoreBtn" style="font-size:11px;color:var(--p5);padding:3px 4px;cursor:pointer;font-weight:600" onclick="(function(){var m=document.getElementById('sportMore'),b=document.getElementById('sportMoreBtn');var open=m.style.display!=='none';m.style.display=open?'none':'block';b.textContent=open?'还有 ${moreSport.length} 条未完成 ▾':'收起 ▴';})()">还有 ${moreSport.length} 条未完成 ▾</div>`;
     }
     if(!undone.length&&done2.length){
       sportH='<div style="font-size:12px;color:var(--ink3);padding:2px 0">今日运动全部完成 🎉</div>';
@@ -1037,14 +1051,20 @@ async function renderHome(){
 
 <!-- 小羊动画 主位 -->
 <div class="sheep-stage">
-  <!-- 气泡容器：小羊居中，6个表情气泡环绕 -->
+  <!-- 气泡容器：小羊居中，6个表情气泡60°均匀环绕 -->
   <div class="sheep-bubble-ring">
-    <!-- 左上 😊 -->
-    <button class="mood-bubble active" data-mood="happy" title="开心" onclick="setSheepMood('happy')" style="left:0;top:10px">😊</button>
-    <!-- 左中 😢 -->
-    <button class="mood-bubble" data-mood="sad" title="难过" onclick="setSheepMood('sad')" style="left:2px;top:52px">😢</button>
-    <!-- 左下 🤩 -->
-    <button class="mood-bubble" data-mood="excited" title="激动" onclick="setSheepMood('excited')" style="left:10px;top:94px">🤩</button>
+    <!-- 正上 😢 270° (110,30) -->
+    <button class="mood-bubble" data-mood="sad" title="难过" onclick="setSheepMood('sad')" style="left:110px;top:30px">😢</button>
+    <!-- 右上 😊 330° (179,70) -->
+    <button class="mood-bubble active" data-mood="happy" title="开心" onclick="setSheepMood('happy')" style="left:179px;top:70px">😊</button>
+    <!-- 右下 😂 30° (179,150) -->
+    <button class="mood-bubble" data-mood="laugh" title="大笑" onclick="setSheepMood('laugh')" style="left:179px;top:150px">😂</button>
+    <!-- 正下 🤩 90° (110,190) -->
+    <button class="mood-bubble" data-mood="excited" title="激动" onclick="setSheepMood('excited')" style="left:110px;top:190px">🤩</button>
+    <!-- 左下 🥺 150° (41,150) -->
+    <button class="mood-bubble" data-mood="hopeful" title="期待" onclick="setSheepMood('hopeful')" style="left:41px;top:150px">🥺</button>
+    <!-- 左上 😤 210° (41,70) -->
+    <button class="mood-bubble" data-mood="angry" title="生气" onclick="setSheepMood('angry')" style="left:41px;top:70px">😤</button>
     <!-- 小羊居中 -->
     <div class="sheep-svg-center" id="sheepWrap">
       <svg id="sheepSvg" class="sheep-anim" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100px;height:100px">
@@ -1109,27 +1129,30 @@ async function renderHome(){
       <rect x="55" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
     </svg>
     </div>
-    <!-- 右上 🥺 -->
-    <button class="mood-bubble" data-mood="hopeful" title="期待" onclick="setSheepMood('hopeful')" style="right:0;top:10px">🥺</button>
-    <!-- 右中 😤 -->
-    <button class="mood-bubble" data-mood="angry" title="生气" onclick="setSheepMood('angry')" style="right:2px;top:52px">😤</button>
-    <!-- 右下 😂 -->
-    <button class="mood-bubble" data-mood="laugh" title="大笑" onclick="setSheepMood('laugh')" style="right:10px;top:94px">😂</button>
   </div>
   <div class="sheep-mood-label" id="sheepMoodLabel">✨ 今天也要加油呀</div>
 </div>
 
 <!-- 日历 + 倒计时 双列 -->
-<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;margin-bottom:8px">
+<div style="display:grid;grid-template-columns:1fr 116px;gap:8px;align-items:stretch;margin-bottom:8px">
   <div class="card" id="calCard" style="--accent:var(--p5);margin:0"></div>
-  <div class="card cdcard" style="margin:0;min-width:110px;max-width:130px">
-    <div style="font-size:10px;color:rgba(255,255,255,.8);font-weight:600;margin-bottom:2px">⏳ 距离</div>
-    <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.3">${cd.name}</div>
-    <div style="display:flex;align-items:baseline;gap:3px"><span style="font-size:32px;font-weight:900;color:#fff;line-height:1">${daysLeft}</span><span style="font-size:12px;color:rgba(255,255,255,.85);font-weight:700">天</span></div>
-    <div class="cdbar"><div class="cdbar-f" style="width:${cdPct}%"></div></div>
-    <div style="display:flex;justify-content:space-between;margin-top:5px;align-items:center">
-      <span style="font-size:10px;color:rgba(255,255,255,.6)">${cd.date||'—'}</span>
-      <button onclick="editCD()" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:10px;padding:2px 7px;border-radius:5px;cursor:pointer">✏️</button>
+  <div class="card cdcard" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;padding:12px 10px">
+    <div>
+      <div style="font-size:10px;color:rgba(255,255,255,.8);font-weight:600;margin-bottom:4px">⏳ 距离</div>
+      <div style="font-size:12px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:6px">${cd.name}</div>
+    </div>
+    <div style="text-align:center;margin:4px 0">
+      <div style="display:flex;align-items:baseline;justify-content:center;gap:3px">
+        <span style="font-size:34px;font-weight:900;color:#fff;line-height:1">${daysLeft}</span>
+        <span style="font-size:13px;color:rgba(255,255,255,.9);font-weight:700">天</span>
+      </div>
+    </div>
+    <div>
+      <div class="cdbar" style="margin-bottom:6px"><div class="cdbar-f" style="width:${cdPct}%"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:10px;color:rgba(255,255,255,.6)">${cd.date||'—'}</span>
+        <button onclick="editCD()" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:10px;padding:2px 7px;border-radius:5px;cursor:pointer">✏️</button>
+      </div>
     </div>
   </div>
 </div>
@@ -5177,46 +5200,40 @@ window.doChangePw=function(){
 const MONEY_CATS=['餐饮','购物','娱乐','交通','美容','聚会','学习','其他'];
 const CAT_COLORS={'餐饮':'#FFB7C5','购物':'#FFCBA4','娱乐':'#D7BDE2','交通':'#AED6F1','美容':'#F1C6E7','聚会':'#B5EAD7','学习':'#FFF0A8','其他':'#E8D5F5'};
 const CAT_DARK={'餐饮':'#E05252','购物':'#D4830A','娱乐':'#9B59B6','交通':'#2980B9','美容':'#C0406A','聚会':'#27AE60','学习':'#B7950B','其他':'#7F8C8D'};
-function buildPieChart(entries){
+function buildCatBars(entries, catBudgets){
   const totals={};MONEY_CATS.forEach(c=>{totals[c]=0;});
   entries.forEach(e=>{if(totals[e.cat]!==undefined)totals[e.cat]+=e.amount||0;else totals['其他']+=e.amount||0;});
-  const cats=MONEY_CATS.filter(c=>totals[c]>0);
+  const cats=MONEY_CATS.filter(c=>totals[c]>0).sort((a,b)=>totals[b]-totals[a]);
   if(!cats.length)return'<div class="empty">本月暂无消费数据</div>';
-  const total=cats.reduce((s,c)=>s+totals[c],0);
-  const cx=80,cy=80,r=70;
-  let startAngle=-Math.PI/2;
-  let paths='',labels='';
-  cats.forEach(c=>{
-    const pct=totals[c]/total;
-    const angle=pct*2*Math.PI;
-    const endAngle=startAngle+angle;
-    const x1=cx+r*Math.cos(startAngle),y1=cy+r*Math.sin(startAngle);
-    const x2=cx+r*Math.cos(endAngle),y2=cy+r*Math.sin(endAngle);
-    const lg=angle>Math.PI?1:0;
-    paths+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${CAT_DARK[c]}" stroke="#fff" stroke-width="1.5" opacity=".85"/>`;
-    if(pct>0.07){
-      const midA=startAngle+angle/2;
-      const lx=cx+(r*0.62)*Math.cos(midA),ly=cy+(r*0.62)*Math.sin(midA);
-      labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="9" font-weight="700">${Math.round(pct*100)}%</text>`;
-    }
-    startAngle=endAngle;
-  });
-  const legendItems=cats.map(c=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px">
-    <span style="width:10px;height:10px;border-radius:2px;background:${CAT_DARK[c]};flex-shrink:0;display:inline-block;opacity:.85"></span>
-    <span style="color:var(--ink2)">${c}</span>
-    <span style="color:var(--ink3);margin-left:auto">¥${totals[c].toFixed(0)}</span>
-  </div>`).join('');
-  return`<div style="display:flex;gap:12px;align-items:flex-start">
-    <svg width="160" height="160" viewBox="0 0 160 160" style="flex-shrink:0">${paths}${labels}<circle cx="${cx}" cy="${cy}" r="28" fill="#fff"/><text x="${cx}" y="${cy-5}" text-anchor="middle" font-size="9" fill="var(--ink3)">总计</text><text x="${cx}" y="${cy+9}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--ink)">¥${total.toFixed(0)}</text></svg>
-    <div style="flex:1;display:flex;flex-direction:column;gap:6px;padding-top:8px">${legendItems}</div>
-  </div>`;
+  const maxVal=Math.max(...cats.map(c=>totals[c]));
+  const catIcons={'餐饮':'🍜','购物':'🛍','娱乐':'🎮','交通':'🚌','美容':'💄','聚会':'🥂','学习':'📚','其他':'📦'};
+  return cats.map(c=>{
+    const pct=totals[c]/maxVal*100;
+    const bud=catBudgets&&catBudgets[c]?catBudgets[c]:0;
+    const barColor=CAT_DARK[c]||'#999';
+    const budPct=bud?Math.min(100,totals[c]/bud*100):0;
+    const remain=bud?bud-totals[c]:null;
+    return`<div class="money-cat-bar-row">
+      <span style="font-size:16px;width:22px;text-align:center">${catIcons[c]||'📦'}</span>
+      <div style="width:36px;font-size:11px;font-weight:700;color:var(--ink2);flex-shrink:0">${c}</div>
+      <div style="flex:1">
+        <div class="money-cat-bar-track">
+          <div class="money-cat-bar-fill" style="width:${pct}%;background:${barColor}cc"></div>
+        </div>
+        ${bud?`<div style="font-size:9px;margin-top:2px;color:${remain<0?'#E53935':remain<bud*0.15?'#F4D03F':'var(--ink3)'}">${remain>=0?'剩 ¥'+remain.toFixed(0):'超 ¥'+Math.abs(remain).toFixed(0)} / 预算¥${bud}</div>`:''}
+      </div>
+      <span style="font-size:12px;font-weight:700;color:${bud&&remain<0?'#E53935':'var(--ink)'};flex-shrink:0">¥${totals[c].toFixed(0)}</span>
+      ${bud?`<span style="font-size:10px;width:30px;text-align:right;flex-shrink:0;color:${budPct>100?'#E53935':budPct>85?'#F4D03F':'#52BE80'}">${budPct.toFixed(0)}%</span>`:''}
+    </div>`;
+  }).join('');
 }
 async function renderMoney(){
   const el=document.getElementById('pg-money');
   const now=new Date();
   const viewMonth=window._moneyView||(window._moneyView={y:now.getFullYear(),m:now.getMonth()});
   const ym=`${viewMonth.y}-${String(viewMonth.m+1).padStart(2,'0')}`;
-  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[],weekBudget:0,catBudgets:{}};
+  cfg.catBudgets=cfg.catBudgets||{};
   const allEntries=await dbAll('ledger');
   const entries=allEntries.filter(e=>e.id!=='cfg'&&e.date&&e.date.startsWith(ym)).sort((a,b)=>b.date.localeCompare(a.date));
   const totalSpent=entries.reduce((s,e)=>s+(e.amount||0),0);
@@ -5224,90 +5241,235 @@ async function renderMoney(){
   const budget=cfg.budget||0;
   const remain=budget-totalFixed-totalSpent;
   const pct=budget>0?Math.min(100,(totalFixed+totalSpent)/budget*100):0;
-  const barColor=pct<60?'#52BE80':pct<85?'#F4D03F':'#E53935';
   const isThisMonth=viewMonth.y===now.getFullYear()&&viewMonth.m===now.getMonth();
-  const prevM=()=>{let m=viewMonth.m-1,y=viewMonth.y;if(m<0){m=11;y--;}window._moneyView={y,m};renderMoney();};
-  const nextM=()=>{let m=viewMonth.m+1,y=viewMonth.y;if(m>11){m=0;y++;}window._moneyView={y,m};renderMoney();};
-  window.moneyPrev=prevM;window.moneyNext=nextM;
+  const editMode=window._moneyEdit||false;
+  window.moneyPrev=()=>{let m=viewMonth.m-1,y=viewMonth.y;if(m<0){m=11;y--;}window._moneyView={y,m};renderMoney();};
+  window.moneyNext=()=>{let m=viewMonth.m+1,y=viewMonth.y;if(m>11){m=0;y++;}window._moneyView={y,m};renderMoney();};
 
-  // extra stats
-  const days=entries.length?[...new Set(entries.map(e=>e.date))].length:1;
-  const dailyAvg=entries.length?(totalSpent/days):0;
-  const maxEntry=entries.length?entries.reduce((a,b)=>(b.amount||0)>(a.amount||0)?b:a,entries[0]):null;
+  // ── 健康指示器文案 ──
+  let healthEmoji,healthText,healthColor;
+  if(!budget){healthEmoji='💰';healthText='设置月预算，开始记账管理';healthColor='var(--ink2)';}
+  else if(remain<0){healthEmoji='😭';healthText=`超支 ¥${Math.abs(remain).toFixed(0)}，下月加油`;healthColor='#E53935';}
+  else if(pct>90){healthEmoji='😱';healthText='快见底了！';healthColor='#E53935';}
+  else if(pct>70){healthEmoji='😟';healthText='要注意节奏了';healthColor='#F39C12';}
+  else if(pct>40){healthEmoji='😊';healthText='花了不少，保持';healthColor='var(--ink2)';}
+  else{healthEmoji='🐑';healthText='还很充裕，继续保持';healthColor='#27AE60';}
+  const barColor=pct<60?'#52BE80':pct<85?'#F4D03F':'#E53935';
 
-  const entryRows=entries.map(e=>{
-    const cc=CAT_COLORS[e.cat]||'#E8D5F5';
-    return`<div class="money-row">
-      <span class="money-cat-tag" style="background:${cc}44;color:var(--ink2)">${e.cat}</span>
+  // ── 每周消费计算 ──
+  function getWeekBounds(wIdx){
+    // 本月第 wIdx 周（0-based）的起止日期
+    const firstDay=new Date(viewMonth.y,viewMonth.m,1);
+    const lastDay=new Date(viewMonth.y,viewMonth.m+1,0);
+    const start=new Date(firstDay); start.setDate(1+wIdx*7);
+    const end=new Date(start); end.setDate(start.getDate()+6);
+    if(end>lastDay)end.setTime(lastDay.getTime());
+    return{start,end};
+  }
+  const daysInMonth=new Date(viewMonth.y,viewMonth.m+1,0).getDate();
+  const numWeeks=Math.ceil(daysInMonth/7);
+  const disposable=Math.max(0,budget-totalFixed);
+  // 每周预算：优先用手动覆盖值，否则月可支配 ÷ 当月周数
+  const autoWeekBudget=disposable>0&&numWeeks>0?Math.floor(disposable/numWeeks):0;
+  const weekBudget=cfg.weekBudgetOverride||autoWeekBudget;
+  const weekRows=Array.from({length:numWeeks},(_,i)=>{
+    const {start,end}=getWeekBounds(i);
+    const s=`${viewMonth.y}-${String(viewMonth.m+1).padStart(2,'0')}-${String(start.getDate()).padStart(2,'0')}`;
+    const e2=`${viewMonth.y}-${String(viewMonth.m+1).padStart(2,'0')}-${String(end.getDate()).padStart(2,'0')}`;
+    const wEntries=entries.filter(e=>e.date>=s&&e.date<=e2);
+    const wSpent=wEntries.reduce((sum,e)=>sum+(e.amount||0),0);
+    const today=todayKey();
+    const isCur=today>=s&&today<=e2&&isThisMonth;
+    const isFuture=today<s&&isThisMonth;
+    const wPct=weekBudget?Math.min(100,wSpent/weekBudget*100):0;
+    const wRemain=weekBudget?weekBudget-wSpent:null;
+    const wColor=wPct>100?'#E53935':wPct>85?'#F4D03F':'#52BE80';
+    const statusIcon=isFuture?'—':wPct>100?'🔴':wPct>85?'⚠️':'✅';
+    return`<div class="money-week-row${isCur?' current':''}">
+      <span style="font-size:11px;font-weight:700;color:${isCur?'var(--p1)':'var(--ink3)'};width:28px;flex-shrink:0">W${i+1}</span>
+      <span style="font-size:10px;color:var(--ink3);width:60px;flex-shrink:0">${start.getDate()}/${viewMonth.m+1}–${end.getDate()}/${viewMonth.m+1}</span>
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:600">${e.note||e.cat}</div>
-        <div style="font-size:11px;color:var(--ink3)">${e.date}</div>
+        ${!isFuture&&weekBudget?`<div class="money-cat-bar-track"><div class="money-cat-bar-fill" style="width:${wPct}%;background:${wColor}"></div></div>`:'<div style="height:7px"></div>'}
+        ${!isFuture&&weekBudget?`<div style="font-size:9px;color:${wRemain<0?'#E53935':wRemain<weekBudget*0.15?'#F4D03F':'var(--ink3)'};margin-top:1px">${wRemain>=0?'剩 ¥'+wRemain.toFixed(0):'超 ¥'+Math.abs(wRemain).toFixed(0)}</div>`:''}
       </div>
-      <span style="font-weight:700;font-size:14px;color:var(--ink)">¥${e.amount.toFixed(2)}</span>
-      <button class="tdel" style="background:none;color:var(--ink3);font-size:13px" onclick="editMoneyEntry('${e.id}')">✏️</button>
-      <button class="tdel" onclick="delMoneyEntry('${e.id}')">×</button>
+      <span style="font-size:12px;font-weight:700;color:${wPct>100?'#E53935':'var(--ink)'};flex-shrink:0">${isFuture?'—':'¥'+wSpent.toFixed(0)}</span>
+      <span style="font-size:13px;flex-shrink:0;width:18px;text-align:center">${statusIcon}</span>
     </div>`;
-  }).join('')||'<div class="empty">本月暂无消费记录 ✨</div>';
+  }).join('');
+
+  // ── 明细按日分组，本周默认展开 ──
+  const todayStr=todayKey();
+  const todayD=new Date(todayStr);
+  const weekStart=new Date(todayD);weekStart.setDate(todayD.getDate()-((todayD.getDay()||7)-1));
+  const weekStartStr=weekStart.toISOString().slice(0,10);
+  const thisWeekEntries=entries.filter(e=>isThisMonth?e.date>=weekStartStr:false);
+  const olderEntries=isThisMonth?entries.filter(e=>e.date<weekStartStr):entries;
+
+  function groupByDay(arr){
+    const grouped={};
+    arr.forEach(e=>{grouped[e.date]=grouped[e.date]||[];grouped[e.date].push(e);});
+    return Object.entries(grouped).sort((a,b)=>b[0].localeCompare(a[0]));
+  }
+  function dayLabel(d){
+    if(d===todayStr)return'今天';
+    const yd=new Date(todayD);yd.setDate(yd.getDate()-1);
+    if(d===yd.toISOString().slice(0,10))return'昨天';
+    return d.slice(5);// MM-DD
+  }
+  function renderDayGroups(groups,editable){
+    return groups.map(([date,dayEntries])=>{
+      const daySum=dayEntries.reduce((s,e)=>s+(e.amount||0),0);
+      const rows=dayEntries.map(e=>{
+        const cc=CAT_COLORS[e.cat]||'#E8D5F5';
+        return`<div class="money-row">
+          <span class="money-cat-tag" style="background:${cc}55;color:var(--ink2)">${e.cat}</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--ink)">${e.note||e.cat}</div>
+          </div>
+          <span style="font-weight:700;font-size:14px;color:var(--ink)">¥${(e.amount||0).toFixed(2)}</span>
+          ${editable?`<button class="tdel" style="background:none;color:var(--ink3);font-size:13px" onclick="editMoneyEntry('${e.id}')">✏️</button><button class="tdel" onclick="delMoneyEntry('${e.id}')">×</button>`:''}
+        </div>`;
+      }).join('');
+      return`<div class="money-day-group">
+        <div class="money-day-hd"><span>${dayLabel(date)}</span><span>¥${daySum.toFixed(0)}</span></div>
+        ${rows}
+      </div>`;
+    }).join('');
+  }
+
+  const thisWeekGroups=groupByDay(thisWeekEntries);
+  const olderGroups=groupByDay(olderEntries);
+  const thisWeekHtml=thisWeekGroups.length?renderDayGroups(thisWeekGroups,editMode):'<div style="font-size:12px;color:var(--ink3);padding:6px 0">本周暂无消费</div>';
+  const olderHtml=olderGroups.length?renderDayGroups(olderGroups,editMode):'';
+
+  // ── 月度文案小结 ──
+  let summaryLine='';
+  if(entries.length>=3){
+    const totals2={};MONEY_CATS.forEach(c=>{totals2[c]=0;});
+    entries.forEach(e=>{if(totals2[e.cat]!==undefined)totals2[e.cat]+=e.amount||0;});
+    const topCat=MONEY_CATS.filter(c=>totals2[c]>0).sort((a,b)=>totals2[b]-totals2[a])[0];
+    const topPct=totalSpent>0?Math.round(totals2[topCat]/totalSpent*100):0;
+    const catQuips={'餐饮':'小馋猫 🍜','购物':'剁手了呀 🛍️','娱乐':'会玩～ 🎮','交通':'到处跑 🚌','美容':'精致 💄','聚会':'爱社交 🥂','学习':'用钱买知识 📚','其他':'杂项多 📦'};
+    if(remain<0)summaryLine=`超预算了 ¥${Math.abs(remain).toFixed(0)}，下个月加油管住钱包 💪`;
+    else if(topPct>40)summaryLine=`这个月${topCat}吃掉了${topPct}%，${catQuips[topCat]||''}`;
+    else summaryLine=`本月花费比较均衡，消费控制不错 🎉`;
+  }
 
   const fixedTags=(cfg.fixed||[]).map((f,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(215,189,226,.2);border-radius:8px;padding:3px 8px;font-size:12px">${f.name} ¥${f.amount}<span style="cursor:pointer;color:var(--ink3)" onclick="delFixed(${i})">×</span></span>`).join('');
 
   el.innerHTML=`
 <div class="ph"><h1>💰 记账本</h1>
-  <button class="btn bg bsm mla" onclick="moneySettings()">⚙️ 设置</button>
+  <button class="btn bg bsm" style="margin-left:auto" onclick="moneySettings()">⚙️</button>
 </div>
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
   <button class="btn bg bxs" onclick="moneyPrev()">◀</button>
   <span style="flex:1;text-align:center;font-weight:700;font-size:14px">${viewMonth.y}年${viewMonth.m+1}月</span>
   <button class="btn bg bxs" onclick="moneyNext()" ${isThisMonth?'disabled style="opacity:.4"':''}>▶</button>
 </div>
-<div class="money-summary">
-  <div class="money-stat">
-    <div class="money-stat-val">¥${totalFixed.toFixed(0)}</div>
-    <div class="money-stat-lbl">固定支出</div>
+
+<!-- 健康指示器 -->
+<div class="money-health">
+  <div class="money-health-top">
+    <span style="font-size:32px;line-height:1">${healthEmoji}</span>
+    <div>
+      <div class="money-health-amt" style="color:${remain<0?'#E53935':'var(--ink)'}">${budget?( remain>=0?'¥'+remain.toFixed(0):'超支¥'+Math.abs(remain).toFixed(0)):'—'}</div>
+      <div class="money-health-label">${budget?'本月剩余可支配':'暂未设置月预算'}</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:11px;font-weight:700;color:${healthColor}">${healthText}</div>
+      ${budget?`<div style="font-size:10px;color:var(--ink3);margin-top:2px">固定¥${totalFixed} + 消费¥${totalSpent.toFixed(0)} / 预算¥${budget}</div>`:''}
+    </div>
   </div>
-  <div class="money-stat">
-    <div class="money-stat-val">¥${totalSpent.toFixed(0)}</div>
-    <div class="money-stat-lbl">已消费</div>
-  </div>
-  <div class="money-remain">
-    <div class="money-remain-lbl">本月剩余可支配</div>
-    <div class="money-remain-val" style="color:${remain<0?'#E53935':remain<budget*0.2?'#F4D03F':'var(--ink)'}">${remain>=0?'¥'+remain.toFixed(0):'超支 ¥'+Math.abs(remain).toFixed(0)}</div>
-    ${budget>0?`<div class="money-bar"><div class="money-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
-    <div style="font-size:11px;color:rgba(61,38,81,.55);margin-top:4px">月预算 ¥${budget} · 已用 ${pct.toFixed(0)}%</div>`:'<div style="font-size:11px;color:rgba(61,38,81,.55);margin-top:4px">→ 点右上角设置月预算</div>'}
-  </div>
+  ${budget?`<div class="money-seg-bar"><div class="money-seg-fill" style="width:${pct}%;background:${barColor}"></div></div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3)"><span>0</span><span>已用 ${pct.toFixed(0)}%</span><span>¥${budget}</span></div>`:''}
 </div>
-${entries.length?`<div class="card" style="--accent:var(--p5)">
+
+<!-- 快速记一笔 -->
+${isThisMonth?`<div class="card" style="--accent:var(--p3);margin-bottom:10px">
+  <div style="font-size:13px;font-weight:700;margin-bottom:10px">✏️ 快速记一笔</div>
+  <div class="money-quick-cats">
+    ${MONEY_CATS.map((c,i)=>{const icons={'餐饮':'🍜','购物':'🛍','娱乐':'🎮','交通':'🚌','美容':'💄','聚会':'🥂','学习':'📚','其他':'📦'};return`<div class="money-qcat${i===0&&!window._selMCat?' active':''}" id="mcat-${c}" onclick="selectMCat('${c}')"><span class="money-qcat-icon">${icons[c]||'📦'}</span><span class="money-qcat-label">${c}</span></div>`;}).join('')}
+  </div>
+  <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+    <input class="inp" id="mAmount" type="number" placeholder="金额 ¥" style="flex:1;font-size:18px;font-weight:800;text-align:center" oninput="this.style.color=this.value?'var(--ink)':'var(--ink3)'">
+    <button class="btn bp" style="font-size:16px;padding:10px 18px;flex-shrink:0" onclick="addMoneyEntry()" id="moneyRecordBtn">记录</button>
+  </div>
+  <div id="moneyNoteWrap" style="margin-top:6px;display:none">
+    <input class="inp" id="mNote" placeholder="备注（选填）" style="width:100%">
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:6px;align-items:center">
+    <button style="border:none;background:none;font-size:11px;color:var(--ink3);cursor:pointer;padding:0" onclick="var w=document.getElementById('moneyNoteWrap');w.style.display=w.style.display==='none'?'block':'none'">＋ 备注</button>
+    <span style="font-size:11px;color:var(--ink3)">日期：<input type="date" id="mDate" value="${todayKey()}" style="border:none;background:none;font-size:11px;color:var(--ink3);font-family:inherit;cursor:pointer"></span>
+  </div>
+</div>`:''}
+
+<!-- 分类消费分布 -->
+${entries.length?`<div class="card" style="--accent:var(--p5);margin-bottom:10px">
   <div class="ct">消费分布</div>
-  ${buildPieChart(entries)}
+  ${buildCatBars(entries, cfg.catBudgets)}
   <div style="display:flex;gap:8px;margin-top:10px">
     <div style="flex:1;background:rgba(174,214,241,.15);border-radius:10px;padding:9px;text-align:center">
-      <div style="font-size:15px;font-weight:800;color:var(--ink)">¥${dailyAvg.toFixed(0)}</div>
+      <div style="font-size:15px;font-weight:800;color:var(--ink)">¥${entries.length?( totalSpent/(([...new Set(entries.map(e=>e.date))].length||1)).toFixed(0)):0}</div>
       <div style="font-size:10px;color:var(--ink3);margin-top:2px">日均消费</div>
     </div>
-    ${maxEntry?`<div style="flex:2;background:rgba(255,183,197,.15);border-radius:10px;padding:9px;text-align:center">
-      <div style="font-size:14px;font-weight:800;color:var(--ink)">¥${maxEntry.amount.toFixed(0)}</div>
-      <div style="font-size:10px;color:var(--ink3);margin-top:2px">最大单笔 · ${maxEntry.note||maxEntry.cat}</div>
-    </div>`:''}
+    <div style="flex:1;background:rgba(255,183,197,.15);border-radius:10px;padding:9px;text-align:center">
+      <div style="font-size:15px;font-weight:800;color:var(--ink)">${entries.length}笔</div>
+      <div style="font-size:10px;color:var(--ink3);margin-top:2px">本月笔数</div>
+    </div>
   </div>
+  ${summaryLine?`<div style="margin-top:10px;padding:8px 10px;background:rgba(215,189,226,.15);border-radius:10px;font-size:12px;color:var(--ink2);text-align:center">${summaryLine}</div>`:''}
 </div>`:''}
-${isThisMonth?`<div class="card" style="--accent:var(--p3)">
-  <div class="ct">✏️ 快速记一笔</div>
-  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="mcat-${c}" onclick="selectMCat('${c}')">${c}</span>`).join('')}</div>
-  <div style="display:flex;gap:7px;margin-bottom:7px;flex-wrap:wrap">
-    <input class="inp" id="mAmount" type="number" placeholder="金额" style="flex:1;min-width:80px">
-    <input class="inp" id="mNote" placeholder="备注（选填）" style="flex:2">
-    <input class="inp" id="mDate" type="date" value="${todayKey()}" style="width:130px;font-size:12px">
+
+<!-- 每周消费 -->
+${(weekBudget||entries.length)?`<div class="card" style="--accent:var(--p4);margin-bottom:10px">
+  <div class="ct">每周消费
+    ${weekBudget?`<span style="font-size:10px;font-weight:400;color:var(--ink3);margin-left:4px">¥${weekBudget}/周（自动）</span>`:''}
+    <button style="margin-left:auto;border:none;background:rgba(215,189,226,.2);border-radius:6px;padding:2px 8px;font-size:10px;color:var(--ink2);cursor:pointer" onclick="moneyEditWeekBudget(${weekBudget},${cfg.weekBudgetOverride||0})">调整</button>
   </div>
-  <button class="btn bp" style="width:100%" onclick="addMoneyEntry()">+ 记录</button>
+  ${weekRows}
 </div>`:''}
+
+<!-- 本月明细 -->
 <div class="card" style="--accent:var(--p2)">
-  <div class="ct">📋 本月明细 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${entries.length}笔</span></div>
-  ${entryRows}
+  <div class="ct">📋 本月明细 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${entries.length}笔 · ¥${totalSpent.toFixed(0)}</span>
+    <button class="btn ${editMode?'bp':'bg'} bsm" style="margin-left:auto;font-size:11px" onclick="window._moneyEdit=!window._moneyEdit;renderMoney()">${editMode?'✅ 完成':'✏️ 编辑'}</button>
+  </div>
+  ${editMode?`<div class="money-edit-bar" style="margin-bottom:8px">✏️ 编辑模式 — 可修改或删除账目，完成后点「✅ 完成」</div>`:''}
+  ${isThisMonth?`<div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:6px">本周</div>`:''}
+  ${thisWeekHtml}
+  ${olderHtml?`<details style="margin-top:8px"><summary style="font-size:12px;color:var(--ink3);cursor:pointer;list-style:none;padding:6px 0;border-top:1px solid var(--sep)">▸ 查看更早记录（${olderGroups.length}天）</summary><div style="margin-top:6px">${olderHtml}</div></details>`:''}
+  ${!entries.length?'<div class="empty">本月暂无消费记录 ✨</div>':''}
 </div>
-${cfg.fixed&&cfg.fixed.length?`<div class="card" style="--accent:var(--p4)"><div class="ct">📌 固定支出</div><div style="display:flex;flex-wrap:wrap;gap:6px">${fixedTags}</div></div>`:''}`;
+${cfg.fixed&&cfg.fixed.length?`<div class="card" style="--accent:var(--p4);margin-bottom:10px"><div class="ct">📌 固定支出 <span style="font-size:11px;font-weight:400;color:var(--ink3)">共¥${totalFixed}</span></div><div style="display:flex;flex-wrap:wrap;gap:6px">${fixedTags}</div></div>`:''}`;
+
   // restore selected cat
-  if(window._selMCat)document.getElementById('mcat-'+window._selMCat)?.classList.add('active');
+  const activeCat=window._selMCat||MONEY_CATS[0];
+  document.getElementById('mcat-'+activeCat)?.classList.add('active');
 }
+window.moneyEditWeekBudget=function(autoVal, currentOverride){
+  const cur=currentOverride||autoVal;
+  openMo(`<div class="mt">📅 调整每周预算</div>
+    <div style="font-size:12px;color:var(--ink3);margin-bottom:10px">自动计算值：¥${autoVal}/周（可支配÷周数）<br>适当调整后将覆盖自动值，下次设置月预算时重置。</div>
+    <input class="inp" id="wBudgetInput" type="number" value="${cur}" style="width:100%;font-size:18px;text-align:center;font-weight:800;margin-bottom:10px">
+    <div style="display:flex;gap:8px">
+      <button class="btn bg" style="flex:1" onclick="moneyResetWeekBudget()">恢复自动</button>
+      <button class="btn bp" style="flex:1" onclick="moneySaveWeekBudget()">确认</button>
+    </div>`);
+};
+window.moneySaveWeekBudget=async function(){
+  const v=parseFloat(document.getElementById('wBudgetInput')?.value);
+  if(!v||v<=0){showToast('请输入有效金额');return;}
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[],catBudgets:{}};
+  cfg.weekBudgetOverride=v;
+  await dbPut('ledger',cfg);
+  closeMo();showToast('每周预算已更新 ¥'+v);renderMoney();
+};
+window.moneyResetWeekBudget=async function(){
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[],catBudgets:{}};
+  delete cfg.weekBudgetOverride;
+  await dbPut('ledger',cfg);
+  closeMo();showToast('已恢复自动计算');renderMoney();
+};
 window.selectMCat=function(c){
   window._selMCat=c;
   document.querySelectorAll('[id^=mcat-]').forEach(el=>el.classList.remove('active'));
@@ -5316,13 +5478,17 @@ window.selectMCat=function(c){
 window.addMoneyEntry=async function(){
   const amt=parseFloat(document.getElementById('mAmount')?.value);
   if(!amt||amt<=0){showToast('请输入金额');return;}
-  const cat=window._selMCat||'其他';
-  const note=document.getElementById('mNote')?.value.trim();
+  const cat=window._selMCat||MONEY_CATS[0];
+  const note=document.getElementById('mNote')?.value.trim()||'';
   const date=document.getElementById('mDate')?.value||todayKey();
   await dbPut('ledger',{id:'le_'+Date.now(),date,amount:amt,cat,note});
-  window._selMCat=null;
-  showToast('已记录 ¥'+amt.toFixed(2));
-  renderMoney();
+  // 视觉反馈
+  const btn=document.getElementById('moneyRecordBtn');
+  if(btn){btn.textContent='✓';btn.style.animation='moneyConfirm .3s ease';setTimeout(()=>{btn.textContent='记录';btn.style.animation='';},800);}
+  const amtEl=document.getElementById('mAmount');if(amtEl)amtEl.value='';
+  const noteEl=document.getElementById('mNote');if(noteEl)noteEl.value='';
+  showToast(`已记录 ¥${amt.toFixed(2)} · ${cat}`);
+  setTimeout(()=>renderMoney(),600);
 };
 window.delMoneyEntry=async function(id){
   await dbDel('ledger',id);renderMoney();
@@ -5349,23 +5515,69 @@ window.saveMoneyEdit=async function(id){
   closeMo();renderMoney();showToast('已更新');
 };
 window.moneySettings=async function(){
-  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  const now=new Date();
+  const vm=window._moneyView||(window._moneyView={y:now.getFullYear(),m:now.getMonth()});
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[],catBudgets:{}};
+  cfg.catBudgets=cfg.catBudgets||{};
+  const catIcons={'餐饮':'🍜','购物':'🛍','娱乐':'🎮','交通':'🚌','美容':'💄','聚会':'🥂','学习':'📚','其他':'📦'};
+  const totalFixed=(cfg.fixed||[]).reduce((s,f)=>s+(f.amount||0),0);
+  const disposable=Math.max(0,(cfg.budget||0)-totalFixed);
+  const daysInMonth=new Date(vm.y,vm.m+1,0).getDate();
+  const numWeeks=Math.ceil(daysInMonth/7);
+  const autoWeekBudget=disposable>0?Math.floor(disposable/numWeeks):0;
+  const catRows=MONEY_CATS.map(c=>`<div class="mrow" style="gap:8px"><span class="ml" style="min-width:60px">${catIcons[c]} ${c}</span><input class="inp" id="cbud_${c}" type="number" placeholder="不限" value="${cfg.catBudgets[c]||''}" oninput="mCheckCatTotal()" style="flex:1"></div>`).join('');
   openMo(`<div class="mt">⚙️ 预算设置</div>
-    <div class="mrow"><span class="ml">月总预算（元）</span><input class="inp" id="mBudget" type="number" value="${cfg.budget||''}"></div>
-    <div class="mrow"><span class="ml">添加固定支出</span>
-      <div style="display:flex;gap:7px">
-        <input class="inp" id="fName" placeholder="名称（如房租）" style="flex:2">
-        <input class="inp" id="fAmt" type="number" placeholder="金额" style="flex:1">
-        <button class="btn bg bsm" onclick="addFixed()">+</button>
-      </div>
+    <div class="mrow"><span class="ml">月总预算（元）</span><input class="inp" id="mBudget" type="number" value="${cfg.budget||''}" oninput="mUpdateHints()"></div>
+    <div style="background:rgba(174,214,241,.15);border-radius:10px;padding:8px 12px;margin-bottom:8px;font-size:12px" id="mBudgetHintBox" data-fixed="${totalFixed}" data-weeks="${numWeeks}">
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--ink3)">固定支出</span><span>¥${totalFixed}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--ink3)">月可支配</span><span id="mDisposableHint" style="font-weight:700;color:var(--p4)">¥${disposable}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--ink3)">本月${numWeeks}周，自动周预算</span><span id="mWeekHint" style="font-weight:700;color:var(--p5)">¥${autoWeekBudget}/周</span></div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:6px">各类目月预算（留空=不限，总和不超过月可支配）</div>
+    ${catRows}
+    <div id="mCatWarning" style="display:none;color:#E53935;font-size:11px;font-weight:700;padding:4px 0">⚠️ 类目总和超出月可支配预算</div>
+    <div style="font-size:11px;font-weight:700;color:var(--ink3);margin:10px 0 6px">固定支出</div>
+    <div style="display:flex;gap:7px;margin-bottom:6px">
+      <input class="inp" id="fName" placeholder="名称（如房租）" style="flex:2">
+      <input class="inp" id="fAmt" type="number" placeholder="金额" style="flex:1">
+      <button class="btn bg bsm" onclick="addFixed()">+</button>
     </div>
     <button class="btn bp" style="width:100%;margin-top:4px" onclick="saveMoneyCfg()">💾 保存</button>`);
+};
+window.mUpdateHints=function(){
+  const budget=parseFloat(document.getElementById('mBudget')?.value)||0;
+  const box=document.getElementById('mBudgetHintBox');
+  if(!box)return;
+  const fixed=parseFloat(box.dataset.fixed)||0;
+  const weeks=parseInt(box.dataset.weeks)||1;
+  const disposable=Math.max(0,budget-fixed);
+  const dispEl=document.getElementById('mDisposableHint');
+  if(dispEl)dispEl.textContent='¥'+disposable;
+  const wh=document.getElementById('mWeekHint');
+  if(wh)wh.textContent='¥'+Math.floor(disposable/weeks)+'/周';
+  window.mCheckCatTotal();
+};
+window.mCheckCatTotal=function(){
+  const budget=parseFloat(document.getElementById('mBudget')?.value)||0;
+  const box=document.getElementById('mBudgetHintBox');
+  const fixed=box?parseFloat(box.dataset.fixed)||0:0;
+  const disposable=Math.max(0,budget-fixed);
+  let catSum=0;
+  MONEY_CATS.forEach(c=>{catSum+=parseFloat(document.getElementById('cbud_'+c)?.value)||0;});
+  const warn=document.getElementById('mCatWarning');
+  if(!warn)return;
+  if(budget>0&&catSum>disposable){
+    warn.style.display='block';
+    warn.textContent=`⚠️ 类目总和 ¥${catSum} 超出月可支配 ¥${disposable.toFixed(0)}，超出 ¥${(catSum-disposable).toFixed(0)}`;
+  } else {
+    warn.style.display='none';
+  }
 };
 window.addFixed=async function(){
   const name=document.getElementById('fName')?.value.trim();
   const amt=parseFloat(document.getElementById('fAmt')?.value);
   if(!name||!amt){showToast('请填写名称和金额');return;}
-  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[],weekBudget:0,catBudgets:{}};
   cfg.fixed.push({name,amount:amt});
   await dbPut('ledger',cfg);
   showToast('已添加');closeMo();renderMoney();
@@ -5375,9 +5587,25 @@ window.delFixed=async function(idx){
   cfg.fixed.splice(idx,1);await dbPut('ledger',cfg);renderMoney();
 };
 window.saveMoneyCfg=async function(){
+  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[],catBudgets:{}};
   const budget=parseFloat(document.getElementById('mBudget')?.value)||0;
-  const cfg=await dbGet('ledger','cfg')||{id:'cfg',budget:0,fixed:[]};
-  cfg.budget=budget;await dbPut('ledger',cfg);
+  const totalFixed=(cfg.fixed||[]).reduce((s,f)=>s+(f.amount||0),0);
+  const disposable=Math.max(0,budget-totalFixed);
+  // 校验类目总和
+  let catSum=0;
+  const catBudgets={};
+  MONEY_CATS.forEach(c=>{
+    const v=parseFloat(document.getElementById('cbud_'+c)?.value);
+    if(v>0){catBudgets[c]=v;catSum+=v;}
+  });
+  if(budget>0&&catSum>disposable){
+    showToast(`类目总和¥${catSum}超出可支配¥${disposable.toFixed(0)}，请调整`);
+    return;
+  }
+  cfg.budget=budget;
+  cfg.catBudgets=catBudgets;
+  delete cfg.weekBudget; // 不再手动存，改为运行时计算
+  await dbPut('ledger',cfg);
   closeMo();showToast('设置已保存');renderMoney();
 };
 // ═══ XHS (小红书创作) ═══
@@ -5638,21 +5866,18 @@ async function renderLove(){
     </div>`;
   }).join('')||'<div style="font-size:12px;color:var(--ink3);padding:4px 0">还没有心愿</div>';
 
-  const dots=photoList.map((_,i)=>`<div class="love-cd${i===0?' act':''}" id="lcdot-${i}"></div>`).join('');
-  const slides=photoList.map((p,i)=>`<div class="love-carousel-slide" onclick="viewLovePhoto('${p.id}')">
-    <img src="${p.data}" alt=""/>
-    <div class="love-carousel-cap">
-      <span class="love-carousel-cap-text">${p.caption||'📸'}</span>
-      <span class="love-carousel-cap-date">${p.date||p.ts?new Date(p.date||(p.ts)).toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'}):''}</span>
-    </div>
-  </div>`).join('');
+  // 照片画布：每张polaroid随机旋转
+  const rotations=[-5,-3,-2,2,4,6,-4,3,-6,5,-1,1];
+  const slides=photoList.map((p,i)=>{
+    const rot=rotations[i%rotations.length];
+    return`<div class="love-polaroid" style="transform:rotate(${rot}deg)" onclick="viewLovePhoto('${p.id}')">
+      <img src="${p.data}" alt=""/>
+      <div class="love-pol-cap">${p.caption||p.date||'📸'}</div>
+    </div>`;
+  }).join('');
   const photoSection=photoList.length
-    ?`<div class="love-carousel" id="loveCarousel">
-        <div class="love-carousel-track" id="loveTrack" style="transform:translateX(0%)">${slides}</div>
-        ${photoList.length>1?`<button class="love-carousel-nav prev" onclick="loveSlide(-1)">‹</button><button class="love-carousel-nav next" onclick="loveSlide(1)">›</button>`:''}
-      </div>
-      <div class="love-carousel-dots">${dots}</div>`
-    :`<div style="padding:20px;text-align:center;color:var(--ink3);font-size:13px">还没有照片，上传第一张 📸</div>`;
+    ?`<div class="love-canvas">${slides}</div>`
+    :`<div class="love-canvas"><div class="love-canvas-empty">还没有照片，上传第一张 📸</div></div>`;
 
   el.innerHTML=`
 <div class="ph"><h1>💕 浪漫小屋</h1>
@@ -5698,7 +5923,6 @@ async function renderLove(){
   ${wishRows}
 </div>`;
   _loveSlideIdx=0;
-  setTimeout(loveAutoPlay,400);
 }
 window.loveSetup=async function(){
   const cfg=await dbGet('love_data','cfg')||{id:'cfg',startDate:'',name1:'',name2:''};
