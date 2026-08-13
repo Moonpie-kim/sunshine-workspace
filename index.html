@@ -359,11 +359,11 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .love-days{font-size:54px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(255,100,150,.25);}
 .love-days-lbl{font-size:13px;color:rgba(255,255,255,.85);margin-top:4px;font-weight:600;}
 /* ─ LOVE PHOTO CANVAS ─ */
-.love-canvas{background:#f5f0e8;border-radius:16px;padding:16px 12px 12px;border:1.5px solid #e8dfc8;box-shadow:inset 0 2px 8px rgba(0,0,0,.06);margin-top:8px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;min-height:120px;}
-.love-polaroid{background:#fff;padding:8px 8px 28px;border-radius:3px;box-shadow:0 4px 14px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.1);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;flex-shrink:0;}
+.love-canvas{background:#f5f0e8;border-radius:16px;padding:16px 12px 12px;border:1.5px solid #e8dfc8;box-shadow:inset 0 2px 8px rgba(0,0,0,.06);margin-top:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-height:120px;}
+.love-polaroid{background:#fff;padding:6px 6px 24px;border-radius:3px;box-shadow:0 4px 14px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.1);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
 .love-polaroid:hover{box-shadow:0 8px 24px rgba(0,0,0,.22);transform:scale(1.04) rotate(0deg) !important;}
-.love-polaroid img{width:100px;height:100px;object-fit:cover;display:block;border-radius:1px;}
-.love-polaroid .love-pol-cap{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-size:10px;color:#555;font-weight:600;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.love-polaroid img{width:100%;height:85px;object-fit:cover;display:block;border-radius:1px;}
+.love-polaroid .love-pol-cap{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9px;color:#555;font-weight:600;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .love-canvas-empty{width:100%;text-align:center;padding:24px 0;color:#b0a898;font-size:13px;}
 .love-anniversary{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,183,197,.12);border:1px solid var(--bd);margin-bottom:7px;}
 .love-anni-days{font-size:20px;font-weight:800;color:var(--p8);min-width:44px;text-align:center;}
@@ -385,6 +385,12 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .jz-day-bar{background:var(--card);border-radius:var(--r);border:1.5px solid var(--bd);padding:13px 14px;margin-bottom:10px;box-shadow:var(--sh);}
 .jz-progress-track{height:8px;background:rgba(0,0,0,.06);border-radius:4px;margin:8px 0;}
 .jz-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#F4A460,#E8875A);transition:width .4s;}
+.jz-flash-card{perspective:1000px;width:100%;cursor:pointer;}
+.jz-flash-inner{position:relative;width:100%;min-height:230px;transition:transform .45s;transform-style:preserve-3d;}
+.jz-flash-card.flipped .jz-flash-inner{transform:rotateY(180deg);}
+.jz-flash-front,.jz-flash-back{position:absolute;width:100%;min-height:230px;backface-visibility:hidden;border-radius:16px;padding:22px 18px;box-sizing:border-box;}
+.jz-flash-front{background:linear-gradient(135deg,#F5EEFF,#EDD9FF);border:1.5px solid #D7BDE2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.jz-flash-back{background:var(--card);border:1.5px solid var(--bd);box-shadow:var(--sh);transform:rotateY(180deg);overflow-y:auto;}
 .tl-group-label{font-size:11px;font-weight:800;color:var(--ink3);letter-spacing:.04em;margin:10px 0 5px;padding-left:2px;}
 .tl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);}
 .tl-item:last-child{border-bottom:none;}
@@ -1045,6 +1051,19 @@ async function renderHome(){
   const homeHabitDone=homeHabitChecks.filter(Boolean).length;
   const homeHabitTotal=homeHabitChecks.length;
   const homeHabitPct=Math.round(homeHabitDone/homeHabitTotal*100);
+
+  // 教资今日任务完成情况（用于今日小结）
+  let jzTaskDone=0,jzTaskTotal=0;
+  {
+    const jzPlan2=JIAOZU_PLAN.find(p=>p.date===today);
+    if(jzPlan2){
+      const customJz2=await dbGet('jiaozu_logs','jzplan_'+today);
+      const jzTasks2=((customJz2&&customJz2._v===2)?customJz2.tasks:jzPlan2.tasks)||[];
+      const jzLog2=(await dbGet('jiaozu_logs','jztask_'+today))||{done:[]};
+      jzTaskTotal=jzTasks2.length;
+      jzTaskDone=jzLog2.done.length;
+    }
+  }
 
   el.innerHTML=`
 <div class="ph"><h1>🌸 今日预览</h1><span style="margin-left:auto;font-size:12px;color:var(--ink3)">${fmtDate(now)}</span></div>
@@ -3283,6 +3302,28 @@ async function renderStudy(){
     html+=engRenderGrammar(grammar,log,today);
   }
   el.innerHTML=html;
+  if(tab==='words')engInitSwipe();
+}
+
+function engInitSwipe(){
+  const card=document.querySelector('.eng-bigcard');
+  if(!card||card._swipe)return;
+  card._swipe=true;
+  let sx=0,sy=0;
+  card.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+  card.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<40||Math.abs(dx)<Math.abs(dy)*1.2)return; // 忽略短距或竖向滑
+    const idx=window._engCardIdx||0;
+    if(dx>0){
+      // 右滑 → 记住了
+      window.engMarkDoneNav(idx);
+    } else {
+      // 左滑 → 难词
+      window.engMarkHard(idx);
+    }
+  },{passive:true});
 }
 
 window.engTab=function(t){window._engTab=t;if(t==='words')window._engCardIdx=null;renderStudy();};
@@ -4583,6 +4624,10 @@ function renderHabits(log, streaks, fullStreak){
         </div>
       </div>`
   }
+  ${jzTaskTotal>0?`<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--sep);display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:12px;color:var(--ink2)">📚 教资今日任务</span>
+    <span style="font-size:12px;font-weight:700;color:${jzTaskDone===jzTaskTotal?'#27AE60':'var(--ink2)'}">${jzTaskDone===jzTaskTotal?'✅ 全部完成':jzTaskDone+'/'+jzTaskTotal+' 完成'}</span>
+  </div>`:''}
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -5213,16 +5258,18 @@ function buildCatBars(entries, catBudgets){
     const barColor=CAT_DARK[c]||'#999';
     const budPct=bud?Math.min(100,totals[c]/bud*100):0;
     const remain=bud?bud-totals[c]:null;
-    return`<div class="money-cat-bar-row">
+    const isOver=bud&&remain<0;
+    return`<div class="money-cat-bar-row"${isOver?' style="background:rgba(229,57,53,.05);border-radius:8px;margin:0 -4px;padding:0 4px"':''}>
       <span style="font-size:16px;width:22px;text-align:center">${catIcons[c]||'📦'}</span>
       <div style="width:36px;font-size:11px;font-weight:700;color:var(--ink2);flex-shrink:0">${c}</div>
       <div style="flex:1">
         <div class="money-cat-bar-track">
-          <div class="money-cat-bar-fill" style="width:${pct}%;background:${barColor}cc"></div>
+          <div class="money-cat-bar-fill" style="width:${pct}%;background:${isOver?'#E53935cc':barColor+'cc'}"></div>
+          ${isOver?`<div style="position:absolute;right:0;top:0;bottom:0;width:3px;background:#E53935;border-radius:0 3px 3px 0"></div>`:''}
         </div>
-        ${bud?`<div style="font-size:9px;margin-top:2px;color:${remain<0?'#E53935':remain<bud*0.15?'#F4D03F':'var(--ink3)'}">${remain>=0?'剩 ¥'+remain.toFixed(0):'超 ¥'+Math.abs(remain).toFixed(0)} / 预算¥${bud}</div>`:''}
+        ${bud?`<div style="font-size:9px;margin-top:2px;color:${remain<0?'#E53935':remain<bud*0.15?'#F4D03F':'var(--ink3)'}">${remain>=0?'剩 ¥'+remain.toFixed(0):'⚠️ 超 ¥'+Math.abs(remain).toFixed(0)} / 预算¥${bud}</div>`:''}
       </div>
-      <span style="font-size:12px;font-weight:700;color:${bud&&remain<0?'#E53935':'var(--ink)'};flex-shrink:0">¥${totals[c].toFixed(0)}</span>
+      <span style="font-size:12px;font-weight:700;color:${isOver?'#E53935':'var(--ink)'};flex-shrink:0">¥${totals[c].toFixed(0)}</span>
       ${bud?`<span style="font-size:10px;width:30px;text-align:right;flex-shrink:0;color:${budPct>100?'#E53935':budPct>85?'#F4D03F':'#52BE80'}">${budPct.toFixed(0)}%</span>`:''}
     </div>`;
   }).join('');
@@ -6401,9 +6448,14 @@ async function renderJiaozu(){
   const today=todayKey();
   const cfg=(await dbGet('jiaozu_logs','cfg'))||{id:'cfg',dailyCount:4,examDate:'',targetScore:0};
   const todayLog=(await dbGet('jiaozu_logs','log_'+today))||{id:'log_'+today,date:today,done:[],mastered:[]};
+  const jzStatus=(await dbGet('jiaozu_logs','jz_status'))||{id:'jz_status',mastered:[],review:[]};
   const allQ=await dbAll('jiaozu_bank');
-  const mastered=todayLog.mastered||[];
+  const mastered=jzStatus.mastered||[];
   const done=todayLog.done||[];
+  const reviewSet=new Set(jzStatus.review||[]);
+  const masteredSet=new Set(mastered);
+  const reviewQAll=allQ.filter(q=>reviewSet.has(q.id))
+    .sort((a,b)=>parseInt(a.id.replace(/\D/g,''))-parseInt(b.id.replace(/\D/g,'')));
   const dailyCount=cfg.dailyCount||4;
   const activeSubj=window._jzSubj||'S2';
   const activeType=window._jzType||'short';
@@ -6424,6 +6476,13 @@ async function renderJiaozu(){
   // type-filtered questions
   const filtered=subjectQ.filter(q=>q.qtype===activeType);
   const sorted=filtered.sort((a,b)=>parseInt(a.id.replace(/\D/g,''))-parseInt(b.id.replace(/\D/g,'')));
+  const statusFilter=window._jzStatusFilter||'all';
+  const displayQ=(()=>{
+    if(statusFilter==='unseen')return sorted.filter(q=>!masteredSet.has(q.id)&&!reviewSet.has(q.id));
+    if(statusFilter==='review')return sorted.filter(q=>reviewSet.has(q.id));
+    if(statusFilter==='mastered')return sorted.filter(q=>masteredSet.has(q.id));
+    return sorted;
+  })();
 
   // gap analysis: question types with 0 mastered
   const gapLines=[];
@@ -6434,12 +6493,16 @@ async function renderJiaozu(){
   }
 
   let qHtml='';
-  if(!filtered.length){
-    qHtml=`<div class="card"><div style="padding:12px;text-align:center;color:var(--ink3);font-size:13px">该题型暂无题目 → 点下方「添加」录入</div></div>`;
+  if(!displayQ.length){
+    const emptyMsg=statusFilter==='all'?'该题型暂无题目 → 点下方「添加」录入'
+      :statusFilter==='unseen'?'该题型已全部看过 👍'
+      :statusFilter==='review'?'暂无待复习题目 ✅'
+      :'暂无已掌握题目，继续加油！';
+    qHtml=`<div class="card"><div style="padding:12px;text-align:center;color:var(--ink3);font-size:13px">${emptyMsg}</div></div>`;
   } else if(activeType==='analysis'){
     // 材料分析题按考点分组
     const topicMap={};
-    sorted.forEach(q=>{const t=q.topic||'未分类';if(!topicMap[t])topicMap[t]=[];topicMap[t].push(q);});
+    displayQ.forEach(q=>{const t=q.topic||'未分类';if(!topicMap[t])topicMap[t]=[];topicMap[t].push(q);});
     for(const [topic,qs] of Object.entries(topicMap)){
       const tMastered=qs.filter(q=>mastered.includes(q.id)).length;
       qHtml+=`<div style="margin:8px 0 4px;padding:4px 10px;border-radius:8px;background:rgba(215,189,226,.2);display:flex;justify-content:space-between;align-items:center">
@@ -6466,7 +6529,7 @@ async function renderJiaozu(){
     }
   } else if(activeType==='design'){
     // 教学设计：显示课题+环节结构
-    for(const q of sorted){
+    for(const q of displayQ){
       const isMastered=mastered.includes(q.id);const isDone=done.includes(q.id);
       const num=q.id.replace(/\D/g,'');
       qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
@@ -6486,7 +6549,7 @@ async function renderJiaozu(){
     }
   } else if(activeType==='writing'){
     // 写作题：显示文体+参考要点
-    for(const q of sorted){
+    for(const q of displayQ){
       const isMastered=mastered.includes(q.id);const isDone=done.includes(q.id);
       const num=q.id.replace(/\D/g,'');
       qHtml+=`<div class="jz-card${isDone?' jz-done':''}" id="jzc-${q.id}">
@@ -6505,7 +6568,7 @@ async function renderJiaozu(){
       </div>`;
     }
   } else {
-    for(const q of sorted){
+    for(const q of displayQ){
       const isMastered=mastered.includes(q.id);
       const isDone=done.includes(q.id);
       const num=q.id.replace(/\D/g,'');
@@ -6605,6 +6668,9 @@ async function renderJiaozu(){
     const s2Pct=Math.round((s2Done.size)/s2Total*100);
     const litPct=Math.round(Math.min(litVideoTotal,63)/63*100);
     const jzPct=Math.round(Math.min(jzDoneTotal,100)/100*100);
+    const masteredShortCount=(jzStatus.mastered||[]).filter(id=>allQ.find(q=>q.id===id&&q.qtype==='short')).length;
+    const jzMasteredPct=Math.round(Math.min(masteredShortCount,100)/100*100);
+    if(masteredShortCount>=5)s2Done.add('简答题');
 
     // ── 顶部倒计时 ──
     tasksTabHtml+=`<div class="jz-day-bar" style="margin-bottom:10px">
@@ -6641,8 +6707,9 @@ async function renderJiaozu(){
         </div>
         <div style="background:rgba(253,216,53,.1);border-radius:10px;padding:8px 10px">
           <div style="font-size:10px;color:var(--ink3);margin-bottom:2px">✏️ 简答题背诵</div>
-          <div style="font-size:15px;font-weight:800;color:var(--ink)">${jzDoneTotal}道<span style="font-size:11px;font-weight:400;color:var(--ink3)"> / 100</span></div>
-          ${mkBar(jzPct,'#E8875A')}
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">${masteredShortCount}题<span style="font-size:11px;font-weight:400;color:var(--ink3)"> / 100</span></div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:1px">${masteredShortCount>=5?'✅ 今日打卡完成':'已掌握（≥5完成打卡）'}</div>
+          ${mkBar(jzMasteredPct,'#E8875A')}
         </div>
       </div>
     </div>`;
@@ -6709,6 +6776,14 @@ async function renderJiaozu(){
   // ── 题目背诵 Tab ──
   let bankTabHtml='';
   if(activeTab==='bank'){
+    const viewMode=window._jzViewMode||'list';
+    const sfCounts={
+      all:sorted.length,
+      unseen:sorted.filter(q=>!masteredSet.has(q.id)&&!reviewSet.has(q.id)).length,
+      review:sorted.filter(q=>reviewSet.has(q.id)).length,
+      mastered:sorted.filter(q=>masteredSet.has(q.id)).length
+    };
+    const flashIdx=Math.min(window._jzFlashIdx||0,Math.max(0,displayQ.length-1));
     const subjTabs=`<div style="display:flex;gap:7px;margin-bottom:10px">
       <button class="btn bsm${activeSubj==='S1'?' bp':' bg'}" onclick="jzSetSubj('S1')">科目一</button>
       <button class="btn bsm${activeSubj==='S2'?' bp':' bg'}" onclick="jzSetSubj('S2')">科目二（小学）</button>
@@ -6718,13 +6793,152 @@ async function renderJiaozu(){
       const mc=mastered.filter(id=>subjectQ.filter(q=>q.qtype===k).find(q=>q.id===id)).length;
       return`<span class="gym-anchor${activeType===k?' active':''}" onclick="jzSetType('${k}')" style="font-size:11px">${v}(${mc}/${cnt})</span>`;
     }).join('');
+    const sfBtnStyle=(k,color)=>statusFilter===k?'':'background:'+color+';border-color:transparent';
+    const statusFilterBar=`<div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap">
+      <button class="btn bsm${statusFilter==='all'?' bp':' bg'}" style="font-size:11px" onclick="jzSetStatusFilter('all')">全部(${sfCounts.all})</button>
+      <button class="btn bsm${statusFilter==='unseen'?' bp':' bg'}" style="font-size:11px" onclick="jzSetStatusFilter('unseen')">未背(${sfCounts.unseen})</button>
+      <button class="btn bsm${statusFilter==='review'?'':''}" style="font-size:11px;${statusFilter==='review'?'background:var(--p4);color:#fff;border-color:var(--p4)':'background:rgba(244,164,96,.15);color:#C46B2A;border:1.5px solid #F4A460'}" onclick="jzSetStatusFilter('review')">↺ 待复习(${sfCounts.review})</button>
+      <button class="btn bsm${statusFilter==='mastered'?'':''}" style="font-size:11px;${statusFilter==='mastered'?'background:var(--p4);color:#fff;border-color:var(--p4)':'background:rgba(125,206,160,.15);color:#3A8A5C;border:1.5px solid #7DCEA0'}" onclick="jzSetStatusFilter('mastered')">✓ 已掌握(${sfCounts.mastered})</button>
+    </div>`;
+    const viewToggle=`<div style="display:flex;gap:5px;margin-bottom:10px;justify-content:flex-end">
+      <button class="btn bsm${viewMode==='list'?' bp':' bg'}" style="font-size:11px;padding:3px 10px" onclick="jzSetViewMode('list')">☰ 列表</button>
+      <button class="btn bsm${viewMode==='flash'?' bp':' bg'}" style="font-size:11px;padding:3px 10px" onclick="jzSetViewMode('flash')">🃏 闪卡</button>
+    </div>`;
+
+    let viewHtml='';
+    window._jzDisplayQLen=displayQ.length;
+    if(viewMode==='flash'&&displayQ.length>0){
+      const q=displayQ[flashIdx];
+      const isMastered=masteredSet.has(q.id);
+      const isReview=reviewSet.has(q.id);
+      const masteredInType=mastered.filter(id=>sorted.find(sq=>sq.id===id)).length;
+      const num=q.id.replace(/\D/g,'');
+      viewHtml=`
+<div style="font-size:11px;color:var(--ink3);text-align:center;margin-bottom:10px">
+  <span style="font-weight:700;color:var(--ink2)">${flashIdx+1} / ${displayQ.length}</span>
+  <span style="margin:0 6px">·</span>已掌握 <b style="color:#3A8A5C">${masteredInType}</b> 题
+  ${statusFilter!=='all'?`<span style="margin-left:4px;background:rgba(232,135,90,.15);padding:1px 6px;border-radius:10px;color:#C46B2A">筛选中</span>`:''}
+</div>
+<div class="jz-flash-card" id="jzFlashCard" onclick="jzFlipCard()">
+  <div class="jz-flash-inner" id="jzFlashInner">
+    <div class="jz-flash-front">
+      <div class="jz-num" style="margin-bottom:14px">${num}</div>
+      <div style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.6">${q.q}</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:18px">点击翻面查看答案 👆</div>
+    </div>
+    <div class="jz-flash-back">
+      <div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:8px">第 ${num} 题 · 答案</div>
+      <div style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--ink2)">${q.a}</div>
+      ${q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic" style="margin-top:10px">💡 口诀：${q.m}</div>`:''}
+      <div class="jz-status" style="margin-top:14px">
+        <button class="jz-btn-status${isMastered?' good':''}" onclick="event.stopPropagation();jzMarkFlash('${q.id}','good')">✓ 已掌握</button>
+        <button class="jz-btn-status${isReview?' review':''}" onclick="event.stopPropagation();jzMarkFlash('${q.id}','review')">↺ 待复习</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:8px">
+  <button class="btn bg bsm" style="flex:1" onclick="jzFlashPrev()" ${flashIdx===0?'disabled':''}>← 上一题</button>
+  <span style="font-size:11px;color:var(--ink3);white-space:nowrap">${flashIdx+1}/${displayQ.length}</span>
+  <button class="btn bp bsm" style="flex:1" onclick="jzFlashNext()" ${flashIdx===displayQ.length-1?'disabled':''}>下一题 →</button>
+</div>`;
+    } else if(viewMode==='flash'&&displayQ.length===0){
+      viewHtml=`<div class="card"><div style="padding:20px;text-align:center;color:var(--ink3);font-size:13px">当前筛选无题目</div></div>`;
+    } else {
+      viewHtml=qHtml+`<div style="padding:10px 0;text-align:center"><button class="btn bg bsm" onclick="jzAddQ()">＋ 添加题目</button></div>`;
+    }
+
     bankTabHtml=`
 ${subjTabs}
-<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">${typeTabs}</div>
-${qHtml}
-<div style="padding:10px 0;text-align:center">
-  <button class="btn bg bsm" onclick="jzAddQ()">＋ 添加题目</button>
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">${typeTabs}</div>
+${statusFilterBar}${viewToggle}
+${viewHtml}`;
+  }
+
+  // ── 待复习 Tab ──
+  let reviewTabHtml='';
+  if(activeTab==='review'){
+    const rvViewMode=window._jzReviewViewMode||'list';
+    const rvFlashIdx=Math.min(window._jzReviewFlashIdx||0,Math.max(0,reviewQAll.length-1));
+    const rvViewToggle=`<div style="display:flex;gap:5px;margin-bottom:10px;justify-content:flex-end">
+      <button class="btn bsm${rvViewMode==='list'?' bp':' bg'}" style="font-size:11px;padding:3px 10px" onclick="jzSetReviewViewMode('list')">☰ 列表</button>
+      <button class="btn bsm${rvViewMode==='flash'?' bp':' bg'}" style="font-size:11px;padding:3px 10px" onclick="jzSetReviewViewMode('flash')">🃏 闪卡</button>
+    </div>`;
+    window._jzReviewQLen=reviewQAll.length;
+    if(!reviewQAll.length){
+      reviewTabHtml=`<div class="card"><div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">暂无待复习题目 🎉<br><span style="font-size:11px;display:block;margin-top:4px">在题目背诵中标记「↺ 待复习」后会出现这里</span></div></div>`;
+    } else if(rvViewMode==='flash'){
+      const q=reviewQAll[rvFlashIdx];
+      const isMastered=masteredSet.has(q.id);
+      const isReview=reviewSet.has(q.id);
+      const num=q.id.replace(/\D/g,'');
+      reviewTabHtml=`
+<div style="font-size:11px;color:var(--ink3);display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+  <span>共 <b style="color:#C46B2A">${reviewQAll.length}</b> 题待复习</span>
+  <span style="font-weight:700;color:var(--ink2)">${rvFlashIdx+1} / ${reviewQAll.length}</span>
+</div>
+${rvViewToggle}
+<div class="jz-flash-card" id="jzFlashCard" onclick="jzFlipCard()">
+  <div class="jz-flash-inner" id="jzFlashInner">
+    <div class="jz-flash-front">
+      <div class="jz-num" style="margin-bottom:14px">${num}</div>
+      <div style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.6">${q.q}</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:18px">点击翻面查看答案 👆</div>
+    </div>
+    <div class="jz-flash-back">
+      <div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:8px">第 ${num} 题 · 答案</div>
+      <div style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--ink2)">${q.a}</div>
+      ${q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic" style="margin-top:10px">💡 口诀：${q.m}</div>`:''}
+      <div class="jz-status" style="margin-top:14px">
+        <button class="jz-btn-status${isMastered?' good':''}" onclick="event.stopPropagation();jzMarkReviewFlash('${q.id}','good')">✓ 已掌握</button>
+        <button class="jz-btn-status${isReview?' review':''}" onclick="event.stopPropagation();jzMarkReviewFlash('${q.id}','review')">↺ 取消复习</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:8px">
+  <button class="btn bg bsm" style="flex:1" onclick="jzReviewFlashPrev()" ${rvFlashIdx===0?'disabled':''}>← 上一题</button>
+  <span style="font-size:11px;color:var(--ink3);white-space:nowrap">${rvFlashIdx+1}/${reviewQAll.length}</span>
+  <button class="btn bp bsm" style="flex:1" onclick="jzReviewFlashNext()" ${rvFlashIdx===reviewQAll.length-1?'disabled':''}>下一题 →</button>
 </div>`;
+    } else {
+      // 列表模式：按科目+题型分组
+      const groups={};
+      reviewQAll.forEach(q=>{
+        const sk=q.subject==='S1'?'科目一':'科目二（小学）';
+        const tk=q.qtype==='short'?'简答题':q.qtype==='analysis'?'材料分析题':q.qtype;
+        const key=sk+' · '+tk;
+        if(!groups[key])groups[key]=[];
+        groups[key].push(q);
+      });
+      reviewTabHtml=rvViewToggle;
+      for(const [grpTitle,qs] of Object.entries(groups)){
+        reviewTabHtml+=`<div style="margin:8px 0 4px;padding:4px 10px;border-radius:8px;background:rgba(244,164,96,.15);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:#C46B2A">↺ ${grpTitle}</span>
+          <span style="font-size:10px;color:var(--ink3)">${qs.length} 题</span>
+        </div>`;
+        for(const q of qs){
+          const isMastered=masteredSet.has(q.id);
+          const num=q.id.replace(/\D/g,'');
+          const mnemonicHtml=q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic">💡 口诀：${q.m}</div>`:'';
+          reviewTabHtml+=`<div class="jz-card" id="jzc-rv-${q.id}">
+            <div class="jz-q-row" onclick="jzToggleCard('jzc-rv-${q.id}','rv')">
+              <div class="jz-num">${num}</div>
+              <div class="jz-q-text">${q.q}</div>
+              <div class="jz-toggle">▾</div>
+            </div>
+            <div class="jz-ans">
+              <div style="white-space:pre-wrap;line-height:1.8">${q.a}</div>
+              ${mnemonicHtml}
+              <div class="jz-status">
+                <button class="jz-btn-status${isMastered?' good':''}" onclick="jzMark('${q.id}','good')">✓ 已掌握</button>
+                <button class="jz-btn-status review" onclick="jzMark('${q.id}','review')">↺ 取消复习</button>
+              </div>
+            </div>
+          </div>`;
+        }
+      }
+    }
   }
 
   el.innerHTML=`
@@ -6739,10 +6953,48 @@ ${cfg.examDate?`<div style="background:linear-gradient(135deg,#AED6F1,#D7BDE2);b
 <div style="display:flex;gap:7px;margin-bottom:12px">
   <button class="btn bsm${activeTab==='tasks'?' bp':' bg'}" style="flex:1" onclick="jzTabSwitch('tasks')">📋 今日任务</button>
   <button class="btn bsm${activeTab==='bank'?' bp':' bg'}" style="flex:1" onclick="jzTabSwitch('bank')">📖 题目背诵</button>
+  <button class="btn bsm${activeTab==='review'?' bp':' bg'}" style="flex:1;position:relative" onclick="jzTabSwitch('review')">↺ 待复习${reviewQAll.length>0?`<span style="position:absolute;top:-4px;right:-4px;background:#F4A460;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">${reviewQAll.length}</span>`:''}</button>
 </div>
-${activeTab==='tasks'?tasksTabHtml:bankTabHtml}`;
+${activeTab==='tasks'?tasksTabHtml:activeTab==='bank'?bankTabHtml:reviewTabHtml}`;
 }
 window.jzTabSwitch=function(tab){window._jzTab=tab;renderJiaozu();};
+window.jzSetStatusFilter=function(f){window._jzStatusFilter=f;window._jzFlashIdx=0;renderJiaozu();};
+window.jzSetViewMode=function(m){window._jzViewMode=m;window._jzFlashIdx=0;renderJiaozu();};
+window.jzSetReviewViewMode=function(m){window._jzReviewViewMode=m;window._jzReviewFlashIdx=0;renderJiaozu();};
+window.jzFlipCard=function(){
+  const card=document.getElementById('jzFlashCard');
+  if(card)card.classList.toggle('flipped');
+};
+window.jzFlashNext=function(){
+  window._jzFlashIdx=(window._jzFlashIdx||0)+1;
+  renderJiaozu();
+};
+window.jzFlashPrev=function(){
+  window._jzFlashIdx=Math.max(0,(window._jzFlashIdx||0)-1);
+  renderJiaozu();
+};
+window.jzReviewFlashNext=function(){
+  window._jzReviewFlashIdx=(window._jzReviewFlashIdx||0)+1;
+  renderJiaozu();
+};
+window.jzReviewFlashPrev=function(){
+  window._jzReviewFlashIdx=Math.max(0,(window._jzReviewFlashIdx||0)-1);
+  renderJiaozu();
+};
+// 闪卡标记后自动推进到下一题
+window.jzMarkFlash=async function(id,type){
+  const curList=window._jzDisplayQLen||1;
+  const curIdx=window._jzFlashIdx||0;
+  if(curIdx<curList-1)window._jzFlashIdx=curIdx+1;
+  // 若已是最后一题，停留原位（clamp会处理）
+  await window.jzMark(id,type);
+};
+window.jzMarkReviewFlash=async function(id,type){
+  const curList=window._jzReviewQLen||1;
+  const curIdx=window._jzReviewFlashIdx||0;
+  if(curIdx<curList-1)window._jzReviewFlashIdx=curIdx+1;
+  await window.jzMark(id,type);
+};
 window.jzToggleDayTask=async function(dateStr,idx){
   const log=(await dbGet('jiaozu_logs','jztask_'+dateStr))||{id:'jztask_'+dateStr,done:[]};
   const i=log.done.indexOf(idx);
@@ -6832,28 +7084,54 @@ window.jzDeleteAll=async function(){
   renderJiaozu();showToast('教资数据已清空');
 };
 window.jzToggleCard=function(id){
-  const card=document.getElementById('jzc-'+id);
-  if(!card)return;
-  card.classList.toggle('open');
+  const el=document.getElementById(id)||document.getElementById('jzc-'+id);
+  if(!el)return;
+  el.classList.toggle('open');
 };
 window.jzMark=async function(id,type){
   const today=todayKey();
-  const log=(await dbGet('jiaozu_logs','log_'+today))||{id:'log_'+today,date:today,done:[],mastered:[]};
-  const alreadyMastered=log.mastered.includes(id);
+  // 1. 更新持久化 jz_status
+  const jzStatus=(await dbGet('jiaozu_logs','jz_status'))||{id:'jz_status',mastered:[],review:[]};
   if(type==='good'){
+    const alreadyMastered=jzStatus.mastered.includes(id);
     if(alreadyMastered){
-      // 取消掌握，同时从 done 移除
-      log.mastered=log.mastered.filter(x=>x!==id);
-      log.done=log.done.filter(x=>x!==id);
+      jzStatus.mastered=jzStatus.mastered.filter(x=>x!==id);
     } else {
-      if(!log.mastered.includes(id))log.mastered.push(id);
-      if(!log.done.includes(id))log.done.push(id);
+      jzStatus.mastered.push(id);
+      jzStatus.review=(jzStatus.review||[]).filter(x=>x!==id);
     }
   } else {
-    log.mastered=log.mastered.filter(x=>x!==id);
-    if(!log.done.includes(id))log.done.push(id);
+    jzStatus.review=jzStatus.review||[];
+    const alreadyReview=jzStatus.review.includes(id);
+    if(alreadyReview){
+      jzStatus.review=jzStatus.review.filter(x=>x!==id);
+    } else {
+      jzStatus.review.push(id);
+      jzStatus.mastered=(jzStatus.mastered||[]).filter(x=>x!==id);
+    }
   }
+  await dbPut('jiaozu_logs',jzStatus);
+  // 2. 同步今日 done 记录
+  const log=(await dbGet('jiaozu_logs','log_'+today))||{id:'log_'+today,date:today,done:[],mastered:[]};
+  const isActive=jzStatus.mastered.includes(id)||jzStatus.review.includes(id);
+  if(isActive){if(!log.done.includes(id))log.done.push(id);}
+  else{log.done=log.done.filter(x=>x!==id);}
+  log.mastered=jzStatus.mastered;
   await dbPut('jiaozu_logs',log);
+  // 3. 已掌握简答题≥5 → 自动完成今日简答题打卡任务
+  const allQ=await dbAll('jiaozu_bank');
+  const masteredShortCount=jzStatus.mastered.filter(mid=>allQ.find(q=>q.id===mid&&q.qtype==='short')).length;
+  const customPlan=await dbGet('jiaozu_logs','jzplan_'+today);
+  const defaultPlan=JIAOZU_PLAN.find(p=>p.date===today);
+  const activePlan=(customPlan&&customPlan._v===2)?customPlan:defaultPlan;
+  const planTasks=(activePlan?activePlan.tasks:[])||[];
+  const jzTaskIdx=planTasks.findIndex(t=>t.includes('简答题背诵')||t.includes('简答题第二轮'));
+  if(jzTaskIdx>=0){
+    const taskLog=(await dbGet('jiaozu_logs','jztask_'+today))||{id:'jztask_'+today,done:[]};
+    const alreadyChecked=taskLog.done.includes(jzTaskIdx);
+    if(masteredShortCount>=5&&!alreadyChecked){taskLog.done.push(jzTaskIdx);await dbPut('jiaozu_logs',taskLog);}
+    else if(masteredShortCount<5&&alreadyChecked){taskLog.done=taskLog.done.filter(x=>x!==jzTaskIdx);await dbPut('jiaozu_logs',taskLog);}
+  }
   renderJiaozu();
 };
 window.jzSetting=async function(){
@@ -6873,8 +7151,8 @@ window.saveJzSetting=async function(){
   await dbPut('jiaozu_logs',cfg);
   closeMo();renderJiaozu();showToast('设置已保存');
 };
-window.jzSetSubj=function(s){window._jzSubj=s;window._jzType=s==='S1'?'analysis':'short';renderJiaozu();};
-window.jzSetType=function(t){window._jzType=t;renderJiaozu();};
+window.jzSetSubj=function(s){window._jzSubj=s;window._jzType=s==='S1'?'analysis':'short';window._jzStatusFilter='all';window._jzFlashIdx=0;renderJiaozu();};
+window.jzSetType=function(t){window._jzType=t;window._jzStatusFilter='all';window._jzFlashIdx=0;renderJiaozu();};
 window.jzAddQ=async function(){
   const subj=window._jzSubj||'S2';
   const type=window._jzType||'short';
