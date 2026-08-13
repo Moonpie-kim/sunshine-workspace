@@ -741,6 +741,24 @@ function openMo(html){document.getElementById('moC').innerHTML=html;document.get
 function closeMo(e){if(!e||e.target===document.getElementById('ov'))document.getElementById('ov').classList.remove('open');}
 // ═══ CALENDAR ═══
 let calView={year:new Date().getFullYear(),month:new Date().getMonth()};
+let calExpanded=false;
+function buildWeekRowHtml(){
+  const now=new Date();
+  const dow=now.getDay(); // 0=Sun
+  const mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1));
+  const days=['一','二','三','四','五','六','日'];
+  let h='';
+  for(let i=0;i<7;i++){
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    const isToday=d.toDateString()===now.toDateString();
+    h+=`<div style="flex:1;text-align:center">
+      <div style="font-size:9px;color:var(--ink3);margin-bottom:3px">${days[i]}</div>
+      <div style="width:28px;height:28px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:${isToday?800:500};
+        background:${isToday?'var(--p5)':'transparent'};color:${isToday?'var(--ink)':'var(--ink2)'}">${d.getDate()}</div>
+    </div>`;
+  }
+  return h;
+}
 function buildCalHtml(year,month){
   const now=new Date();
   const fd=new Date(year,month,1).getDay(),dim=new Date(year,month+1,0).getDate();
@@ -755,14 +773,28 @@ function refreshCal(){
   const {year,month}=calView;
   const now=new Date();
   const isThisMonth=year===now.getFullYear()&&month===now.getMonth();
-  el.innerHTML=`<div class="ct" style="gap:8px">
-    <button class="btn bg bxs" onclick="calPrev()">◀</button>
-    <span style="flex:1;text-align:center">📅 ${year}年${month+1}月</span>
-    <button class="btn bg bxs" onclick="calNext()">▶</button>
-  </div>
-  ${!isThisMonth?`<div style="text-align:center;margin-bottom:6px"><button class="btn bg bxs" onclick="calToday()">回到今天</button></div>`:''}
-  <div class="cal">${buildCalHtml(year,month)}</div>`;
+  if(!calExpanded){
+    // 折叠：本周7天横条
+    el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="font-size:12px;font-weight:700;color:var(--ink2)">📅 ${now.getMonth()+1}月 本周</span>
+      <button onclick="calToggle()" style="background:rgba(174,214,241,.3);border:none;border-radius:6px;padding:3px 10px;font-size:11px;color:var(--ink2);cursor:pointer">展开本月 ▾</button>
+    </div>
+    <div style="display:flex;gap:2px">${buildWeekRowHtml()}</div>`;
+  } else {
+    // 展开：本月完整日历
+    el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+      <button class="btn bg bxs" onclick="calPrev()">◀</button>
+      <span style="flex:1;text-align:center;font-size:12px;font-weight:700">📅 ${year}年${month+1}月</span>
+      <button class="btn bg bxs" onclick="calNext()">▶</button>
+      <button onclick="calToggle()" style="background:rgba(174,214,241,.3);border:none;border-radius:6px;padding:3px 10px;font-size:11px;color:var(--ink2);cursor:pointer">收起 ▴</button>
+    </div>
+    ${!isThisMonth?`<div style="text-align:center;margin-bottom:6px"><button class="btn bg bxs" onclick="calToday()">回到今天</button></div>`:''}
+    <div class="cal">${buildCalHtml(year,month)}</div>`;
+  }
 }
+window.calToggle=function(){calExpanded=!calExpanded;refreshCal();};
 window.calPrev=function(){calView.month--;if(calView.month<0){calView.month=11;calView.year--;}refreshCal();};
 window.calNext=function(){calView.month++;if(calView.month>11){calView.month=0;calView.year++;}refreshCal();};
 window.calToday=function(){const n=new Date();calView={year:n.getFullYear(),month:n.getMonth()};refreshCal();};
@@ -863,40 +895,44 @@ async function renderHome(){
   // calendar
   calView={year:now.getFullYear(),month:now.getMonth()};
 
-  // 教资今日任务
-  let jzTodayH='';
+  // study tasks — today only, 未完成优先显示，最多2条
+  let studyH='';
+  let studyUndonCount=0;
+  const studyLines=[];
+  // 教资未完成任务
   {
     const jzPlan=JIAOZU_PLAN.find(p=>p.date===today);
     if(jzPlan){
       const customJz=await dbGet('jiaozu_logs','jzplan_'+today);
       const jzTasks=((customJz&&customJz._v===2)?customJz.tasks:jzPlan.tasks)||[];
       const jzLog=(await dbGet('jiaozu_logs','jztask_'+today))||{done:[]};
-      if(jzTasks.length){
-        jzTodayH+=`<div class="ci-group-label">📝 教资备考</div>`;
-        jzTasks.forEach((t,i)=>{
-          const done=jzLog.done.includes(i);
-          jzTodayH+=`<div class="trow">
-            <button class="tchk${done?' done':''}" onclick="homeToggleJzTask(${i})">${done?'✓':''}</button>
-            <span class="tname${done?' done':''}">${t}</span>
-          </div>`;
-        });
-      }
+      jzTasks.forEach((t,i)=>{
+        if(!jzLog.done.includes(i)){
+          studyLines.push({label:'📝 '+t,type:'jz',idx:i});
+          studyUndonCount++;
+        }
+      });
     }
   }
-
-  // study tasks — today only
-  let studyH='';
+  // 普通学习科目未完成任务
   for(const subj of subjects.sort((a,b)=>a.order-b.order)){
     const tasks=allTasks.filter(t=>t.subjectId===subj.id&&(t.taskDate===today||!t.taskDate));
-    if(!tasks.length){studyH+=`<div class="ci-group-label">${subj.icon} ${subj.label}</div><div style="font-size:12px;color:var(--ink3);padding:4px 0 8px">暂无任务 → 前往「英语学习」添加</div>`;continue;}
-    studyH+=`<div class="ci-group-label">${subj.icon} ${subj.label}</div>`;
     for(const t of tasks){
-      const ci=ciMap[t.id];const done=ci?.done||false;
-      studyH+=`<div class="trow">
-        <button class="tchk${done?' done':''}" onclick="toggleCI('${t.id}','study')">${done?'✓':''}</button>
-        <span class="tname${done?' done':''}">${t.name}</span>
-      </div>`;
+      const done=ciMap[t.id]?.done||false;
+      if(!done){studyLines.push({label:subj.icon+' '+t.name,type:'ci',id:t.id});studyUndonCount++;}
     }
+  }
+  if(!studyLines.length){
+    studyH='<div style="font-size:12px;color:var(--ink3);padding:2px 0">今日任务全部完成 🎉</div>';
+  } else {
+    studyLines.slice(0,2).forEach(item=>{
+      if(item.type==='jz'){
+        studyH+=`<div class="trow"><button class="tchk" onclick="homeToggleJzTask(${item.idx})"></button><span class="tname">${item.label}</span></div>`;
+      } else {
+        studyH+=`<div class="trow"><button class="tchk" onclick="toggleCI('${item.id}','study')"></button><span class="tname">${item.label}</span></div>`;
+      }
+    });
+    if(studyUndonCount>2) studyH+=`<div style="font-size:11px;color:var(--ink3);padding:2px 4px;cursor:pointer" onclick="navTo('study')">还有 ${studyUndonCount-2} 条未完成 ›</div>`;
   }
 
   // sport tasks — today
@@ -951,6 +987,8 @@ async function renderHome(){
 
   el.innerHTML=`
 <div class="ph"><h1>🌸 今日预览</h1><span style="margin-left:auto;font-size:12px;color:var(--ink3)">${fmtDate(now)}</span></div>
+
+<!-- 小羊动画 主位 -->
 <div class="sheep-stage">
   <div class="sheep-svg-wrap" id="sheepWrap">
     <svg id="sheepSvg" class="sheep-anim" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100px;height:100px">
@@ -1025,52 +1063,69 @@ async function renderHome(){
     <button class="mood-btn" data-mood="laugh" title="大笑" onclick="setSheepMood('laugh')">😂</button>
   </div>
 </div>
-<div class="card" id="calCard" style="--accent:var(--p5)"></div>
-<div class="card cdcard">
-  <div style="display:flex;align-items:center;justify-content:space-between">
-    <div><div style="font-size:11px;color:rgba(255,255,255,.8);font-weight:600">⏳ 距离</div>
-    <div style="font-size:17px;font-weight:800;color:#fff;margin-top:2px">${cd.name}</div></div>
-    <div style="text-align:right"><div style="font-size:44px;font-weight:900;color:#fff;line-height:1">${daysLeft}</div>
-    <div style="font-size:11px;color:rgba(255,255,255,.75)">天</div></div>
+
+<!-- 日历 + 倒计时 双列 -->
+<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;margin-bottom:8px">
+  <div class="card" id="calCard" style="--accent:var(--p5);margin:0"></div>
+  <div class="card cdcard" style="margin:0;min-width:110px;max-width:130px">
+    <div style="font-size:10px;color:rgba(255,255,255,.8);font-weight:600;margin-bottom:2px">⏳ 距离</div>
+    <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.3">${cd.name}</div>
+    <div style="font-size:38px;font-weight:900;color:#fff;line-height:1">${daysLeft}</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.75);margin-bottom:6px">天</div>
+    <div class="cdbar"><div class="cdbar-f" style="width:${cdPct}%"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px;align-items:center">
+      <span style="font-size:10px;color:rgba(255,255,255,.6)">${cd.date||'—'}</span>
+      <button onclick="editCD()" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:10px;padding:2px 7px;border-radius:5px;cursor:pointer">✏️</button>
+    </div>
   </div>
-  <div class="cdbar"><div class="cdbar-f" style="width:${cdPct}%"></div></div>
-  <div style="display:flex;justify-content:space-between;margin-top:5px">
-    <span style="font-size:11px;color:rgba(255,255,255,.65)">${cd.date||'未设置日期'}</span>
-    <button onclick="editCD()" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:11px;padding:3px 9px;border-radius:6px;cursor:pointer">✏️ 编辑</button>
-  </div>
 </div>
-<div class="card" style="--accent:var(--p4)">
-  <div class="ct">🎓 今日学习任务</div>
-  ${jzTodayH}${studyH||(!jzTodayH?'<div class="empty">暂无学习任务</div>':'')}
-</div>
-<div class="card" style="--accent:var(--p5)">
-  <div class="ct">🏋️ 今日运动计划</div>
-  ${sportH}
-</div>
-<div class="card" style="--accent:var(--p2)">
+
+<!-- 每日习惯 一行 -->
+<div class="card" style="--accent:var(--p3);margin-bottom:8px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-    <div class="ct" style="margin:0">📋 今日待办</div>
-    <a onclick="navTo('life')" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
-  </div>
-  ${homeTodoH}
-</div>
-<div class="card" style="--accent:var(--p3)">
-  <div class="ct" style="margin-bottom:8px">🌱 每日习惯
-    <a onclick="navTo('life')" style="font-size:11px;color:var(--ink3);cursor:pointer;font-weight:400">查看详情 ›</a>
+    <span style="font-size:13px;font-weight:700">🌱 每日习惯</span>
+    <a onclick="navTo('life')" style="font-size:11px;color:var(--ink3);cursor:pointer">详情 ›</a>
   </div>
   <div class="sheep-prog-wrap"><div class="sheep-prog-track"><div class="sheep-prog-fill" style="width:${homeHabitPct}%"></div></div><div class="sheep-prog-icon" style="left:${Math.max(2,Math.min(98,homeHabitPct))}%">🐑</div></div>
-  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center">
     ${['💧','⏰','🌙','🚶','🥚','🛁','🏃'].map((icon,i)=>`<span style="font-size:20px;opacity:${homeHabitChecks[i]?1:.25};transition:opacity .3s">${icon}</span>`).join('')}
-    <span style="font-size:12px;font-weight:700;color:${homeHabitDone===homeHabitTotal?'#27AE60':'var(--ink3)'};margin-left:auto;align-self:center">${homeHabitDone===homeHabitTotal?'全部完成 🎉':homeHabitDone+'/'+homeHabitTotal}</span>
+    <span style="font-size:12px;font-weight:700;color:${homeHabitDone===homeHabitTotal?'#27AE60':'var(--ink3)'};margin-left:auto">${homeHabitDone===homeHabitTotal?'全部完成 🎉':homeHabitDone+'/'+homeHabitTotal}</span>
   </div>
 </div>
-<div class="card" style="--accent:var(--p2)">
-  <div class="ct">💰 快速记账</div>
-  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px" id="homeMonCats">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="hmcat-${c}" onclick="homeSelCat('${c}')" style="font-size:11px;padding:3px 9px">${c}</span>`).join('')}</div>
-  <div style="display:flex;gap:7px">
-    <input class="inp" id="hmAmt" type="number" placeholder="金额" style="flex:1">
-    <input class="inp" id="hmNote" placeholder="备注" style="flex:2">
-    <button class="btn bp bsm" onclick="homeAddMoney()" style="flex-shrink:0">记</button>
+
+<!-- 今日学习任务 一行 -->
+<div class="card" style="--accent:var(--p4);margin-bottom:8px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <span style="font-size:13px;font-weight:700">🎓 今日学习</span>
+    <a onclick="navTo('study')" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
+  </div>
+  ${studyH}
+</div>
+
+<!-- 今日运动 一行 -->
+<div class="card" style="--accent:var(--p5);margin-bottom:8px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <span style="font-size:13px;font-weight:700">🏋️ 今日运动</span>
+    <a onclick="navTo('sport')" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
+  </div>
+  ${sportH}
+</div>
+
+<!-- 本周待办 + 快速记账 双列 -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+  <div class="card" style="--accent:var(--p2);margin:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:12px;font-weight:700">📋 待办</span>
+      <a onclick="navTo('life')" style="font-size:10px;color:var(--ink3);cursor:pointer">全部 ›</a>
+    </div>
+    ${homeTodoH}
+  </div>
+  <div class="card" style="--accent:var(--p3);margin:0">
+    <div style="font-size:12px;font-weight:700;margin-bottom:8px">💰 快速记账</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px" id="homeMonCats">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="hmcat-${c}" onclick="homeSelCat('${c}')" style="font-size:10px;padding:2px 7px">${c}</span>`).join('')}</div>
+    <input class="inp" id="hmAmt" type="number" placeholder="金额" style="width:100%;margin-bottom:5px;font-size:12px">
+    <input class="inp" id="hmNote" placeholder="备注" style="width:100%;margin-bottom:5px;font-size:12px">
+    <button class="btn bp" onclick="homeAddMoney()" style="width:100%;font-size:12px">记一笔</button>
   </div>
 </div>`;
   const savedMood=localStorage.getItem('sheep_mood')||'happy';
