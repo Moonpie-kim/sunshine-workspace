@@ -264,7 +264,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .garden-entry-meta{font-size:11px;color:var(--p6);font-weight:700;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;}
 .garden-entry-text{font-size:13px;color:var(--ink);white-space:pre-wrap;line-height:1.6;}
 /* ─ SHEEP ─ */
-.sheep-stage{display:flex;flex-direction:column;align-items:center;padding:14px 0 6px;position:relative;}
+.sheep-stage{display:flex;flex-direction:column;align-items:center;padding:20px 0 10px;position:relative;}
 .sheep-svg-wrap{width:100px;height:100px;position:relative;}
 .sheep-anim{animation:sheepFloat 2.4s ease-in-out infinite;}
 @keyframes sheepFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
@@ -272,11 +272,28 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 @keyframes sheepBounce{0%{transform:scale(1) translateY(0)}100%{transform:scale(1.06) translateY(-3px)}}
 .sheep-sway{animation:sheepSway 2s ease-in-out infinite;}
 @keyframes sheepSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
-.sheep-mood-label{margin-top:6px;font-size:13px;font-weight:700;color:var(--ink2);text-align:center;}
-.sheep-mood-btns{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;justify-content:center;}
-.mood-btn{border:none;cursor:pointer;font-size:18px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08);}
-.mood-btn:hover{transform:scale(1.15);}
-.mood-btn.active{background:var(--ga);box-shadow:0 3px 12px rgba(255,154,162,.4);}
+.sheep-mood-label{margin-top:8px;font-size:13px;font-weight:700;color:var(--ink2);text-align:center;}
+/* 气泡容器：以小羊SVG为中心 */
+.sheep-bubble-ring{position:relative;width:190px;height:140px;margin:0 auto;}
+.sheep-bubble-ring .sheep-svg-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+.mood-bubble{position:absolute;border:none;cursor:pointer;font-size:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);box-shadow:0 3px 10px rgba(0,0,0,.1);transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center;}
+.mood-bubble:hover{transform:scale(1.2) !important;}
+.mood-bubble.active{background:var(--ga);box-shadow:0 4px 14px rgba(255,154,162,.45);}
+@keyframes bubbleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.mood-bubble:nth-child(1){animation:bubbleFloat 2.8s ease-in-out infinite;}
+.mood-bubble:nth-child(2){animation:bubbleFloat 3.1s ease-in-out infinite .4s;}
+.mood-bubble:nth-child(3){animation:bubbleFloat 2.6s ease-in-out infinite .8s;}
+.mood-bubble:nth-child(4){animation:bubbleFloat 3.3s ease-in-out infinite .2s;}
+.mood-bubble:nth-child(5){animation:bubbleFloat 2.9s ease-in-out infinite .6s;}
+.mood-bubble:nth-child(6){animation:bubbleFloat 3.0s ease-in-out infinite 1s;}
+/* ─ TODO CARDS ─ */
+.todo-card{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border-radius:12px;background:var(--card);border:1.5px solid var(--bd);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+.todo-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:12px 0 0 12px;}
+.todo-card:active{transform:scale(.98);}
+.todo-card.todo-overdue{border-color:rgba(229,57,53,.3);background:rgba(229,57,53,.03);}
+.todo-card.todo-overdue::before{background:#E53935;}
+.todo-card:not(.todo-overdue)::before{background:var(--ga);}
+.todo-card-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd);flex-shrink:0;margin-top:1px;transition:all .2s;background:transparent;}
 /* ─ MONEY ─ */
 .money-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;}
 .money-stat{background:var(--card);border-radius:var(--rs);padding:11px 12px;border:1.5px solid var(--bd);text-align:center;}
@@ -925,14 +942,23 @@ async function renderHome(){
   if(!studyLines.length){
     studyH='<div style="font-size:12px;color:var(--ink3);padding:2px 0">今日任务全部完成 🎉</div>';
   } else {
-    studyLines.slice(0,2).forEach(item=>{
+    const showLines=studyLines.slice(0,2);
+    const moreLines=studyLines.slice(2);
+    showLines.forEach(item=>{
       if(item.type==='jz'){
         studyH+=`<div class="trow"><button class="tchk" onclick="homeToggleJzTask(${item.idx})"></button><span class="tname">${item.label}</span></div>`;
       } else {
         studyH+=`<div class="trow"><button class="tchk" onclick="toggleCI('${item.id}','study')"></button><span class="tname">${item.label}</span></div>`;
       }
     });
-    if(studyUndonCount>2) studyH+=`<div style="font-size:11px;color:var(--ink3);padding:2px 4px;cursor:pointer" onclick="navTo('study')">还有 ${studyUndonCount-2} 条未完成 ›</div>`;
+    if(moreLines.length){
+      const moreHtml=moreLines.map(item=>item.type==='jz'
+        ?`<div class="trow"><button class="tchk" onclick="homeToggleJzTask(${item.idx})"></button><span class="tname">${item.label}</span></div>`
+        :`<div class="trow"><button class="tchk" onclick="toggleCI('${item.id}','study')"></button><span class="tname">${item.label}</span></div>`
+      ).join('');
+      studyH+=`<div id="studyMore" style="display:none">${moreHtml}</div>
+        <div style="font-size:11px;color:var(--p4);padding:3px 4px;cursor:pointer;font-weight:600" onclick="this.style.display='none';document.getElementById('studyMore').style.display='block'">还有 ${moreLines.length} 条未完成 ▾</div>`;
+    }
   }
 
   // sport tasks — today
@@ -941,15 +967,36 @@ async function renderHome(){
   let sportH='';
   if(!todaySport.length){sportH='<div style="font-size:12px;color:var(--ink3);padding:4px 0">今天无运动计划 → 前往「锻炼身体」添加</div>';}
   else{
+    const undone=[];const done2=[];
     for(const p of todaySport){
-      const ci=ciMap[p.id];const done=ci?.done||false;
+      const ci=ciMap[p.id];const isDone=ci?.done||false;
+      if(isDone)done2.push(p);else undone.push(p);
+    }
+    const showSport=undone.slice(0,2);
+    const moreSport=undone.slice(2);
+    showSport.forEach(p=>{
+      const ci=ciMap[p.id];const isDone=ci?.done||false;
       sportH+=`<div class="trow">
-        <button class="tchk${done?' done':''}" onclick="toggleSportCI('${p.id}')">${done?'✓':''}</button>
+        <button class="tchk${isDone?' done':''}" onclick="toggleSportCI('${p.id}')">${isDone?'✓':''}</button>
         <div style="flex:1">
           <div style="font-size:13px">${p.name}</div>
           <div style="font-size:11px;color:var(--ink3)">${p.type==='cardio'?'有氧':'力量'} · ${p.duration}</div>
         </div>
       </div>`;
+    });
+    if(moreSport.length){
+      const moreHtml=moreSport.map(p=>`<div class="trow">
+        <button class="tchk" onclick="toggleSportCI('${p.id}')"></button>
+        <div style="flex:1">
+          <div style="font-size:13px">${p.name}</div>
+          <div style="font-size:11px;color:var(--ink3)">${p.type==='cardio'?'有氧':'力量'} · ${p.duration}</div>
+        </div>
+      </div>`).join('');
+      sportH+=`<div id="sportMore" style="display:none">${moreHtml}</div>
+        <div style="font-size:11px;color:var(--p5);padding:3px 4px;cursor:pointer;font-weight:600" onclick="this.style.display='none';document.getElementById('sportMore').style.display='block'">还有 ${moreSport.length} 条未完成 ▾</div>`;
+    }
+    if(!undone.length&&done2.length){
+      sportH='<div style="font-size:12px;color:var(--ink3);padding:2px 0">今日运动全部完成 🎉</div>';
     }
   }
 
@@ -990,8 +1037,17 @@ async function renderHome(){
 
 <!-- 小羊动画 主位 -->
 <div class="sheep-stage">
-  <div class="sheep-svg-wrap" id="sheepWrap">
-    <svg id="sheepSvg" class="sheep-anim" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100px;height:100px">
+  <!-- 气泡容器：小羊居中，6个表情气泡环绕 -->
+  <div class="sheep-bubble-ring">
+    <!-- 左上 😊 -->
+    <button class="mood-bubble active" data-mood="happy" title="开心" onclick="setSheepMood('happy')" style="left:0;top:10px">😊</button>
+    <!-- 左中 😢 -->
+    <button class="mood-bubble" data-mood="sad" title="难过" onclick="setSheepMood('sad')" style="left:2px;top:52px">😢</button>
+    <!-- 左下 🤩 -->
+    <button class="mood-bubble" data-mood="excited" title="激动" onclick="setSheepMood('excited')" style="left:10px;top:94px">🤩</button>
+    <!-- 小羊居中 -->
+    <div class="sheep-svg-center" id="sheepWrap">
+      <svg id="sheepSvg" class="sheep-anim" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100px;height:100px">
       <circle cx="50" cy="42" r="25" fill="#F0E6FF"/>
       <circle cx="32" cy="48" r="17" fill="#EDD9FF"/>
       <circle cx="68" cy="48" r="17" fill="#EDD9FF"/>
@@ -1052,16 +1108,15 @@ async function renderHome(){
       <rect x="37" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
       <rect x="55" y="79" width="8" height="4.5" rx="2.2" fill="#D7BDE2"/>
     </svg>
+    </div>
+    <!-- 右上 🥺 -->
+    <button class="mood-bubble" data-mood="hopeful" title="期待" onclick="setSheepMood('hopeful')" style="right:0;top:10px">🥺</button>
+    <!-- 右中 😤 -->
+    <button class="mood-bubble" data-mood="angry" title="生气" onclick="setSheepMood('angry')" style="right:2px;top:52px">😤</button>
+    <!-- 右下 😂 -->
+    <button class="mood-bubble" data-mood="laugh" title="大笑" onclick="setSheepMood('laugh')" style="right:10px;top:94px">😂</button>
   </div>
   <div class="sheep-mood-label" id="sheepMoodLabel">✨ 今天也要加油呀</div>
-  <div class="sheep-mood-btns">
-    <button class="mood-btn active" data-mood="happy" title="开心" onclick="setSheepMood('happy')">😊</button>
-    <button class="mood-btn" data-mood="sad" title="难过" onclick="setSheepMood('sad')">😢</button>
-    <button class="mood-btn" data-mood="excited" title="激动" onclick="setSheepMood('excited')">🤩</button>
-    <button class="mood-btn" data-mood="hopeful" title="期待" onclick="setSheepMood('hopeful')">🥺</button>
-    <button class="mood-btn" data-mood="angry" title="生气" onclick="setSheepMood('angry')">😤</button>
-    <button class="mood-btn" data-mood="laugh" title="大笑" onclick="setSheepMood('laugh')">😂</button>
-  </div>
 </div>
 
 <!-- 日历 + 倒计时 双列 -->
@@ -1070,8 +1125,7 @@ async function renderHome(){
   <div class="card cdcard" style="margin:0;min-width:110px;max-width:130px">
     <div style="font-size:10px;color:rgba(255,255,255,.8);font-weight:600;margin-bottom:2px">⏳ 距离</div>
     <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.3">${cd.name}</div>
-    <div style="font-size:38px;font-weight:900;color:#fff;line-height:1">${daysLeft}</div>
-    <div style="font-size:10px;color:rgba(255,255,255,.75);margin-bottom:6px">天</div>
+    <div style="display:flex;align-items:baseline;gap:3px"><span style="font-size:32px;font-weight:900;color:#fff;line-height:1">${daysLeft}</span><span style="font-size:12px;color:rgba(255,255,255,.85);font-weight:700">天</span></div>
     <div class="cdbar"><div class="cdbar-f" style="width:${cdPct}%"></div></div>
     <div style="display:flex;justify-content:space-between;margin-top:5px;align-items:center">
       <span style="font-size:10px;color:rgba(255,255,255,.6)">${cd.date||'—'}</span>
@@ -1111,22 +1165,21 @@ async function renderHome(){
   ${sportH}
 </div>
 
-<!-- 本周待办 + 快速记账 双列 -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-  <div class="card" style="--accent:var(--p2);margin:0">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <span style="font-size:12px;font-weight:700">📋 待办</span>
-      <a onclick="navTo('life')" style="font-size:10px;color:var(--ink3);cursor:pointer">全部 ›</a>
-    </div>
-    ${homeTodoH}
+<!-- 本周待办 -->
+<div class="card" style="--accent:var(--p2);margin-bottom:8px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <span style="font-size:13px;font-weight:700">📋 待办</span>
+    <a onclick="navTo('life')" style="font-size:11px;color:var(--ink3);cursor:pointer">全部 ›</a>
   </div>
-  <div class="card" style="--accent:var(--p3);margin:0">
-    <div style="font-size:12px;font-weight:700;margin-bottom:8px">💰 快速记账</div>
-    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px" id="homeMonCats">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="hmcat-${c}" onclick="homeSelCat('${c}')" style="font-size:10px;padding:2px 7px">${c}</span>`).join('')}</div>
-    <input class="inp" id="hmAmt" type="number" placeholder="金额" style="width:100%;margin-bottom:5px;font-size:12px">
-    <input class="inp" id="hmNote" placeholder="备注" style="width:100%;margin-bottom:5px;font-size:12px">
-    <button class="btn bp" onclick="homeAddMoney()" style="width:100%;font-size:12px">记一笔</button>
-  </div>
+  ${homeTodoH}
+</div>
+<!-- 快速记账 -->
+<div class="card" style="--accent:var(--p3);margin-bottom:8px">
+  <div style="font-size:13px;font-weight:700;margin-bottom:8px">💰 快速记账</div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px" id="homeMonCats">${MONEY_CATS.map(c=>`<span class="gym-anchor" id="hmcat-${c}" onclick="homeSelCat('${c}')" style="font-size:10px;padding:2px 7px">${c}</span>`).join('')}</div>
+  <input class="inp" id="hmAmt" type="number" placeholder="金额" style="width:100%;margin-bottom:5px;font-size:12px">
+  <input class="inp" id="hmNote" placeholder="备注" style="width:100%;margin-bottom:5px;font-size:12px">
+  <button class="btn bp" onclick="homeAddMoney()" style="width:100%;font-size:12px">记一笔</button>
 </div>`;
   const savedMood=localStorage.getItem('sheep_mood')||'happy';
   setSheepMood(savedMood,true);
@@ -1198,7 +1251,7 @@ window.setSheepMood=function(mood,silent){
   if(label)label.textContent=MOOD_LABELS[mood]||'';
   const animName=MOOD_ANIMS[mood]||'sheepFloat';
   svg.className=MOOD_ANIM_CLASS[animName]||'sheep-anim';
-  document.querySelectorAll('.mood-btn').forEach(b=>{b.classList.toggle('active',b.dataset.mood===mood);});
+  document.querySelectorAll('.mood-bubble').forEach(b=>{b.classList.toggle('active',b.dataset.mood===mood);});
   localStorage.setItem('sheep_mood',mood);
   if(!silent)showToast(MOOD_LABELS[mood]||'');
 };
@@ -4634,28 +4687,6 @@ function renderHabits(log, streaks, fullStreak){
 
 </div>
 
-<!-- 今日小结 -->
-<div class="hcard" style="margin-top:2px;background:${done===total?'linear-gradient(135deg,rgba(181,234,215,.3),rgba(174,214,241,.2))':'linear-gradient(135deg,rgba(255,240,168,.25),rgba(255,203,164,.2))'};border-color:${done===total?'rgba(125,206,160,.4)':'rgba(255,203,164,.4)'}">
-  <div class="hcard-title" style="color:${done===total?'#27AE60':'#C47A1A'}">
-    ${done===total?'🎉 今日全部完成！':'📋 今日小结'}
-    <span style="margin-left:auto;font-size:11px;background:${done===total?'rgba(125,206,160,.2)':'rgba(255,203,164,.3)'};padding:2px 8px;border-radius:8px;color:${done===total?'#27AE60':'#C47A1A'}">🔥 已连续 ${fullStreak} 天全勤</span>
-  </div>
-  ${done===total
-    ?`<div style="font-size:13px;color:var(--ink2);line-height:1.8">今天的 7 个习惯全部打卡，继续保持！<br><span style="font-size:11px;color:var(--ink3)">明天继续加油，小羊为你骄傲 🐑</span></div>`
-    :`<div style="margin-bottom:8px">
-        <div style="font-size:11px;font-weight:700;color:#27AE60;margin-bottom:4px">✅ 已完成 (${done})</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px">
-          ${HABIT_DEFS.filter(h=>h.check).map(h=>`<span style="font-size:12px;padding:3px 9px;border-radius:8px;background:rgba(181,234,215,.3);color:#27AE60">${h.icon} ${h.label}${streaks&&streaks[h.key]>0?` <b style="font-size:10px">${streaks[h.key]+1}天</b>`:''}</span>`).join('')||'<span style="font-size:12px;color:var(--ink3)">今天还没开始哦</span>'}
-        </div>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:700;color:#E67E22;margin-bottom:4px">💪 还需努力 (${total-done})</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px">
-          ${HABIT_DEFS.filter(h=>!h.check).map(h=>`<span style="font-size:12px;padding:3px 9px;border-radius:8px;background:rgba(255,203,164,.25);color:#C47A1A">${h.icon} ${h.label}</span>`).join('')}
-        </div>
-      </div>`
-  }
-</div>
 
 </div>`;
 }
@@ -4695,26 +4726,31 @@ async function renderLife(){
   const catTags=['all',...TODO_CATS].map(c=>`<span class="gym-anchor${filterCat===c?' active':''}" onclick="lifeFilterCat('${c}')" style="font-size:11px;padding:3px 9px">${c==='all'?'全部':c}</span>`).join('');
   const priTags=[{k:'all',label:'全部',color:'var(--ink3)'},...TODO_PRIS].map(p=>`<span class="gym-anchor${filterPri===p.k?' active':''}" onclick="lifeFilterPri('${p.k}')" style="font-size:11px;padding:3px 9px;color:${p.color||'var(--ink3)'}">${p.label}</span>`).join('');
 
+  const priIcon={high:'🔴',mid:'🟡',low:'🟢'};
+  const catIcon={'工作':'💼','学习':'📚','生活':'🏠','购物':'🛒','健康':'💪','其他':'📌'};
+
   const pRows=pending.map(t=>{
     const od=overdue(t);
     const pri=TODO_PRIS.find(p=>p.k===(t.pri||'mid'))||TODO_PRIS[1];
     const cc=CAT_COLORS[t.cat]||'#E8D5F5';
-    return`<div class="trow" style="${od?'background:rgba(229,57,53,.04);border-radius:8px;':''}">
-      <button class="tchk" onclick="togTodo('${t.id}')"></button>
+    const ci=catIcon[t.cat]||'📌';
+    const pi=priIcon[t.pri||'mid'];
+    return`<div class="todo-card${od?' todo-overdue':''}" onclick="togTodo('${t.id}')" id="tdc_${t.id}">
+      <div class="todo-card-check" id="tdck_${t.id}"></div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:13px;color:${od?'#E53935':'var(--ink)'};word-break:break-all">${t.name}</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:3px;align-items:center">
-          <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;background:${pri.color}22;color:${pri.color}">${pri.label}优先</span>
-          ${t.cat?`<span style="font-size:10px;padding:1px 6px;border-radius:5px;background:${cc}44;color:var(--ink2)">${t.cat}</span>`:''}
-          ${t.dueDate?`<span style="font-size:10px;color:${od?'#E53935':'var(--ink3)'}">${t.dueDate}${od?' ⚠️超期':''}</span>`:''}
+        <div style="font-size:13px;font-weight:600;color:${od?'#E53935':'var(--ink)'};line-height:1.4;word-break:break-all">${t.name}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;align-items:center">
+          <span style="font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;background:${pri.color}18;color:${pri.color};border:1px solid ${pri.color}30">${pi} ${pri.label}优先</span>
+          ${t.cat?`<span style="font-size:11px;padding:2px 7px;border-radius:8px;background:${cc}55;color:var(--ink2)">${ci} ${t.cat}</span>`:''}
+          ${t.dueDate?`<span style="font-size:11px;color:${od?'#E53935':'var(--ink3)'}">📅 ${t.dueDate}${od?' 已超期':''}</span>`:''}
         </div>
       </div>
-      <button class="tdel" onclick="delTodo('${t.id}')">×</button>
+      <button class="tdel" onclick="event.stopPropagation();delTodo('${t.id}')" style="align-self:flex-start">×</button>
     </div>`;
-  }).join('')||`<div class="empty">${filterCat!=='all'||filterPri!=='all'?'没有符合筛选的待办':'今天暂无待办 ✨'}</div>`;
+  }).join('')||`<div class="empty">${filterCat!=='all'||filterPri!=='all'?'没有符合筛选的待办':'暂无待办，添加一个吧 ✨'}</div>`;
 
-  const dRows=done.map(t=>`<div class="trow" style="opacity:.45">
-    <div style="width:20px;height:20px;border-radius:50%;background:var(--ga);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+  const dRows=done.map(t=>`<div class="todo-card" style="opacity:.4;pointer-events:none">
+    <div style="width:22px;height:22px;border-radius:50%;background:var(--ga);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700">✓</div>
     <span style="flex:1;font-size:13px;text-decoration:line-through;color:var(--ink3)">${t.name}</span>
   </div>`).join('');
 
@@ -4725,42 +4761,60 @@ async function renderLife(){
   <button class="habit-tab${lifeTab==='todo'?' on':''}" onclick="lifeTab('todo')">📋 待办事项${pending.length?` <span style="background:var(--p1);border-radius:8px;font-size:10px;padding:1px 5px;margin-left:2px">${pending.length}</span>`:''}</button>
 </div>
 ${lifeTab==='habit'?renderHabits(habitLog, habitStreaks, fullStreak):`
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px">
-  <div class="money-stat"><div class="money-stat-val">${pending.length}</div><div class="money-stat-lbl">待完成</div></div>
-  <div class="money-stat" style="background:rgba(229,57,53,.07);border-color:rgba(229,57,53,.2)"><div class="money-stat-val" style="color:#E53935">${overdueCount}</div><div class="money-stat-lbl">已超期</div></div>
-  <div class="money-stat" style="background:rgba(243,156,18,.07);border-color:rgba(243,156,18,.2)"><div class="money-stat-val" style="color:#F39C12">${highPending}</div><div class="money-stat-lbl">高优先</div></div>
-</div>
-<div class="card" style="--accent:var(--p2)">
-  <div class="ct">筛选</div>
-  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">${catTags}</div>
-  <div style="display:flex;flex-wrap:wrap;gap:5px">${priTags}</div>
-</div>
-<div class="card" style="--accent:var(--p2)">
-  <div class="ct">待办事项 <span style="font-size:11px;font-weight:400;color:var(--ink3)">${pending.length} 项</span></div>
-  ${pRows}
-  ${dRows?`<details style="margin-top:8px"><summary style="font-size:12px;color:var(--ink3);cursor:pointer;list-style:none">▸ 已完成（${done.length}）</summary><div style="margin-top:6px">${dRows}</div></details>`:''}
-</div>
-<div class="card" style="--accent:var(--p3)">
-  <div class="ct">➕ 添加待办</div>
-  <div style="display:flex;flex-direction:column;gap:7px">
-    <input class="inp" id="tdName" placeholder="待办内容…">
-    <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <input class="inp" id="tdDate" type="date" style="width:130px;font-size:12px">
-      <select class="inp" id="tdCat" style="width:80px;font-size:12px">
-        ${TODO_CATS.map(c=>`<option>${c}</option>`).join('')}
-      </select>
-      <select class="inp" id="tdPri" style="width:70px;font-size:12px">
-        ${TODO_PRIS.map(p=>`<option value="${p.k}">${p.label}优先</option>`).join('')}
-      </select>
-    </div>
-    <button class="btn bp bsm" style="width:100%" onclick="addTodo()">+ 添加</button>
+<!-- 待办概览：进度条 -->
+${(()=>{
+  const total2=pending.length+done.length;
+  const donePct=total2?Math.round(done.length/total2*100):0;
+  return`<div class="hcard" style="margin-bottom:10px;background:linear-gradient(135deg,rgba(174,214,241,.15),rgba(215,189,226,.15))">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:13px;font-weight:700">📋 今日清单</span>
+    <span style="font-size:12px;font-weight:700;color:${done.length===total2&&total2>0?'#27AE60':'var(--ink3)'}">${done.length===total2&&total2>0?'全部搞定 🎉':done.length+'/'+total2+' 完成'}</span>
   </div>
+  <div class="habit-prog-bar" style="margin-bottom:8px"><div class="habit-prog-fill" style="width:${donePct}%;background:var(--ga)"></div></div>
+  <div style="display:flex;gap:6px">
+    <span style="font-size:11px;padding:3px 9px;border-radius:8px;background:rgba(229,57,53,.1);color:#E53935;font-weight:700">${overdueCount>0?'⚠️ '+overdueCount+' 超期':'✅ 无超期'}</span>
+    <span style="font-size:11px;padding:3px 9px;border-radius:8px;background:rgba(243,156,18,.1);color:#F39C12;font-weight:700">${highPending>0?'🔴 '+highPending+' 高优先':'👌 无紧急'}</span>
+  </div>
+</div>`;})()}
+<!-- 筛选 -->
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">${catTags}</div>
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">${priTags}</div>
+<!-- 待办卡片列表 -->
+<div style="display:flex;flex-direction:column;gap:7px">
+  ${pRows}
+</div>
+${dRows?`<details style="margin-top:10px"><summary style="font-size:12px;color:var(--ink3);cursor:pointer;list-style:none;padding:6px 0;border-top:1px solid var(--sep)">▸ 已完成（${done.length}）</summary><div style="margin-top:6px;display:flex;flex-direction:column;gap:5px">${dRows}</div></details>`:''}
+<!-- 添加待办 -->
+<div class="hcard" style="margin-top:12px;background:rgba(215,189,226,.1)">
+  <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--ink2)">➕ 添加新待办</div>
+  <input class="inp" id="tdName" placeholder="写下要做的事…" style="margin-bottom:7px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px">
+    <input class="inp" id="tdDate" type="date" style="font-size:12px">
+    <select class="inp" id="tdCat" style="font-size:12px">
+      ${TODO_CATS.map(c=>`<option>${c}</option>`).join('')}
+    </select>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:8px">
+    ${TODO_PRIS.map(p=>`<label style="flex:1;text-align:center;padding:6px 0;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid ${p.color}33;color:${p.color};transition:all .2s" id="tdpri_${p.k}" onclick="selectTodoPri('${p.k}')">${priIcon[p.k]} ${p.label}</label>`).join('')}
+  </div>
+  <input type="hidden" id="tdPriVal" value="mid">
+  <button class="btn bp" style="width:100%" onclick="addTodo()">+ 添加</button>
 </div>`}`;
 }
 
 window.lifeTab=function(t){window._lifeTab=t;renderLife();};
 window.lifeFilterCat=function(c){window._lifeCat=c;renderLife();};
 window.lifeFilterPri=function(p){window._lifePri=p;renderLife();};
+window.selectTodoPri=function(k){
+  document.getElementById('tdPriVal').value=k;
+  ['high','mid','low'].forEach(p=>{
+    const el=document.getElementById('tdpri_'+p);
+    if(!el)return;
+    const pri=TODO_PRIS.find(x=>x.k===p);
+    if(p===k){el.style.background=pri.color+'22';el.style.borderColor=pri.color;}
+    else{el.style.background='';el.style.borderColor=pri.color+'33';}
+  });
+};
 
 // ── 习惯交互 ──
 window.habitWater=async function(){
@@ -4824,7 +4878,7 @@ window.addTodo=async function(){
   const name=document.getElementById('tdName').value.trim();if(!name)return;
   const dueDate=document.getElementById('tdDate').value||'';
   const cat=document.getElementById('tdCat')?.value||'其他';
-  const pri=document.getElementById('tdPri')?.value||'mid';
+  const pri=document.getElementById('tdPriVal')?.value||document.getElementById('tdPri')?.value||'mid';
   await dbPut('todos',{id:'td_'+Date.now(),name,done:false,dueDate,cat,pri,ts:Date.now()});
   document.getElementById('tdName').value='';document.getElementById('tdDate').value='';
   renderLife();
