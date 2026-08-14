@@ -759,7 +759,7 @@ function getWeekStart(d=new Date()){
   date.setDate(date.getDate()-day+1);date.setHours(0,0,0,0);return date;
 }
 function getWeekEnd(d=new Date()){const s=getWeekStart(d);const e=new Date(s);e.setDate(e.getDate()+6);return e;}
-function todayKey(){return new Date().toISOString().slice(0,10);}
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDate(d){return d.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});}
 function pad2(n){return String(n).padStart(2,'0');}
 async function ensureWeek(){
@@ -877,6 +877,17 @@ if(isMobile()){
       closeDrawer();
     });
   });
+  // edge swipe: right-swipe from left 30px opens drawer, left-swipe closes
+  let _tsx=0,_tsy=0;
+  document.addEventListener('touchstart',e=>{_tsx=e.touches[0].clientX;_tsy=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-_tsx;
+    const dy=e.changedTouches[0].clientY-_tsy;
+    if(Math.abs(dx)<Math.abs(dy)*1.5)return; // more vertical than horizontal
+    const sb2=document.getElementById('sb');
+    if(dx>40&&_tsx<40&&!sb2.classList.contains('open')){toggleDrawer();}
+    else if(dx<-40&&sb2.classList.contains('open')){closeDrawer();}
+  },{passive:true});
 } else {
   document.querySelectorAll('.ni').forEach(item=>{item.addEventListener('click',()=>navTo(item.dataset.page));});
 }
@@ -936,7 +947,7 @@ async function renderHome(){
   let studyH='';
   let studyUndonCount=0;
   const studyLines=[];
-  // 教资未完成任务
+  // 教资未完成任务（含顺延：过去7天未完成的任务也显示）
   {
     const jzPlan=JIAOZU_PLAN.find(p=>p.date===today);
     if(jzPlan){
@@ -949,6 +960,24 @@ async function renderHome(){
           studyUndonCount++;
         }
       });
+    }
+    // 顺延：过去7天（不含今天）有未完成的教资任务
+    for(let d=1;d<=7;d++){
+      const pastDate=new Date(now);pastDate.setDate(pastDate.getDate()-d);
+      const pastKey=pastDate.toISOString().slice(0,10);
+      const pastPlan=JIAOZU_PLAN.find(p=>p.date===pastKey);
+      if(!pastPlan)continue;
+      const pastCustom=await dbGet('jiaozu_logs','jzplan_'+pastKey);
+      const pastTasks=((pastCustom&&pastCustom._v===2)?pastCustom.tasks:pastPlan.tasks)||[];
+      const pastLog=(await dbGet('jiaozu_logs','jztask_'+pastKey))||{done:[]};
+      const pastUndone=pastTasks.filter((_,i)=>!pastLog.done.includes(i));
+      if(pastUndone.length){
+        const mm=(pastDate.getMonth()+1);const dd2=pastDate.getDate();
+        pastUndone.forEach(t=>{
+          studyLines.push({label:`📝 ${t} <span style="font-size:10px;color:var(--ink3)">(${mm}/${dd2}顺延)</span>`,type:'jz_past',date:pastKey,task:t});
+          studyUndonCount++;
+        });
+      }
     }
   }
   // 普通学习科目未完成任务
@@ -967,6 +996,8 @@ async function renderHome(){
     showLines.forEach(item=>{
       if(item.type==='jz'){
         studyH+=`<div class="trow"><button class="tchk" onclick="homeToggleJzTask(${item.idx})"></button><span class="tname">${item.label}</span></div>`;
+      } else if(item.type==='jz_past'){
+        studyH+=`<div class="trow"><button class="tchk" onclick="homeToggleJzPast('${item.date}','${item.task.replace(/'/g,'\\\'').replace(/"/g,'&quot;')}')"></button><span class="tname">${item.label}</span></div>`;
       } else {
         studyH+=`<div class="trow"><button class="tchk" onclick="toggleCI('${item.id}','study')"></button><span class="tname">${item.label}</span></div>`;
       }
@@ -974,6 +1005,8 @@ async function renderHome(){
     if(moreLines.length){
       const moreHtml=moreLines.map(item=>item.type==='jz'
         ?`<div class="trow"><button class="tchk" onclick="homeToggleJzTask(${item.idx})"></button><span class="tname">${item.label}</span></div>`
+        :item.type==='jz_past'
+        ?`<div class="trow"><button class="tchk" onclick="homeToggleJzPast('${item.date}','${item.task.replace(/'/g,'\\\'').replace(/"/g,'&quot;')}')"></button><span class="tname">${item.label}</span></div>`
         :`<div class="trow"><button class="tchk" onclick="toggleCI('${item.id}','study')"></button><span class="tname">${item.label}</span></div>`
       ).join('');
       studyH+=`<div id="studyMore" style="display:none">${moreHtml}</div>
@@ -1193,7 +1226,7 @@ async function renderHome(){
 <div class="card" style="--accent:var(--p4);margin-bottom:8px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
     <span style="font-size:13px;font-weight:700">🎓 今日学习</span>
-    <a onclick="navTo('study')" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
+    <a onclick="navTo(${jzTaskTotal>0?'\'jiaozu\'':'\'study\''})" style="font-size:11px;color:var(--ink3);cursor:pointer">查看全部 ›</a>
   </div>
   ${studyH}
   ${jzTaskTotal>0?`<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--sep);display:flex;align-items:center;justify-content:space-between">
@@ -4960,6 +4993,22 @@ window.homeToggleJzTask=async function(idx){
   if(i>-1)log.done.splice(i,1);else log.done.push(idx);
   await dbPut('jiaozu_logs',log);
   renderHome();
+  if(window.currentPage==='jiaozu')renderJiaozu();
+};
+// 顺延任务打卡：在原日期的 log 里按任务名标记完成（用 taskName 索引）
+window.homeToggleJzPast=async function(dateStr,taskName){
+  const key='jztask_'+dateStr;
+  const pastPlan=JIAOZU_PLAN.find(p=>p.date===dateStr);
+  if(!pastPlan)return;
+  const pastCustom=await dbGet('jiaozu_logs','jzplan_'+dateStr);
+  const pastTasks=((pastCustom&&pastCustom._v===2)?pastCustom.tasks:pastPlan.tasks)||[];
+  const idx=pastTasks.indexOf(taskName);
+  if(idx<0)return;
+  const log=(await dbGet('jiaozu_logs',key))||{id:key,done:[]};
+  const i=log.done.indexOf(idx);
+  if(i>-1)log.done.splice(i,1);else log.done.push(idx);
+  await dbPut('jiaozu_logs',log);
+  renderHome();showToast('✅ 顺延任务打卡！');
   if(window.currentPage==='jiaozu')renderJiaozu();
 };
 window.togTl=async function(id){
