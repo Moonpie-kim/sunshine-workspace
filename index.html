@@ -382,6 +382,12 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .jz-btn-status{flex:1;padding:6px 0;border-radius:8px;font-size:12px;font-weight:700;border:1.5px solid var(--bd);background:var(--bg);color:var(--ink2);cursor:pointer;transition:all .18s;}
 .jz-btn-status.good{background:rgba(125,206,160,.2);border-color:#7DCEA0;color:#3A8A5C;}
 .jz-btn-status.review{background:rgba(244,164,96,.2);border-color:#F4A460;color:#C46B2A;}
+.jz-voice-btn{width:100%;padding:8px 0;border-radius:8px;font-size:12px;font-weight:700;border:1.5px solid var(--bd);background:var(--bg);color:var(--ink2);cursor:pointer;transition:all .18s;margin-top:6px;}
+.jz-voice-btn.recording{background:rgba(229,57,53,.12);border-color:#E53935;color:#E53935;animation:jz-pulse .8s ease-in-out infinite;}
+@keyframes jz-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.jz-voice-result{margin-top:8px;font-size:12px;line-height:1.8;padding:8px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--bd);}
+.jz-point-hit{color:#27AE60;font-weight:600;}
+.jz-point-miss{color:#E53935;text-decoration:line-through;opacity:.7;}
 .jz-day-bar{background:var(--card);border-radius:var(--r);border:1.5px solid var(--bd);padding:13px 14px;margin-bottom:10px;box-shadow:var(--sh);}
 .jz-progress-track{height:8px;background:rgba(0,0,0,.06);border-radius:4px;margin:8px 0;}
 .jz-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#F4A460,#E8875A);transition:width .4s;}
@@ -6821,8 +6827,10 @@ async function renderJiaozu(){
     </div>
     <div class="jz-flash-back">
       <div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:8px">第 ${num} 题 · 答案</div>
-      <div style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--ink2)">${q.a}</div>
+      <div id="jzAnsDisplay" style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--ink2)">${q.a}</div>
       ${q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic" style="margin-top:10px">💡 口诀：${q.m}</div>`:''}
+      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="event.stopPropagation();jzVoiceToggle('${q.id.replace(/'/g,'\\\'')}')" >🎤 开始语音对比</button>
+      <div id="jzVoiceResult" class="jz-voice-result" style="display:none"></div>
       <div class="jz-status" style="margin-top:14px">
         <button class="jz-btn-status${isMastered?' good':''}" onclick="event.stopPropagation();jzMarkFlash('${q.id}','good')">✓ 已掌握</button>
         <button class="jz-btn-status${isReview?' review':''}" onclick="event.stopPropagation();jzMarkFlash('${q.id}','review')">↺ 待复习</button>
@@ -6880,8 +6888,10 @@ ${rvViewToggle}
     </div>
     <div class="jz-flash-back">
       <div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:8px">第 ${num} 题 · 答案</div>
-      <div style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--ink2)">${q.a}</div>
+      <div id="jzAnsDisplay" style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--ink2)">${q.a}</div>
       ${q.m&&q.m!=='无口诀'?`<div class="jz-mnemonic" style="margin-top:10px">💡 口诀：${q.m}</div>`:''}
+      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="event.stopPropagation();jzVoiceToggle('${q.id.replace(/'/g,'\\\'')}')" >🎤 开始语音对比</button>
+      <div id="jzVoiceResult" class="jz-voice-result" style="display:none"></div>
       <div class="jz-status" style="margin-top:14px">
         <button class="jz-btn-status${isMastered?' good':''}" onclick="event.stopPropagation();jzMarkReviewFlash('${q.id}','good')">✓ 已掌握</button>
         <button class="jz-btn-status${isReview?' review':''}" onclick="event.stopPropagation();jzMarkReviewFlash('${q.id}','review')">↺ 取消复习</button>
@@ -6976,13 +6986,117 @@ window.jzReviewFlashPrev=function(){
 };
 // 闪卡标记后自动推进到下一题
 window.jzMarkFlash=async function(id,type){
-  // 不提前+1，标记后 displayQ 会少一题，clamp 会自动定位到正确位置
-  // 若当前题不是最后一题，保持 idx 不变（下一题自然顶上来）
-  // 若是最后一题，idx 会被 clamp 到新末尾
   await window.jzMark(id,type);
 };
 window.jzMarkReviewFlash=async function(id,type){
   await window.jzMark(id,type);
+};
+
+// ── 语音对比 ──
+let _jzRecognition=null;
+let _jzRecording=false;
+
+// 把答案按要点拆分（①②③ 或 \n 分隔）
+function jzSplitPoints(ans){
+  // 先按换行拆，再合并有序号的行
+  const lines=ans.split('\n').map(s=>s.trim()).filter(Boolean);
+  const points=[];
+  for(const line of lines){
+    // 有①-⑩或数字+. 开头视为要点
+    if(/^[①②③④⑤⑥⑦⑧⑨⑩]|^\d+[.、]/.test(line)){
+      points.push(line);
+    } else if(points.length){
+      // 续行合并到上一要点
+      points[points.length-1]+=' '+line;
+    } else {
+      points.push(line);
+    }
+  }
+  return points.length?points:[ans];
+}
+
+// 对比：spoken 文字 vs 要点列表，返回每个要点是否命中
+function jzMatchPoints(points,spoken){
+  const s=spoken.replace(/\s/g,'');
+  return points.map(p=>{
+    // 去除序号和标点，取核心文字
+    const core=p.replace(/^[①②③④⑤⑥⑦⑧⑨⑩\d.、\s]/,'').replace(/[：:]/g,'').replace(/\s/g,'');
+    // 核心文字长度>=4时，要求出现连续4字片段；短的直接全匹配
+    if(core.length>=4){
+      // 滑窗：core里每4字片段看spoken里有没有
+      let hits=0,total=0;
+      for(let i=0;i<=core.length-4;i+=2){
+        const chunk=core.slice(i,i+4);
+        total++;
+        if(s.includes(chunk))hits++;
+      }
+      return total>0&&hits/total>=0.5;
+    }
+    return s.includes(core);
+  });
+}
+
+window.jzVoiceToggle=async function(qid){
+  if(_jzRecording){
+    if(_jzRecognition)_jzRecognition.stop();
+    return;
+  }
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    alert('当前浏览器不支持语音识别，请使用 Chrome 或 Safari');
+    return;
+  }
+  const allQ=await dbAll('jiaozu_bank');
+  const q=allQ.find(x=>x.id===qid);
+  if(!q)return;
+
+  const btn=document.getElementById('jzVoiceBtn');
+  const resultEl=document.getElementById('jzVoiceResult');
+  if(!btn||!resultEl)return;
+
+  const rec=new SpeechRecognition();
+  rec.lang='zh-CN';
+  rec.continuous=true;
+  rec.interimResults=true;
+  _jzRecognition=rec;
+  _jzRecording=true;
+  btn.textContent='🔴 录音中… 再点停止';
+  btn.classList.add('recording');
+  resultEl.style.display='block';
+  resultEl.innerHTML='<span style="color:var(--ink3)">正在聆听…</span>';
+
+  let finalText='';
+  rec.onresult=e=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)finalText+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    resultEl.innerHTML=`<span style="color:var(--ink3);font-size:11px">识别中：</span>${finalText}<span style="color:var(--ink3)">${interim}</span>`;
+  };
+
+  rec.onend=()=>{
+    _jzRecording=false;
+    _jzRecognition=null;
+    if(btn){btn.textContent='🎤 重新对比';btn.classList.remove('recording');}
+    if(!finalText.trim()){resultEl.innerHTML='<span style="color:var(--ink3)">未识别到内容，请重试</span>';return;}
+    // 对比并渲染
+    const points=jzSplitPoints(q.a);
+    const hits=jzMatchPoints(points,finalText);
+    let html=`<div style="font-size:11px;color:var(--ink3);margin-bottom:6px">识别内容：${finalText}</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">要点对比：</div>`;
+    points.forEach((p,i)=>{
+      html+=`<div class="${hits[i]?'jz-point-hit':'jz-point-miss'}" style="margin-bottom:4px">${hits[i]?'✓':'✗'} ${p}</div>`;
+    });
+    resultEl.innerHTML=html;
+  };
+
+  rec.onerror=e=>{
+    _jzRecording=false;_jzRecognition=null;
+    if(btn){btn.textContent='🎤 开始语音对比';btn.classList.remove('recording');}
+    resultEl.innerHTML=`<span style="color:#E53935">识别出错：${e.error}</span>`;
+  };
+
+  rec.start();
 };
 window.jzToggleDayTask=async function(dateStr,idx){
   const log=(await dbGet('jiaozu_logs','jztask_'+dateStr))||{id:'jztask_'+dateStr,done:[]};
