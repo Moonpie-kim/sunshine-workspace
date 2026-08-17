@@ -6823,7 +6823,7 @@ async function renderJiaozu(){
     <div class="jz-flash-front">
       <div class="jz-num" style="margin-bottom:14px">${num}</div>
       <div style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.6">${q.q}</div>
-      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="event.stopPropagation();jzVoiceToggle('${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
+      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="jzVoiceToggle(event,'${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
       <div id="jzVoiceResult" style="display:none;margin-top:8px;font-size:11px;color:var(--ink3)">识别中…</div>
       <div style="font-size:11px;color:var(--ink3);margin-top:10px">背完后翻面查看对比结果 👆</div>
     </div>
@@ -6885,7 +6885,7 @@ ${rvViewToggle}
     <div class="jz-flash-front">
       <div class="jz-num" style="margin-bottom:14px">${num}</div>
       <div style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.6">${q.q}</div>
-      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="event.stopPropagation();jzVoiceToggle('${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
+      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="jzVoiceToggle(event,'${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
       <div id="jzVoiceResult" style="display:none;margin-top:8px;font-size:11px;color:var(--ink3)">识别中…</div>
       <div style="font-size:11px;color:var(--ink3);margin-top:10px">背完后翻面查看对比结果 👆</div>
     </div>
@@ -6967,6 +6967,7 @@ window.jzSetStatusFilter=function(f){window._jzStatusFilter=f;window._jzFlashIdx
 window.jzSetViewMode=function(m){window._jzViewMode=m;window._jzFlashIdx=0;renderJiaozu();};
 window.jzSetReviewViewMode=function(m){window._jzReviewViewMode=m;window._jzReviewFlashIdx=0;renderJiaozu();};
 window.jzFlipCard=function(){
+  if(_jzRecording)return;
   const card=document.getElementById('jzFlashCard');
   if(card)card.classList.toggle('flipped');
 };
@@ -7038,7 +7039,8 @@ function jzMatchPoints(points,spoken){
   });
 }
 
-window.jzVoiceToggle=async function(qid){
+window.jzVoiceToggle=async function(ev,qid){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
   if(_jzRecording){
     if(_jzRecognition)_jzRecognition.stop();
     return;
