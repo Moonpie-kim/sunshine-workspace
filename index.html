@@ -6976,16 +6976,12 @@ window.jzReviewFlashPrev=function(){
 };
 // 闪卡标记后自动推进到下一题
 window.jzMarkFlash=async function(id,type){
-  const curList=window._jzDisplayQLen||1;
-  const curIdx=window._jzFlashIdx||0;
-  if(curIdx<curList-1)window._jzFlashIdx=curIdx+1;
-  // 若已是最后一题，停留原位（clamp会处理）
+  // 不提前+1，标记后 displayQ 会少一题，clamp 会自动定位到正确位置
+  // 若当前题不是最后一题，保持 idx 不变（下一题自然顶上来）
+  // 若是最后一题，idx 会被 clamp 到新末尾
   await window.jzMark(id,type);
 };
 window.jzMarkReviewFlash=async function(id,type){
-  const curList=window._jzReviewQLen||1;
-  const curIdx=window._jzReviewFlashIdx||0;
-  if(curIdx<curList-1)window._jzReviewFlashIdx=curIdx+1;
   await window.jzMark(id,type);
 };
 window.jzToggleDayTask=async function(dateStr,idx){
