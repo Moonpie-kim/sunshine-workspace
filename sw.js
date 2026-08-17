@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sunshine-workspace-v3';
+const CACHE_NAME = 'sunshine-workspace-v4';
 const ASSETS = [
   '/index.html',
   '/manifest.json'
