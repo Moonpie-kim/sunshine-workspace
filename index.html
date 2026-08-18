@@ -6818,12 +6818,12 @@ async function renderJiaozu(){
   <span style="margin:0 6px">·</span>已掌握 <b style="color:#3A8A5C">${masteredInType}</b> 题
   ${statusFilter!=='all'?`<span style="margin-left:4px;background:rgba(232,135,90,.15);padding:1px 6px;border-radius:10px;color:#C46B2A">筛选中</span>`:''}
 </div>
-<div class="jz-flash-card" id="jzFlashCard" onclick="jzFlipCard()">
+<div class="jz-flash-card" id="jzFlashCard" onclick="jzFlipCard(event)">
   <div class="jz-flash-inner" id="jzFlashInner">
     <div class="jz-flash-front">
       <div class="jz-num" style="margin-bottom:14px">${num}</div>
       <div style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.6">${q.q}</div>
-      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="jzVoiceToggle(event,'${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
+      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="jzVoiceToggle('${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
       <div id="jzVoiceResult" style="display:none;margin-top:8px;font-size:11px;color:var(--ink3)">识别中…</div>
       <div style="font-size:11px;color:var(--ink3);margin-top:10px">背完后翻面查看对比结果 👆</div>
     </div>
@@ -6880,12 +6880,12 @@ ${viewHtml}`;
   <span style="font-weight:700;color:var(--ink2)">${rvFlashIdx+1} / ${reviewQAll.length}</span>
 </div>
 ${rvViewToggle}
-<div class="jz-flash-card" id="jzFlashCard" onclick="jzFlipCard()">
+<div class="jz-flash-card" id="jzFlashCard" onclick="jzFlipCard(event)">
   <div class="jz-flash-inner" id="jzFlashInner">
     <div class="jz-flash-front">
       <div class="jz-num" style="margin-bottom:14px">${num}</div>
       <div style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.6">${q.q}</div>
-      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="jzVoiceToggle(event,'${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
+      <button class="jz-voice-btn" id="jzVoiceBtn" onclick="jzVoiceToggle('${q.id.replace(/'/g,'\\\'')}')" style="margin-top:18px">🎤 开始语音背诵</button>
       <div id="jzVoiceResult" style="display:none;margin-top:8px;font-size:11px;color:var(--ink3)">识别中…</div>
       <div style="font-size:11px;color:var(--ink3);margin-top:10px">背完后翻面查看对比结果 👆</div>
     </div>
@@ -6966,8 +6966,9 @@ window.jzTabSwitch=function(tab){window._jzTab=tab;renderJiaozu();};
 window.jzSetStatusFilter=function(f){window._jzStatusFilter=f;window._jzFlashIdx=0;renderJiaozu();};
 window.jzSetViewMode=function(m){window._jzViewMode=m;window._jzFlashIdx=0;renderJiaozu();};
 window.jzSetReviewViewMode=function(m){window._jzReviewViewMode=m;window._jzReviewFlashIdx=0;renderJiaozu();};
-window.jzFlipCard=function(){
+window.jzFlipCard=function(e){
   if(_jzRecording)return;
+  if(e&&e.target&&e.target.closest('button'))return;
   const card=document.getElementById('jzFlashCard');
   if(card)card.classList.toggle('flipped');
 };
@@ -7039,8 +7040,7 @@ function jzMatchPoints(points,spoken){
   });
 }
 
-window.jzVoiceToggle=async function(ev,qid){
-  if(ev&&ev.stopPropagation)ev.stopPropagation();
+window.jzVoiceToggle=async function(qid){
   if(_jzRecording){
     if(_jzRecognition)_jzRecognition.stop();
     return;
