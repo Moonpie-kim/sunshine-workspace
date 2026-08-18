@@ -6969,7 +6969,7 @@ window.jzSetStatusFilter=function(f){window._jzStatusFilter=f;window._jzFlashIdx
 window.jzSetViewMode=function(m){window._jzViewMode=m;window._jzFlashIdx=0;renderJiaozu();};
 window.jzSetReviewViewMode=function(m){window._jzReviewViewMode=m;window._jzReviewFlashIdx=0;renderJiaozu();};
 window.jzFlipCard=function(e){
-  if(_jzVoiceState!=='idle')return;
+  if(_jzVoiceRecording)return;
   if(e&&e.target&&e.target.closest('button'))return;
   const card=document.getElementById('jzFlashCard');
   if(card)card.classList.toggle('flipped');
@@ -7000,17 +7000,13 @@ window.jzMarkReviewFlash=async function(id,type){
 
 // ── 语音对比 ──
 let _jzRec=null;
-let _jzVoiceState='idle'; // 'idle'|'recording'|'paused'
-let _jzAccumText='';
+let _jzVoiceRecording=false;
 let _jzVoiceQid=null;
 
-// 把答案按要点拆分（①②③ 或 \n 分隔）
 function jzSplitPoints(ans){
-  // 先按换行拆
   const lines=ans.split('\n').map(s=>s.trim()).filter(Boolean);
   const points=[];
   for(const line of lines){
-    // 同一行内有多个 ①②③ 编号，按编号再拆
     const subParts=line.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/);
     if(subParts.length>1){
       subParts.forEach(p=>{const t=p.trim();if(t)points.push(t);});
@@ -7025,169 +7021,101 @@ function jzSplitPoints(ans){
   return points.length?points:[ans];
 }
 
-// 对比：spoken 文字 vs 要点列表，返回每个要点是否命中
 function jzMatchPoints(points,spoken){
   const s=spoken.replace(/\s/g,'');
   return points.map(p=>{
-    // 去掉序号和标点，取核心文字
     const core=p.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]/,'').replace(/[；;：:，,。.、]/g,'').replace(/\s/g,'');
     if(core.length<2)return false;
     if(core.length<6)return s.includes(core);
-    // 滑窗：每4字片段步长1，超过35%命中即通过（口语表达有省略，适当放宽）
     let hits=0,total=0;
     for(let i=0;i<=core.length-4;i++){
-      const chunk=core.slice(i,i+4);
-      total++;
+      const chunk=core.slice(i,i+4);total++;
       if(s.includes(chunk))hits++;
     }
     return total>0&&hits/total>=0.35;
   });
 }
 
-function _jzVoiceUI(state){
-  const btn=document.getElementById('jzVoiceBtn');
-  const resultEl=document.getElementById('jzVoiceResult');
-  if(!btn||!resultEl)return;
-  if(state==='idle'){
-    btn.style.display='';
-    btn.textContent='🎤 开始语音背诵';
-    btn.classList.remove('recording');
-    resultEl.style.display='none';
-    resultEl.innerHTML='';
-  } else if(state==='recording'){
-    btn.style.display='';
-    btn.textContent='⏸ 暂停';
-    btn.classList.add('recording');
-    resultEl.style.display='block';
-    if(!resultEl.innerHTML)resultEl.innerHTML='<span style="color:var(--ink3)">正在聆听…</span>';
-  } else if(state==='paused'){
-    btn.style.display='none';
-    btn.classList.remove('recording');
-    const preview=_jzAccumText?`<div style="font-size:11px;color:var(--ink3);margin-bottom:8px;word-break:break-all">已录入：${_jzAccumText}</div>`:'<div style="font-size:11px;color:var(--ink3);margin-bottom:8px">暂无录入内容</div>';
-    resultEl.style.display='block';
-    resultEl.innerHTML=preview+
-      `<div style="display:flex;gap:6px;margin-top:4px">
-        <button onclick="jzVoiceResume()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(100,181,246,.2);color:#1565C0;font-size:12px;font-weight:700">▶ 继续</button>
-        <button onclick="jzVoiceSubmit()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(76,175,80,.18);color:#2E7D32;font-size:12px;font-weight:700">✓ 提交</button>
-        <button onclick="jzVoiceReset()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(229,57,53,.12);color:#C62828;font-size:12px;font-weight:700">🔄 重录</button>
-      </div>`;
-  }
-}
-
-function _jzStartRec(){
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SpeechRecognition){alert('当前浏览器不支持语音识别，请使用 Chrome 或 Safari');return;}
-  const rec=new SpeechRecognition();
-  rec.lang='zh-CN';rec.continuous=true;rec.interimResults=true;
-  _jzRec=rec;
-  let lastInterim='';
-  rec.onresult=e=>{
-    lastInterim='';
-    for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal){_jzAccumText+=e.results[i][0].transcript;lastInterim='';}
-      else lastInterim+=e.results[i][0].transcript;
-    }
-    const r=document.getElementById('jzVoiceResult');
-    if(r&&_jzVoiceState==='recording')r.innerHTML=`<span style="font-size:11px;color:var(--ink3)">识别中：</span>${_jzAccumText}<span style="color:var(--ink3)">${lastInterim}</span>`;
-  };
-  rec.onend=()=>{
-    // iOS 停止时最后一段 interim 不会变 final，手动追加
-    if(lastInterim)_jzAccumText+=lastInterim;
-    if(_jzVoiceState==='recording'){
-      _jzVoiceState='paused';
-      _jzRec=null;
-      _jzVoiceUI('paused');
-    }
-  };
-  rec.onerror=e=>{
-    _jzVoiceState='paused';_jzRec=null;
-    const r=document.getElementById('jzVoiceResult');
-    if(r)r.innerHTML=`<span style="color:#E53935">识别出错(${e.error})，请重试</span>`;
-    _jzVoiceUI('paused');
-  };
-  rec.start();
-}
-
-window.jzVoiceToggle=async function(qid){
-  // 首次开始
-  if(_jzVoiceState==='idle'){
-    const allQ=await dbAll('jiaozu_bank');
-    const q=allQ.find(x=>x.id===qid);
-    if(!q)return;
-    _jzVoiceQid=qid;
-    _jzAccumText='';
-    _jzVoiceState='recording';
-    _jzVoiceUI('recording');
-    _jzStartRec();
-  } else if(_jzVoiceState==='recording'){
-    // 暂停
-    _jzVoiceState='paused';
-    if(_jzRec){_jzRec.onend=()=>{_jzRec=null;};_jzRec.stop();}
-    _jzVoiceUI('paused');
-  }
-};
-
-window.jzVoiceResume=function(){
-  if(_jzVoiceState!=='paused')return;
-  _jzVoiceState='recording';
-  _jzVoiceUI('recording');
-  _jzStartRec();
-};
-
-window.jzVoiceSubmit=async function(){
-  if(!_jzAccumText.trim()){
-    // 无内容：保持 paused UI（按钮还在），只更新提示文字
-    const r=document.getElementById('jzVoiceResult');
-    if(r){
-      const preview='<div style="font-size:11px;color:#E53935;margin-bottom:8px">暂无录入内容，请先录音</div>';
-      r.innerHTML=preview+
-        `<div style="display:flex;gap:6px;margin-top:4px">
-          <button onclick="jzVoiceResume()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(100,181,246,.2);color:#1565C0;font-size:12px;font-weight:700">▶ 继续</button>
-          <button onclick="jzVoiceSubmit()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(76,175,80,.18);color:#2E7D32;font-size:12px;font-weight:700">✓ 提交</button>
-          <button onclick="jzVoiceReset()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(229,57,53,.12);color:#C62828;font-size:12px;font-weight:700">🔄 重录</button>
-        </div>`;
-    }
-    return;
-  }
+// 把对比结果写到背面
+async function _jzWriteCompare(text){
   const allQ=await dbAll('jiaozu_bank');
   const q=allQ.find(x=>x.id===_jzVoiceQid);
   if(!q)return;
-  // 正面：显示完成提示 + 重录按钮
-  const resultEl=document.getElementById('jzVoiceResult');
-  if(resultEl){
-    resultEl.style.display='block';
-    resultEl.innerHTML='✅ 提交完成，翻面查看要点对比';
-  }
-  const btn=document.getElementById('jzVoiceBtn');
-  if(btn){
-    btn.style.display='';
-    btn.textContent='🔄 重新背诵';
-    btn.classList.remove('recording');
-    btn.onclick=function(){
-      _jzAccumText='';
-      _jzVoiceState='recording';
-      _jzVoiceUI('recording');
-      _jzStartRec();
-    };
-  }
-  // 背面：写入对比
   const compareEl=document.getElementById('jzVoiceCompare');
-  if(compareEl){
-    const points=jzSplitPoints(q.a);
-    const hits=jzMatchPoints(points,_jzAccumText);
-    let html=`<div style="font-size:11px;color:var(--ink3);margin-bottom:6px;word-break:break-all">识别内容：${_jzAccumText}</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">要点对比：</div>`;
-    points.forEach((p,i)=>{html+=`<div class="${hits[i]?'jz-point-hit':'jz-point-miss'}" style="margin-bottom:4px">${hits[i]?'✓':'✗'} ${p}</div>`;});
-    compareEl.innerHTML=html;compareEl.style.display='block';
-  }
-  _jzVoiceState='idle';_jzVoiceQid=null;
+  if(!compareEl)return;
+  const points=jzSplitPoints(q.a);
+  const hits=jzMatchPoints(points,text);
+  let html=`<div style="font-size:11px;color:var(--ink3);margin-bottom:6px;word-break:break-all">识别内容：${text}</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">要点对比：</div>`;
+  points.forEach((p,i)=>{html+=`<div class="${hits[i]?'jz-point-hit':'jz-point-miss'}" style="margin-bottom:4px">${hits[i]?'✓':'✗'} ${p}</div>`;});
+  compareEl.innerHTML=html;compareEl.style.display='block';
+}
+
+// 开始录音
+window.jzVoiceToggle=async function(qid){
+  if(_jzVoiceRecording)return; // 录音中忽略重复点击
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){alert('当前浏览器不支持语音识别，请使用 Chrome 或 Safari');return;}
+  const allQ=await dbAll('jiaozu_bank');
+  if(!allQ.find(x=>x.id===qid))return;
+  _jzVoiceQid=qid;
+  _jzVoiceRecording=true;
+
+  const btn=document.getElementById('jzVoiceBtn');
+  const resultEl=document.getElementById('jzVoiceResult');
+  if(btn){btn.textContent='录音中…';btn.classList.add('recording');}
+  if(resultEl){resultEl.style.display='block';resultEl.innerHTML='<span style="color:var(--ink3)">正在聆听，背完后点「提交」</span><br><button onclick="jzVoiceSubmitStop()" style="margin-top:8px;padding:7px 20px;border-radius:10px;border:none;background:rgba(76,175,80,.18);color:#2E7D32;font-size:13px;font-weight:700">✓ 提交</button><button onclick="jzVoiceRestart()" style="margin-top:8px;margin-left:8px;padding:7px 16px;border-radius:10px;border:none;background:rgba(229,57,53,.1);color:#C62828;font-size:13px;font-weight:700">🔄 重录</button>';}
+
+  const rec=new SpeechRecognition();
+  rec.lang='zh-CN';rec.continuous=true;rec.interimResults=true;
+  _jzRec=rec;
+  let accum='';let lastInterim='';
+
+  rec.onresult=e=>{
+    lastInterim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal){accum+=e.results[i][0].transcript;lastInterim='';}
+      else lastInterim+=e.results[i][0].transcript;
+    }
+    if(resultEl)resultEl.querySelector('span').textContent='识别中：'+accum+lastInterim;
+  };
+
+  rec.onend=async()=>{
+    const text=(accum+(lastInterim||'')).trim();
+    _jzVoiceRecording=false;_jzRec=null;
+    if(!text){
+      if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');}
+      if(resultEl){resultEl.innerHTML='<span style="color:var(--ink3)">未识别到内容，请重试</span>';}
+      return;
+    }
+    if(btn){btn.textContent='🔄 重新背诵';btn.classList.remove('recording');btn.onclick=()=>jzVoiceRestart();}
+    if(resultEl)resultEl.innerHTML='✅ 完成，翻面查看要点对比';
+    await _jzWriteCompare(text);
+  };
+
+  rec.onerror=e=>{
+    _jzVoiceRecording=false;_jzRec=null;
+    if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');btn.onclick=null;}
+    if(resultEl)resultEl.innerHTML=`<span style="color:#E53935">识别出错(${e.error})，请重试</span>`;
+  };
+
+  rec.start();
 };
 
-window.jzVoiceReset=function(){
+// 提交：停止录音，onend 自动处理对比
+window.jzVoiceSubmitStop=function(){
+  if(_jzRec)_jzRec.stop();
+};
+
+// 重录：停止当前录音，清空重开
+window.jzVoiceRestart=function(){
   if(_jzRec){try{_jzRec.onend=()=>{};_jzRec.stop();}catch(e){}}
-  _jzRec=null;_jzAccumText='';
-  _jzVoiceState='recording';
-  _jzVoiceUI('recording');
-  _jzStartRec();
+  _jzRec=null;_jzVoiceRecording=false;_jzVoiceQid=null;
+  const btn=document.getElementById('jzVoiceBtn');
+  const resultEl=document.getElementById('jzVoiceResult');
+  if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');btn.onclick=null;}
+  if(resultEl){resultEl.style.display='none';resultEl.innerHTML='';}
+  const compareEl=document.getElementById('jzVoiceCompare');
+  if(compareEl){compareEl.innerHTML='';compareEl.style.display='none';}
 };
 window.jzToggleDayTask=async function(dateStr,idx){
   const log=(await dbGet('jiaozu_logs','jztask_'+dateStr))||{id:'jztask_'+dateStr,done:[]};
