@@ -7126,18 +7126,40 @@ window.jzVoiceResume=function(){
 
 window.jzVoiceSubmit=async function(){
   if(!_jzAccumText.trim()){
+    // 无内容：保持 paused UI（按钮还在），只更新提示文字
     const r=document.getElementById('jzVoiceResult');
-    if(r)r.innerHTML='<span style="color:var(--ink3)">暂无录入内容，请先录音</span>';
+    if(r){
+      const preview='<div style="font-size:11px;color:#E53935;margin-bottom:8px">暂无录入内容，请先录音</div>';
+      r.innerHTML=preview+
+        `<div style="display:flex;gap:6px;margin-top:4px">
+          <button onclick="jzVoiceResume()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(100,181,246,.2);color:#1565C0;font-size:12px;font-weight:700">▶ 继续</button>
+          <button onclick="jzVoiceSubmit()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(76,175,80,.18);color:#2E7D32;font-size:12px;font-weight:700">✓ 提交</button>
+          <button onclick="jzVoiceReset()" style="flex:1;padding:7px 0;border-radius:10px;border:none;background:rgba(229,57,53,.12);color:#C62828;font-size:12px;font-weight:700">🔄 重录</button>
+        </div>`;
+    }
     return;
   }
   const allQ=await dbAll('jiaozu_bank');
   const q=allQ.find(x=>x.id===_jzVoiceQid);
   if(!q)return;
-  // 正面：显示完成提示
+  // 正面：显示完成提示 + 重录按钮
   const resultEl=document.getElementById('jzVoiceResult');
-  if(resultEl){resultEl.style.display='block';resultEl.innerHTML='✅ 提交完成，翻面查看要点对比';}
+  if(resultEl){
+    resultEl.style.display='block';
+    resultEl.innerHTML='✅ 提交完成，翻面查看要点对比';
+  }
   const btn=document.getElementById('jzVoiceBtn');
-  if(btn){btn.style.display='';btn.textContent='🔄 重新背诵';btn.classList.remove('recording');}
+  if(btn){
+    btn.style.display='';
+    btn.textContent='🔄 重新背诵';
+    btn.classList.remove('recording');
+    btn.onclick=function(){
+      _jzAccumText='';
+      _jzVoiceState='recording';
+      _jzVoiceUI('recording');
+      _jzStartRec();
+    };
+  }
   // 背面：写入对比
   const compareEl=document.getElementById('jzVoiceCompare');
   if(compareEl){
