@@ -7087,14 +7087,14 @@ window.jzVoiceToggle=async function(qid){
       if(resultEl){resultEl.innerHTML='<span style="color:var(--ink3)">未识别到内容，请重试</span>';}
       return;
     }
-    if(btn){btn.textContent='🔄 重新背诵';btn.classList.remove('recording');btn.onclick=()=>jzVoiceRestart();}
+    if(btn){btn.textContent='🔄 重新背诵';btn.classList.remove('recording');btn.onclick=()=>jzVoiceRestart(_jzVoiceQid);}
     if(resultEl)resultEl.innerHTML='✅ 完成，翻面查看要点对比';
     await _jzWriteCompare(text);
   };
 
   rec.onerror=e=>{
     _jzVoiceRecording=false;_jzRec=null;
-    if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');btn.onclick=null;}
+    if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');}
     if(resultEl)resultEl.innerHTML=`<span style="color:#E53935">识别出错(${e.error})，请重试</span>`;
   };
 
@@ -7107,15 +7107,19 @@ window.jzVoiceSubmitStop=function(){
 };
 
 // 重录：停止当前录音，清空重开
-window.jzVoiceRestart=function(){
+window.jzVoiceRestart=function(qid){
   if(_jzRec){try{_jzRec.onend=()=>{};_jzRec.stop();}catch(e){}}
-  _jzRec=null;_jzVoiceRecording=false;_jzVoiceQid=null;
+  _jzRec=null;_jzVoiceRecording=false;
   const btn=document.getElementById('jzVoiceBtn');
   const resultEl=document.getElementById('jzVoiceResult');
-  if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');btn.onclick=null;}
+  if(btn){btn.textContent='🎤 开始语音背诵';btn.classList.remove('recording');}
   if(resultEl){resultEl.style.display='none';resultEl.innerHTML='';}
   const compareEl=document.getElementById('jzVoiceCompare');
   if(compareEl){compareEl.innerHTML='';compareEl.style.display='none';}
+  // 恢复 btn 的 onclick 为原始 attribute（清掉 JS 层的覆盖）
+  if(btn)btn.onclick=null;
+  // 如果有 qid 传入，直接重新开始录音
+  if(qid){_jzVoiceQid=null;jzVoiceToggle(qid);}
 };
 window.jzToggleDayTask=async function(dateStr,idx){
   const log=(await dbGet('jiaozu_logs','jztask_'+dateStr))||{id:'jztask_'+dateStr,done:[]};
