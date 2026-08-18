@@ -7006,10 +7006,15 @@ let _jzVoiceQid=null;
 
 // 把答案按要点拆分（①②③ 或 \n 分隔）
 function jzSplitPoints(ans){
+  // 先按换行拆
   const lines=ans.split('\n').map(s=>s.trim()).filter(Boolean);
   const points=[];
   for(const line of lines){
-    if(/^[①②③④⑤⑥⑦⑧⑨⑩]|^\d+[.、]/.test(line)){
+    // 同一行内有多个 ①②③ 编号，按编号再拆
+    const subParts=line.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/);
+    if(subParts.length>1){
+      subParts.forEach(p=>{const t=p.trim();if(t)points.push(t);});
+    } else if(/^[①②③④⑤⑥⑦⑧⑨⑩]|^\d+[.、]/.test(line)){
       points.push(line);
     } else if(points.length){
       points[points.length-1]+=' '+line;
@@ -7024,17 +7029,18 @@ function jzSplitPoints(ans){
 function jzMatchPoints(points,spoken){
   const s=spoken.replace(/\s/g,'');
   return points.map(p=>{
-    const core=p.replace(/^[①②③④⑤⑥⑦⑧⑨⑩\d.、\s]/,'').replace(/[：:]/g,'').replace(/\s/g,'');
-    if(core.length>=4){
-      let hits=0,total=0;
-      for(let i=0;i<=core.length-4;i+=2){
-        const chunk=core.slice(i,i+4);
-        total++;
-        if(s.includes(chunk))hits++;
-      }
-      return total>0&&hits/total>=0.5;
+    // 去掉序号和标点，取核心文字
+    const core=p.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]/,'').replace(/[；;：:，,。.、]/g,'').replace(/\s/g,'');
+    if(core.length<2)return false;
+    if(core.length<6)return s.includes(core);
+    // 滑窗：每4字片段，超过40%命中即通过（口语表达有省略，适当放宽）
+    let hits=0,total=0;
+    for(let i=0;i<=core.length-4;i+=2){
+      const chunk=core.slice(i,i+4);
+      total++;
+      if(s.includes(chunk))hits++;
     }
-    return s.includes(core);
+    return total>0&&hits/total>=0.4;
   });
 }
 
