@@ -7080,17 +7080,19 @@ function _jzStartRec(){
   const rec=new SpeechRecognition();
   rec.lang='zh-CN';rec.continuous=true;rec.interimResults=true;
   _jzRec=rec;
+  let lastInterim='';
   rec.onresult=e=>{
-    let interim='';
+    lastInterim='';
     for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal)_jzAccumText+=e.results[i][0].transcript;
-      else interim+=e.results[i][0].transcript;
+      if(e.results[i].isFinal){_jzAccumText+=e.results[i][0].transcript;lastInterim='';}
+      else lastInterim+=e.results[i][0].transcript;
     }
     const r=document.getElementById('jzVoiceResult');
-    if(r&&_jzVoiceState==='recording')r.innerHTML=`<span style="font-size:11px;color:var(--ink3)">识别中：</span>${_jzAccumText}<span style="color:var(--ink3)">${interim}</span>`;
+    if(r&&_jzVoiceState==='recording')r.innerHTML=`<span style="font-size:11px;color:var(--ink3)">识别中：</span>${_jzAccumText}<span style="color:var(--ink3)">${lastInterim}</span>`;
   };
   rec.onend=()=>{
-    // 仅在 recording 状态结束时切换到 paused（stop()调用或超时）
+    // iOS 停止时最后一段 interim 不会变 final，手动追加
+    if(lastInterim)_jzAccumText+=lastInterim;
     if(_jzVoiceState==='recording'){
       _jzVoiceState='paused';
       _jzRec=null;
