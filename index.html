@@ -7007,9 +7007,15 @@ function jzSplitPoints(ans){
   const lines=ans.split('\n').map(s=>s.trim()).filter(Boolean);
   const points=[];
   for(const line of lines){
+    // 纯标题行（以冒号/：结尾，无编号）跳过
+    if(/[：:]\s*$/.test(line)&&!/^[①②③④⑤⑥⑦⑧⑨⑩]|^\d+[.、]/.test(line))continue;
     const subParts=line.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/);
     if(subParts.length>1){
-      subParts.forEach(p=>{const t=p.trim();if(t)points.push(t);});
+      subParts.forEach(p=>{
+        const t=p.trim();
+        // 跳过纯标题片段（冒号结尾无实质内容）
+        if(t&&!/^[^①②③④⑤⑥⑦⑧⑨⑩]*[：:]\s*$/.test(t))points.push(t);
+      });
     } else if(/^[①②③④⑤⑥⑦⑧⑨⑩]|^\d+[.、]/.test(line)){
       points.push(line);
     } else if(points.length){
@@ -7032,7 +7038,7 @@ function jzMatchPoints(points,spoken){
       const chunk=core.slice(i,i+4);total++;
       if(s.includes(chunk))hits++;
     }
-    return total>0&&hits/total>=0.35;
+    return total>0&&hits/total>=0.3;
   });
 }
 
