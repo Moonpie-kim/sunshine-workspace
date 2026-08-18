@@ -7033,14 +7033,14 @@ function jzMatchPoints(points,spoken){
     const core=p.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]/,'').replace(/[；;：:，,。.、]/g,'').replace(/\s/g,'');
     if(core.length<2)return false;
     if(core.length<6)return s.includes(core);
-    // 滑窗：每4字片段，超过40%命中即通过（口语表达有省略，适当放宽）
+    // 滑窗：每4字片段步长1，超过35%命中即通过（口语表达有省略，适当放宽）
     let hits=0,total=0;
-    for(let i=0;i<=core.length-4;i+=2){
+    for(let i=0;i<=core.length-4;i++){
       const chunk=core.slice(i,i+4);
       total++;
       if(s.includes(chunk))hits++;
     }
-    return total>0&&hits/total>=0.4;
+    return total>0&&hits/total>=0.35;
   });
 }
 
