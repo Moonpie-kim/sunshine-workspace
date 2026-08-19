@@ -7032,13 +7032,14 @@ function jzMatchPoints(points,spoken){
   return points.map(p=>{
     const core=p.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]/,'').replace(/[；;：:，,。.、]/g,'').replace(/\s/g,'');
     if(core.length<2)return false;
-    if(core.length<6)return s.includes(core);
-    let hits=0,total=0;
-    for(let i=0;i<=core.length-4;i++){
-      const chunk=core.slice(i,i+4);total++;
-      if(s.includes(chunk))hits++;
-    }
-    return total>0&&hits/total>=0.3;
+    if(core.length<5)return s.includes(core);
+    // 2字窗口步长2 + 3字窗口步长2，任一命中率达标即通过
+    const kw2=[],kw3=[];
+    for(let i=0;i<core.length-1;i+=2)kw2.push(core.slice(i,i+2));
+    for(let i=0;i<=core.length-3;i+=2)kw3.push(core.slice(i,i+3));
+    const h2=kw2.filter(k=>s.includes(k)).length;
+    const h3=kw3.filter(k=>s.includes(k)).length;
+    return h2/kw2.length>=0.6||h3/kw3.length>=0.5;
   });
 }
 
