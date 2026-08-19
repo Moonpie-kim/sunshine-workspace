@@ -6319,7 +6319,7 @@ const JIAOZU_QUESTIONS=[
   {id:'jz11',q:'简述基础教育课程改革的目标',a:'①改善学生学习方式；②建立与素质教育理念一致的评价与考试制度；③实行三级课程管理制度；④体现课程结构均衡性、综合性和选择性；⑤密切课程内容与生活和时代的联系；⑥实现课程功能的转变。',m:'方平的关节有内功'},
   {id:'jz12',q:'简述新课程结构的内容',a:'①小学以综合课程为主；②初中设置分科与综合相结合的课程；③高中以分科课程为主，设选修课，积极试行学分制；④从小学至高中设置综合实践活动并作为必修课程；⑤农村中学课程为当地社会经济发展服务。',m:'小综高分初结合，一到十二综必修'},
   {id:'jz13',q:'简述新版综合实践活动的内容',a:'①义务教育阶段：侧重跨学科研究性学习、社会实践；②普通高中：包括研究性学习、党团活动、军训、社会考察等。',m:'研党军社'},
-  {id:'jz14',q:'简述影响小学综合实践活动设计的因素',a:'①课程目标（具体化，避免抽象化和纯知识化）；②教师方面（旧有观念、知识结构、活动规划设计能力）；③学生方面（已有经验、兴趣爱好）；④学校教育条件（自然资源、文化资源、物质条件和人力资源）。',m:'学校教师根据目标教育学生'},
+  {id:'jz14',q:'简述影响小学综合实践活动设计的因素',a:'①课程目标：目标设计一定要具体化，避免出现课程目标设计"抽象化"和"纯知识化"的倾向。\n②教师方面：教师旧有的观念、教师的知识结构、教师的活动规划与设计能力。\n③学生方面：学生的已有经验、学生的兴趣爱好。\n④学校的教育条件：学校所处地区的自然资源；学校所处地区的文化资源；学校所处地区的物质条件和人力资源；学校特有的物质条件和学校文化资源。',m:'学校教师根据目标教育学生'},
   {id:'jz15',q:'简述引起无意注意的因素',a:'①客观条件：刺激物的强度、对比性、新异性和运动变化；②主观条件：需要与兴趣、情绪情感状态、个体知识经验、期待等。',m:'对墙心动（客观）'},
   {id:'jz16',q:'简述小学儿童注意的培养',a:'①善于运用无意注意的规律；②善于组织和发展有意注意；③善于运用两种注意相互转换的规律；④避免与控制分心。',m:'注意有无新欢'},
   {id:'jz17',q:'简述观察力的培养',a:'①引导明确观察目的与任务；②充分准备，提出方法，制订计划；③加强个别指导，培养良好观察习惯；④引导记录整理成果，开展讨论交流。',m:'明目准备指导讨论'},
@@ -6432,10 +6432,19 @@ async function ensureJiaozuBank(){
       await dbPut('jiaozu_bank',q);
     }
   }
-  // ensure jz51-jz100 and jz_m* are present (append only if missing)
+  // ensure jz51-jz100 and jz_m* are present, and sync q/a/m changes from JIAOZU_QUESTIONS
   const ids=new Set(all.map(q=>q.id));
+  const dbMap=Object.fromEntries(all.map(q=>[q.id,q]));
   for(const q of JIAOZU_QUESTIONS){
-    if(!ids.has(q.id))await dbPut('jiaozu_bank',q);
+    if(!ids.has(q.id)){
+      await dbPut('jiaozu_bank',q);
+    } else {
+      // 如果题目、答案或口诀有变化，更新内容但保留 status/subject/qtype
+      const existing2=dbMap[q.id];
+      if(existing2.q!==q.q||existing2.a!==q.a||existing2.m!==q.m){
+        await dbPut('jiaozu_bank',{...existing2,q:q.q,a:q.a,m:q.m});
+      }
+    }
   }
   // force-correct subject on jz_m* records (fix legacy S1 mistake)
   const allAfter=await dbAll('jiaozu_bank');
