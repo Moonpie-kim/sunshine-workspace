@@ -16,16 +16,16 @@
   --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px}
 /* Header */
 .hd{background:var(--green);color:#fff;padding:14px 16px 10px;text-align:center}
 .hd h1{font-size:1.15rem;font-weight:700;margin-bottom:2px}
 .hd p{font-size:0.78rem;opacity:.8}
-/* Top tabs */
-.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tb{flex:0 0 auto;padding:11px 16px;border:none;background:none;font-size:0.88rem;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
-.tb.on{color:var(--green);border-bottom-color:var(--green);font-weight:700}
+/* Bottom tabs */
+.tabs{display:flex;background:#fff;border-top:1px solid var(--border);position:fixed;bottom:0;left:0;right:0;z-index:100;padding-bottom:env(safe-area-inset-bottom,0px)}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px 6px;border:none;background:none;font-size:.62rem;color:var(--muted);cursor:pointer;border-top:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tb.on{color:var(--green);border-top-color:var(--green)}
+.tb-icon{font-size:1.25rem;line-height:1}
 /* Pane */
 .pane{display:none;padding:14px;max-width:720px;margin:0 auto}
 .pane.on{display:block}
@@ -152,6 +152,7 @@ td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top;line
 tr:last-child td{border-bottom:none}
 .note{font-size:.78rem;color:var(--muted);line-height:1.5;margin-top:5px}
 @media(max-width:380px){.stats{grid-template-columns:repeat(3,1fr)}.stat-v{font-size:1.35rem}}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 </style>
 </head>
 <body>
@@ -160,10 +161,10 @@ tr:last-child td{border-bottom:none}
   <p>2026.09.16 — 12.16 &nbsp;·&nbsp; 4.5 → 7 &nbsp;·&nbsp; 成功线 6.5</p>
 </div>
 <div class="tabs">
-  <button class="tb on" onclick="goTab('home',this)">🏠 首页</button>
-  <button class="tb" onclick="goTab('week',this)">📆 本周</button>
-  <button class="tb" onclick="goTab('overview',this)">🗺 总览</button>
-  <button class="tb" onclick="goTab('skills',this)">📚 技能</button>
+  <button class="tb on" onclick="goTab('home',this)"><span class="tb-icon">🏠</span>首页</button>
+  <button class="tb" onclick="goTab('week',this)"><span class="tb-icon">📆</span>本周</button>
+  <button class="tb" onclick="goTab('overview',this)"><span class="tb-icon">🗺</span>总览</button>
+  <button class="tb" onclick="goTab('skills',this)"><span class="tb-icon">📚</span>技能</button>
 </div>
 
 <!-- ======= HOME TAB ======= -->
@@ -186,7 +187,8 @@ tr:last-child td{border-bottom:none}
     <div class="stat"><div class="stat-v" id="h-countdown">—</div><div class="stat-l">📅 距考试</div></div>
   </div>
   <div class="card">
-    <div class="card-title"><span>📋</span>今日任务<span id="today-date-label" style="font-size:.78rem;font-weight:400;color:var(--muted);margin-left:6px"></span></div>
+    <div class="card-title"><span>📋</span>今日任务<span id="today-date-label" style="font-size:.78rem;font-weight:400;color:var(--muted);margin-left:6px"></span><span id="today-prog-chip" style="margin-left:auto;font-size:.8rem;font-weight:700;color:var(--green)"></span></div>
+    <div class="bar" style="margin:-4px 0 10px"><div class="bar-fill" id="today-prog-bar" style="width:0%"></div></div>
     <div id="today-tasks-list"></div>
     <div class="vocab-counter" style="margin-top:8px">
       <div>
@@ -224,6 +226,8 @@ tr:last-child td{border-bottom:none}
     <div id="week-review-stars" class="stars" style="margin-bottom:8px"></div>
     <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">自由笔记</div>
     <textarea id="week-review-note" class="week-review-field" placeholder="其他想记录的…" onblur="saveWeekReview('note',this.value)"></textarea>
+    <button onclick="toggleWeekHistory()" style="background:none;border:1px solid var(--border);border-radius:7px;width:100%;padding:7px;font-size:.78rem;color:var(--muted);cursor:pointer;margin-top:2px">📂 查看上周复盘</button>
+    <div id="week-history-panel" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)"></div>
   </div>
 </div>
 
@@ -232,6 +236,11 @@ tr:last-child td{border-bottom:none}
   <div class="card">
     <div class="card-title"><span>🗺</span>3个月总计划 <span class="readonly-badge">只读·基准</span></div>
     <p class="note" style="margin-bottom:10px">所有调整以此为约束基础，不可直接修改。本周调整内容若偏离此计划会触发冲突提示。</p>
+    <div style="margin-bottom:16px">
+      <div class="prog-row"><div class="prog-meta"><span>阶段1 · 筑基（9.16–10.15）</span><span id="op1t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op1" style="width:0%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>阶段2 · 强化（10.16–11.15）</span><span id="op2t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op2" style="width:0%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>阶段3 · 冲刺（11.16–12.16）</span><span id="op3t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op3" style="width:0%"></div></div></div>
+    </div>
     <div class="ov-stage">
       <h3>阶段1 · 筑基期（9.16–10.15）</h3>
       <ul>
@@ -408,6 +417,12 @@ const CONFLICT_KEYS={
   read:['阅读','精读','长难句','拆句','reading'],
   write:['写作','task','Task','作文'],
   speak:['口语','录音','口述','speaking']
+};
+const SKILL_STAGE_TARGETS={
+  listen:{1:18,2:22,3:20},
+  read:{1:30,2:28,3:24},
+  write:{1:8,2:12,3:16},
+  speak:{1:8,2:10,3:12}
 };
 
 // ===== STORAGE =====
@@ -615,6 +630,19 @@ function renderTodayTasks(){
   const done=getTaskDone();
   const dLabel=document.getElementById('today-date-label');
   if(dLabel){const days=['周日','周一','周二','周三','周四','周五','周六'];dLabel.textContent=days[dow];}
+  // progress chip + bar
+  const scheduledTasks=tasks.filter(t=>t.id!=='fri-rv'&&t.id!=='tue-rv');
+  const doneCnt=scheduledTasks.filter(t=>done[today()+'_'+t.id]).length;
+  const totalCnt=scheduledTasks.length;
+  const chip=document.getElementById('today-prog-chip');
+  const bar=document.getElementById('today-prog-bar');
+  if(chip&&totalCnt>0){
+    const allDone=doneCnt===totalCnt;
+    chip.textContent=allDone?'🎉 全部完成！':`${doneCnt}/${totalCnt}`;
+    chip.style.color=allDone?'var(--green)':'var(--muted)';
+    if(bar){bar.style.width=Math.round(doneCnt/totalCnt*100)+'%';bar.style.background=allDone?'var(--green)':'var(--green-light)';}
+    if(allDone) launchConfetti();
+  } else if(chip){chip.textContent='';if(bar)bar.style.width='0%';}
   if(!tasks.length){el.innerHTML='<p class="note">今日无固定任务</p>';return;}
   const activeSlot=getCurrentTimeSlot();
   el.innerHTML=tasks.map(task=>{
@@ -828,8 +856,16 @@ function renderSkills(){
     }
     const progEl=document.getElementById(`sk-${skill}-prog`);
     if(progEl){
-      const total=sc[skill]||0;
-      progEl.innerHTML=`<div style="font-size:1.4rem;font-weight:700;color:var(--${skill})">${total}</div><div class="note">累计完成次数（整个备考期）</div>`;
+      const cnt=sc[skill]||0;
+      const stage=getCurrentStage();
+      const target=(SKILL_STAGE_TARGETS[skill]&&SKILL_STAGE_TARGETS[skill][stage])||20;
+      const pct=Math.min(100,Math.round(cnt/target*100));
+      progEl.innerHTML=`<div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px">
+        <span style="font-weight:700;color:var(--${SKILL_COLORS[skill]});font-size:1.2rem">${cnt}</span>
+        <span style="color:var(--muted)">本阶段目标 ${target} 次</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:${pct}%;background:var(--${SKILL_COLORS[skill]})"></div></div>
+      <div class="note" style="margin-top:4px">已完成 ${pct}%</div>`;
     }
     const revEl=document.getElementById(`sk-${skill}-rev`);
     if(revEl)renderReviewBlock(`sk-${skill}-rev`,t,skill);
@@ -952,6 +988,7 @@ function goTab(name,btn){
   if(btn)btn.classList.add('on');
   if(name==='home'){renderTodayTasks();renderTodayReview();updateStats();}
   if(name==='week'){renderWeek();renderWeekReview();}
+  if(name==='overview')renderOverviewBars();
   if(name==='skills')renderSkills();
 }
 function goSkill(name,btn){
@@ -1045,6 +1082,61 @@ function renderWeekReview(){
 function setWeekStar(n){
   saveWeekReview('stars',n);renderWeekReview();
 }
+
+// ===== CONFETTI =====
+function launchConfetti(){
+  if(sessionStorage.getItem('celebrated_'+today())) return;
+  sessionStorage.setItem('celebrated_'+today(),'1');
+  const colors=['#2d6a4f','#52b788','#2563eb','#ea580c','#7c3aed','#d97706','#f59e0b'];
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden';
+  for(let i=0;i<55;i++){
+    const p=document.createElement('div');
+    const size=Math.random()*8+4;
+    p.style.cssText=`position:absolute;top:-20px;left:${Math.random()*100}%;width:${size}px;height:${size}px;background:${colors[i%colors.length]};border-radius:${Math.random()>.5?'50%':'2px'};animation:confettiFall ${1.2+Math.random()*.9}s ${Math.random()*.9}s ease-in forwards`;
+    wrap.appendChild(p);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(()=>wrap.remove(),2800);
+}
+
+// ===== OVERVIEW BARS =====
+function renderOverviewBars(){
+  const stages=[
+    {s:'2026-09-16',e:'2026-10-15',bar:'op1',txt:'op1t'},
+    {s:'2026-10-16',e:'2026-11-15',bar:'op2',txt:'op2t'},
+    {s:'2026-11-16',e:'2026-12-16',bar:'op3',txt:'op3t'}
+  ];
+  stages.forEach(sg=>{
+    const pct=calcStage(sg.s,sg.e);
+    const b=document.getElementById(sg.bar);const t=document.getElementById(sg.txt);
+    if(b)b.style.width=pct+'%';if(t)t.textContent=pct+'%';
+  });
+}
+
+// ===== WEEK HISTORY =====
+function toggleWeekHistory(){
+  const panel=document.getElementById('week-history-panel');if(!panel)return;
+  if(panel.style.display!=='none'){panel.style.display='none';return;}
+  // find previous week key
+  const allWeekKeys=Object.keys(LS.get('ielts_custom_weeks',{})).sort();
+  const curKey=getWeekKey();
+  const prevKey=allWeekKeys.filter(k=>k<curKey).pop();
+  const rvKey=prevKey?`wr_${prevKey}`:null;
+  const rv=rvKey?LS.get(rvKey,null):null;
+  if(!rv||(!rv.stumble&&!rv.todo&&!rv.note&&!rv.stars)){
+    panel.innerHTML='<p class="note">暂无上周复盘记录</p>';
+  } else {
+    const stars='★'.repeat(rv.stars||0)+'☆'.repeat(5-(rv.stars||0));
+    panel.innerHTML=`<div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:8px">上周复盘</div>
+      ${rv.stars?`<div style="font-size:.9rem;margin-bottom:6px;color:var(--yellow)">${stars}</div>`:''}
+      ${rv.stumble?`<div style="font-size:.75rem;color:var(--muted);margin-bottom:2px">本周卡点</div><div style="font-size:.82rem;background:var(--bg);border-radius:6px;padding:6px 10px;margin-bottom:8px;line-height:1.5">${rv.stumble}</div>`:''}
+      ${rv.todo?`<div style="font-size:.75rem;color:var(--muted);margin-bottom:2px">待解决问题</div><div style="font-size:.82rem;background:var(--bg);border-radius:6px;padding:6px 10px;margin-bottom:8px;line-height:1.5">${rv.todo}</div>`:''}
+      ${rv.note?`<div style="font-size:.75rem;color:var(--muted);margin-bottom:2px">自由笔记</div><div style="font-size:.82rem;background:var(--bg);border-radius:6px;padding:6px 10px;line-height:1.5">${rv.note}</div>`:''}`;
+  }
+  panel.style.display='block';
+}
+
 renderTodayTasks();
 renderTodayReview();
 updateStats();
