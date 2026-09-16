@@ -90,8 +90,13 @@ body{font-family:-apple-system,"SF Pro Text","PingFang SC",sans-serif;background
 /* ── Skill sub-tabs ── */
 .skill-tabs{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:2px}
 .skill-tabs::-webkit-scrollbar{display:none}
-.stb{flex:0 0 auto;padding:7px 16px;border-radius:20px;border:none;font-size:.8rem;cursor:pointer;background:var(--card);color:var(--muted);font-weight:500;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.stb{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 14px 7px;border-radius:14px;border:none;font-size:.7rem;cursor:pointer;
+  background:var(--card);color:var(--muted);font-weight:500;transition:all .2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .stb.on{font-weight:700;box-shadow:none}
+.stb-icon{width:20px;height:20px;display:block}
+.stb-icon svg{width:100%;height:100%}
 .stb-listen.on{background:var(--blue-pale);color:var(--blue)}
 .stb-read.on{background:var(--green-pale);color:var(--green)}
 .stb-write.on{background:var(--orange-pale);color:var(--orange)}
@@ -325,11 +330,26 @@ tr:last-child td{border-bottom:none}
 <!-- ======= SKILLS TAB ======= -->
 <div id="pane-skills" class="pane">
   <div class="skill-tabs">
-    <button class="stb stb-listen on" onclick="goSkill('listen',this)">听力</button>
-    <button class="stb stb-read" onclick="goSkill('read',this)">阅读</button>
-    <button class="stb stb-write" onclick="goSkill('write',this)">写作</button>
-    <button class="stb stb-speak" onclick="goSkill('speak',this)">口语</button>
-    <button class="stb stb-vocab" onclick="goSkill('vocab',this)">词汇</button>
+    <button class="stb stb-listen on" onclick="goSkill('listen',this)">
+      <span class="stb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0118 0"/><rect x="2" y="12" width="3" height="5" rx="1.5"/><rect x="19" y="12" width="3" height="5" rx="1.5"/></svg></span>
+      听力
+    </button>
+    <button class="stb stb-read" onclick="goSkill('read',this)">
+      <span class="stb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"/><line x1="14.5" y1="14.5" x2="21" y2="21"/></svg></span>
+      阅读
+    </button>
+    <button class="stb stb-write" onclick="goSkill('write',this)">
+      <span class="stb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+      写作
+    </button>
+    <button class="stb stb-speak" onclick="goSkill('speak',this)">
+      <span class="stb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+      口语
+    </button>
+    <button class="stb stb-vocab" onclick="goSkill('vocab',this)">
+      <span class="stb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="13" height="16" rx="2"/><rect x="3" y="3" width="13" height="16" rx="2"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="11.5" x2="11" y2="11.5"/></svg></span>
+      词汇
+    </button>
   </div>
   <div id="skill-listen" class="skill-pane on">
     <div class="card"><div class="card-title">听力 — 今日任务</div><div id="sk-listen-today"></div></div>
