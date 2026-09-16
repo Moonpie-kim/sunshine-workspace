@@ -110,7 +110,18 @@ body{font-family:-apple-system,"SF Pro Text","PingFang SC",sans-serif;background
 .stb-vocab.on{background:var(--yellow-pale);color:var(--yellow)}
 .skill-pane{display:none}.skill-pane.on{display:block}
 
-/* ── Week grid ── */
+/* ── Week edit mode ── */
+.week-edit-toggle{font-size:.75rem;font-weight:600;padding:5px 12px;border-radius:20px;border:none;cursor:pointer;transition:all .18s;margin-left:auto}
+.week-edit-toggle.view-mode{background:var(--bg);color:var(--muted)}
+.week-edit-toggle.edit-mode{background:var(--green);color:#fff}
+.week-edit-mode-bar{display:none;background:var(--orange-pale);border-radius:10px;padding:7px 12px;margin-bottom:10px;font-size:.76rem;color:var(--orange);font-weight:600}
+.week-edit-mode-bar.on{display:block}
+.task-inline-edit{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0}
+.task-inline-input{border:1.5px solid var(--border);border-radius:8px;padding:6px 9px;font-size:.8rem;font-family:inherit;background:#fff;color:var(--text);width:100%}
+.task-inline-input:focus{outline:none;border-color:var(--green-light)}
+.task-dur-input{width:80px}
+.task-del-btn{background:none;border:1px solid var(--red);border-radius:6px;padding:3px 8px;font-size:.72rem;color:var(--red);cursor:pointer;flex-shrink:0;white-space:nowrap}
+
 .week-grid{display:flex;flex-direction:column;gap:8px}
 .week-row{background:var(--card);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow)}
 .week-day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -268,8 +279,9 @@ tr:last-child td{border-bottom:none}
 <div id="pane-week" class="pane">
   <div class="card">
     <div class="card-title">本周任务总览
-      <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:4px">点击铅笔可调整</span>
+      <button id="week-edit-btn" class="week-edit-toggle view-mode" onclick="toggleWeekEditMode()">编辑</button>
     </div>
+    <div id="week-edit-mode-bar" class="week-edit-mode-bar">编辑模式 · 修改后点击保存生效，删除不可撤销</div>
     <div class="week-grid" id="week-grid"></div>
   </div>
   <p class="note" style="padding:0 4px">调整任务后系统自动检测与总计划的冲突。<strong>每周一 00:00 自动刷新</strong>本周任务为基础计划，上周调整不延续。</p>
@@ -449,7 +461,7 @@ tr:last-child td{border-bottom:none}
   <div class="edit-modal">
     <h3>调整任务</h3>
     <input class="edit-input" id="edit-name" placeholder="任务描述" />
-    <input class="edit-input" id="edit-duration" placeholder="时长（如 90min）" />
+    <input class="edit-input" id="edit-duration" placeholder="时长（如 90 或 90min）" onblur="this.value=normalizeDur(this.value.trim())" />
     <div style="display:flex;gap:8px;margin-top:4px">
       <button class="ebtn ebtn-save" onclick="saveEdit()">保存</button>
       <button class="ebtn ebtn-cancel" onclick="closeEdit()">取消</button>
@@ -600,8 +612,9 @@ function getTasksForDow(dow){
   // apply customizations to base tasks
   const result=base.map(t=>{
     const c=custom[t.id];
+    if(c&&c.deleted) return null; // deleted this week
     return c?{...t,...c,customized:true}:t;
-  });
+  }).filter(Boolean);
   // append added tasks for this dow
   Object.entries(custom).forEach(([id,v])=>{
     if(id.startsWith(`custom-${dow}-`)&&v.added) result.push({...v,id});
@@ -773,19 +786,74 @@ function toggleTask(taskId,dateStr){
   renderTodayTasks();renderWeek();updateStats();renderSkills();
 }
 
+// ===== WEEK EDIT MODE =====
+let weekEditMode=false;
+function toggleWeekEditMode(){
+  // save all inline edits before toggling
+  if(weekEditMode) commitInlineEdits();
+  weekEditMode=!weekEditMode;
+  const btn=document.getElementById('week-edit-btn');
+  const bar=document.getElementById('week-edit-mode-bar');
+  if(btn){btn.textContent=weekEditMode?'保存':'编辑';btn.className='week-edit-toggle '+(weekEditMode?'edit-mode':'view-mode');}
+  if(bar){bar.classList.toggle('on',weekEditMode);}
+  renderWeek();
+}
+function commitInlineEdits(){
+  // collect all visible inline inputs and persist
+  document.querySelectorAll('.task-inline-input[data-taskid]').forEach(inp=>{
+    const taskId=inp.dataset.taskid;
+    const dow=parseInt(inp.dataset.dow);
+    if(!taskId||isNaN(dow)) return;
+    const row=inp.closest('.week-inline-row');if(!row)return;
+    const nameEl=row.querySelector('.task-inline-name');
+    const durEl=row.querySelector('.task-inline-dur');
+    if(!nameEl||!durEl) return;
+    const name=nameEl.value.trim();
+    const dur=normalizeDur(durEl.value.trim());
+    if(!name) return;
+    applyEdit(taskId,dow,name,dur);
+  });
+}
+function normalizeDur(val){
+  if(!val) return val;
+  // pure number → append min
+  if(/^\d+$/.test(val)) return val+'min';
+  return val;
+}
+function deleteTask(taskId,dow){
+  const custom=getCustom();
+  // if it's a custom-added task, just remove it
+  if(taskId.startsWith('custom-')){
+    delete custom[taskId];
+  } else {
+    // mark base task as deleted for this week
+    custom[taskId]={deleted:true};
+  }
+  saveCustom(custom);
+  renderTodayTasks();renderWeek();renderSkills();updateStats();
+}
+
 // ===== RENDER: WEEK =====
 function taskRow(t, dateStr, thisDow, done){
   const key=dateStr+'_'+t.id;const checked=done[key];
   const skColors={listen:'blue',read:'green',write:'orange',speak:'purple',vocab:'yellow'};
   const sk=t.skills&&t.skills[0];const col=skColors[sk]||'muted';
+  if(weekEditMode){
+    return `<div class="week-inline-row" style="display:flex;align-items:flex-start;gap:7px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <div style="width:7px;height:7px;border-radius:50%;background:var(--${col});flex-shrink:0;margin-top:10px"></div>
+      <div class="task-inline-edit">
+        <input class="task-inline-input task-inline-name" data-taskid="${t.id}" data-dow="${thisDow}" value="${t.name.replace(/"/g,'&quot;')}" placeholder="任务名称" onblur="autoSaveInline(this)">
+        <input class="task-inline-input task-inline-dur" style="width:90px" data-taskid="${t.id}" data-dow="${thisDow}" value="${t.dur}" placeholder="时长" onblur="onDurBlur(this)">
+      </div>
+      <button class="task-del-btn" onclick="deleteTask('${t.id}',${thisDow})">删除</button>
+    </div>`;
+  }
   return `<div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border)">
     <div style="width:7px;height:7px;border-radius:50%;background:var(--${col});flex-shrink:0;margin-top:2px"></div>
     <div style="flex:1;min-width:0">
       <div style="font-size:.8rem;${checked?'text-decoration:line-through;opacity:.5':''}line-height:1.4">${t.name}${t.customized?'<span style="font-size:.68rem;color:var(--orange);margin-left:3px">调整</span>':t.added?'<span style="font-size:.68rem;color:var(--blue);margin-left:3px">新增</span>':''}</div>
       <div style="font-size:.72rem;color:var(--muted)">${t.dur}</div>
     </div>
-    <button onclick="openEdit('${t.id}',${thisDow})" style="background:none;border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:.72rem;color:var(--muted);cursor:pointer;flex-shrink:0">✏️</button>
-    ${t.added?`<button onclick="removeCustomTask('${t.id}',${thisDow})" style="background:none;border:1px solid #fee2e2;border-radius:5px;padding:2px 6px;font-size:.72rem;color:var(--red);cursor:pointer;flex-shrink:0">✕</button>`:''}
   </div>`;
 }
 function renderWeek(){
@@ -801,7 +869,7 @@ function renderWeek(){
     const thisDow=d.getDay();
     const dateStr=toKey(d.getFullYear(),d.getMonth()+1,d.getDate());
     const isToday=dateStr===today();
-    const tasks=getTasksForDow(thisDow);
+    const tasks=getTasksForDow(thisDow).filter(t=>!t.deleted);
     const workTasks=tasks.filter(t=>t.slot==='work');
     const eveTasks=tasks.filter(t=>t.slot==='eve'||!t.slot);
     const slotSection=(label,color,slotTasks)=>{
@@ -816,7 +884,6 @@ function renderWeek(){
     const doneDayTasks=scheduledTasks.filter(t=>done[dateStr+'_'+t.id]);
     let dayStatusDot='';
     const isPast=dateStr<today();
-    const isFuture=dateStr>today();
     if(!scheduledTasks.length){dayStatusDot='';}
     else if(doneDayTasks.length===scheduledTasks.length){
       dayStatusDot=`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:var(--green);background:var(--green-pale);border-radius:20px;padding:2px 8px;margin-left:6px">全部完成</span>`;
@@ -825,15 +892,16 @@ function renderWeek(){
     } else if(isPast){
       dayStatusDot=`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:var(--muted);background:var(--bg);border-radius:20px;padding:2px 8px;margin-left:6px">未打卡</span>`;
     }
+    const addBtn=weekEditMode?`<button onclick="openAddTask(${thisDow},'${dateStr}')" style="margin-top:6px;background:none;border:1px dashed var(--border);border-radius:6px;width:100%;padding:5px;font-size:.75rem;color:var(--muted);cursor:pointer">＋ 新增任务</button>`:'';
     html+=`<div class="week-row">
       <div class="week-day-head" style="margin-bottom:4px">
-        <span class="week-day-label${isToday?' today-label':''}">${days[thisDow]} <span style="font-weight:400;font-size:.78rem">${d.getMonth()+1}/${d.getDate()}</span>${isToday?'<span style="font-size:.72rem;color:var(--green);margin-left:4px">今天</span>':''}${dayStatusDot}</span>
+        <span class="week-day-label${isToday?' today-label':''}">${days[thisDow]} <span style="font-weight:400;font-size:.78rem">${d.getMonth()+1}/${d.getDate()}</span>${isToday?'<span style="font-size:.72rem;color:var(--green);margin-left:4px">今天</span>':''}${!weekEditMode?dayStatusDot:''}</span>
         ${thisDow===6?`<span style="font-size:.7rem;color:var(--muted)">阶段${getCurrentStage()}</span>`:''}
       </div>
       ${slotSection('白天','var(--blue)',workTasks)}
       ${slotSection('晚间','var(--green)',eveTasks)}
       ${!workTasks.length&&!eveTasks.length?'<div style="font-size:.75rem;color:var(--muted);padding:4px 0">无固定任务</div>':''}
-      <button onclick="openAddTask(${thisDow},'${dateStr}')" style="margin-top:6px;background:none;border:1px dashed var(--border);border-radius:6px;width:100%;padding:5px;font-size:.75rem;color:var(--muted);cursor:pointer">＋ 新增任务</button>
+      ${addBtn}
     </div>`;
   }
   el.innerHTML=html;
@@ -1076,7 +1144,26 @@ function applyEdit(taskId,dow,name,dur){
 }
 // openWeekEdit removed — each task row has its own edit button
 
-// ===== WEEK TAB JUMP =====
+function autoSaveInline(inp){
+  const taskId=inp.dataset.taskid;
+  const dow=parseInt(inp.dataset.dow);
+  if(!taskId||isNaN(dow)) return;
+  const row=inp.closest('.week-inline-row');if(!row)return;
+  const nameEl=row.querySelector('.task-inline-name');
+  const durEl=row.querySelector('.task-inline-dur');
+  if(!nameEl||!durEl) return;
+  const name=nameEl.value.trim();
+  const dur=normalizeDur(durEl.value.trim());
+  if(!name) return;
+  if(dur!==durEl.value) durEl.value=dur;
+  applyEdit(taskId,dow,name,dur);
+}
+function onDurBlur(inp){
+  inp.value=normalizeDur(inp.value.trim());
+  autoSaveInline(inp);
+}
+
+
 function goToWeekTab(){
   const btn=document.querySelector('.tb:nth-child(2)');
   goTab('week',btn);
@@ -1085,6 +1172,15 @@ function goToWeekTab(){
 
 // ===== TAB NAVIGATION =====
 function goTab(name,btn){
+  // auto-save and exit edit mode when leaving week tab
+  if(weekEditMode&&name!=='week'){
+    commitInlineEdits();
+    weekEditMode=false;
+    const eb=document.getElementById('week-edit-btn');
+    const bar=document.getElementById('week-edit-mode-bar');
+    if(eb){eb.textContent='编辑';eb.className='week-edit-toggle view-mode';}
+    if(bar)bar.classList.remove('on');
+  }
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
   const pane=document.getElementById('pane-'+name);
