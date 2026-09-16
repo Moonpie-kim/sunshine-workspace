@@ -28,22 +28,22 @@ body{font-family:-apple-system,"SF Pro Text","PingFang SC",sans-serif;background
 .hd p{font-size:.75rem;opacity:.75;letter-spacing:.02em}
 
 /* ── Bottom Tab Bar ── */
-.tabs{display:flex;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-top:0.5px solid rgba(0,0,0,.12);
+.tabs{display:flex;background:rgba(255,255,255,.95);backdrop-filter:saturate(180%) blur(24px);
+  -webkit-backdrop-filter:saturate(180%) blur(24px);
+  border-top:0.5px solid rgba(0,0,0,.1);
   position:fixed;bottom:0;left:0;right:0;z-index:200;
   height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
   padding-bottom:env(safe-area-inset-bottom,0px)}
 .tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;padding:8px 4px 4px;border:none;background:none;
-  font-size:.62rem;font-weight:500;color:var(--muted);cursor:pointer;
-  transition:color .15s;letter-spacing:.01em;position:relative}
-.tb.on{color:var(--green)}
-.tb-icon{font-size:1.35rem;line-height:1;transition:transform .15s}
-.tb.on .tb-icon{transform:scale(1.08)}
-/* active dot */
-.tb.on::after{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);
-  width:20px;height:3px;border-radius:2px;background:var(--green)}
+  gap:4px;padding:10px 4px 6px;border:none;background:none;
+  font-size:.68rem;font-weight:500;color:#aaa;cursor:pointer;
+  transition:color .15s;letter-spacing:.02em;position:relative}
+.tb.on{color:var(--green);font-weight:600}
+.tb-icon{display:none}
+/* SVG-style icon via text, hidden — labels only */
+.tb::before{content:'';display:block;width:24px;height:2px;border-radius:1px;
+  background:transparent;margin-bottom:2px;transition:background .15s}
+.tb.on::before{background:var(--green)}
 
 /* ── Pane ── */
 .pane{display:none;padding:14px 16px;max-width:430px;margin:0 auto}
@@ -182,10 +182,10 @@ tr:last-child td{border-bottom:none}
   <p>2026.09.16 — 12.16 &nbsp;·&nbsp; 4.5 → 7 &nbsp;·&nbsp; 成功线 6.5</p>
 </div>
 <div class="tabs">
-  <button class="tb on" onclick="goTab('home',this)"><span class="tb-icon">🏠</span>首页</button>
-  <button class="tb" onclick="goTab('week',this)"><span class="tb-icon">📆</span>本周</button>
-  <button class="tb" onclick="goTab('overview',this)"><span class="tb-icon">🗺</span>总览</button>
-  <button class="tb" onclick="goTab('skills',this)"><span class="tb-icon">📚</span>技能</button>
+  <button class="tb on" onclick="goTab('home',this)">首页</button>
+  <button class="tb" onclick="goTab('week',this)">本周</button>
+  <button class="tb" onclick="goTab('overview',this)">总览</button>
+  <button class="tb" onclick="goTab('skills',this)">技能</button>
 </div>
 
 <!-- ======= HOME TAB ======= -->
@@ -195,20 +195,20 @@ tr:last-child td{border-bottom:none}
     <p id="stage-transition-body"></p>
   </div>
   <div id="streak-warn-banner" class="streak-warn" style="display:none">
-    <div class="streak-warn-icon">⚠️</div>
+    <div class="streak-warn-icon" style="font-size:.9rem;font-weight:700;color:#92400e;background:#fbbf24;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">!</div>
     <div class="streak-warn-text"><h4 id="streak-warn-title"></h4><p id="streak-warn-body"></p></div>
   </div>
   <div id="milestone-banner" class="milestone" style="display:none">
-    <div class="milestone-icon">🎉</div>
+    <div class="milestone-icon" style="font-size:1.6rem;line-height:1"></div>
     <div class="milestone-text"><h4 id="milestone-title"></h4><p id="milestone-sub"></p></div>
   </div>
   <div class="stats">
-    <div class="stat"><div class="stat-v" id="h-streak">0</div><div class="stat-l">🔥 连续天</div></div>
-    <div class="stat"><div class="stat-v" id="h-rate">0%</div><div class="stat-l">✅ 完成率</div></div>
-    <div class="stat"><div class="stat-v" id="h-countdown">—</div><div class="stat-l">📅 距考试</div></div>
+    <div class="stat"><div class="stat-v" id="h-streak">0</div><div class="stat-l">连续天</div></div>
+    <div class="stat"><div class="stat-v" id="h-rate">0%</div><div class="stat-l">完成率</div></div>
+    <div class="stat"><div class="stat-v" id="h-countdown">—</div><div class="stat-l">距考试</div></div>
   </div>
   <div class="card">
-    <div class="card-title"><span>📋</span>今日任务<span id="today-date-label" style="font-size:.78rem;font-weight:400;color:var(--muted);margin-left:6px"></span><span id="today-prog-chip" style="margin-left:auto;font-size:.8rem;font-weight:700;color:var(--green)"></span></div>
+    <div class="card-title">今日任务<span id="today-date-label" style="font-size:.78rem;font-weight:400;color:var(--muted);margin-left:6px"></span><span id="today-prog-chip" style="margin-left:auto;font-size:.8rem;font-weight:700;color:var(--green)"></span></div>
     <div class="bar" style="margin:-4px 0 10px"><div class="bar-fill" id="today-prog-bar" style="width:0%"></div></div>
     <div id="today-tasks-list"></div>
     <div class="vocab-counter" style="margin-top:8px">
@@ -223,7 +223,7 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
   <div class="card">
-    <div class="card-title"><span>✏️</span>今日复盘</div>
+    <div class="card-title">今日复盘</div>
     <div id="today-review-home"></div>
   </div>
 </div>
@@ -231,14 +231,14 @@ tr:last-child td{border-bottom:none}
 <!-- ======= WEEK TAB ======= -->
 <div id="pane-week" class="pane">
   <div class="card">
-    <div class="card-title"><span>📆</span>本周任务总览
+    <div class="card-title">本周任务总览
       <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:4px">点击铅笔可调整</span>
     </div>
     <div class="week-grid" id="week-grid"></div>
   </div>
   <p class="note" style="padding:0 4px">调整任务后系统自动检测与总计划的冲突。<strong>每周一 00:00 自动刷新</strong>本周任务为基础计划，上周调整不延续。</p>
   <div class="card" style="margin-top:4px">
-    <div class="card-title"><span>📝</span>本周复盘</div>
+    <div class="card-title">本周复盘</div>
     <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">本周卡点</div>
     <textarea id="week-review-stumble" class="week-review-field" placeholder="哪些地方没弄懂？哪个题型最难？" onblur="saveWeekReview('stumble',this.value)"></textarea>
     <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">待解决问题</div>
@@ -247,7 +247,7 @@ tr:last-child td{border-bottom:none}
     <div id="week-review-stars" class="stars" style="margin-bottom:8px"></div>
     <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">自由笔记</div>
     <textarea id="week-review-note" class="week-review-field" placeholder="其他想记录的…" onblur="saveWeekReview('note',this.value)"></textarea>
-    <button onclick="toggleWeekHistory()" style="background:none;border:1px solid var(--border);border-radius:7px;width:100%;padding:7px;font-size:.78rem;color:var(--muted);cursor:pointer;margin-top:2px">📂 查看上周复盘</button>
+    <button onclick="toggleWeekHistory()" style="background:none;border:1px solid var(--border);border-radius:7px;width:100%;padding:7px;font-size:.78rem;color:var(--muted);cursor:pointer;margin-top:2px">查看上周复盘</button>
     <div id="week-history-panel" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)"></div>
   </div>
 </div>
@@ -255,7 +255,7 @@ tr:last-child td{border-bottom:none}
 <!-- ======= OVERVIEW TAB ======= -->
 <div id="pane-overview" class="pane">
   <div class="card">
-    <div class="card-title"><span>🗺</span>3个月总计划 <span class="readonly-badge">只读·基准</span></div>
+    <div class="card-title">3个月总计划 <span class="readonly-badge">只读·基准</span></div>
     <p class="note" style="margin-bottom:10px">所有调整以此为约束基础，不可直接修改。本周调整内容若偏离此计划会触发冲突提示。</p>
     <div style="margin-bottom:16px">
       <div class="prog-row"><div class="prog-meta"><span>阶段1 · 筑基（9.16–10.15）</span><span id="op1t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op1" style="width:0%"></div></div></div>
@@ -313,39 +313,39 @@ tr:last-child td{border-bottom:none}
 <!-- ======= SKILLS TAB ======= -->
 <div id="pane-skills" class="pane">
   <div class="skill-tabs">
-    <button class="stb stb-listen on" onclick="goSkill('listen',this)">🎧 听力</button>
-    <button class="stb stb-read" onclick="goSkill('read',this)">📖 阅读</button>
-    <button class="stb stb-write" onclick="goSkill('write',this)">✍️ 写作</button>
-    <button class="stb stb-speak" onclick="goSkill('speak',this)">🗣 口语</button>
-    <button class="stb stb-vocab" onclick="goSkill('vocab',this)">📝 词汇</button>
+    <button class="stb stb-listen on" onclick="goSkill('listen',this)">听力</button>
+    <button class="stb stb-read" onclick="goSkill('read',this)">阅读</button>
+    <button class="stb stb-write" onclick="goSkill('write',this)">写作</button>
+    <button class="stb stb-speak" onclick="goSkill('speak',this)">口语</button>
+    <button class="stb stb-vocab" onclick="goSkill('vocab',this)">词汇</button>
   </div>
   <div id="skill-listen" class="skill-pane on">
-    <div class="card"><div class="card-title"><span>🎧</span>听力 — 今日任务</div><div id="sk-listen-today"></div></div>
-    <div class="card"><div class="card-title"><span>📅</span>本周听力计划</div><div id="sk-listen-week"></div></div>
-    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-listen-prog"></div></div>
-    <div class="card"><div class="card-title"><span>✏️</span>听力复盘</div><div id="sk-listen-rev"></div></div>
+    <div class="card"><div class="card-title">听力 — 今日任务</div><div id="sk-listen-today"></div></div>
+    <div class="card"><div class="card-title">本周听力计划</div><div id="sk-listen-week"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-listen-prog"></div></div>
+    <div class="card"><div class="card-title">听力复盘</div><div id="sk-listen-rev"></div></div>
   </div>
   <div id="skill-read" class="skill-pane">
-    <div class="card"><div class="card-title"><span>📖</span>阅读 — 今日任务</div><div id="sk-read-today"></div></div>
-    <div class="card"><div class="card-title"><span>📅</span>本周阅读计划</div><div id="sk-read-week"></div></div>
-    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-read-prog"></div></div>
-    <div class="card"><div class="card-title"><span>✏️</span>阅读复盘</div><div id="sk-read-rev"></div></div>
+    <div class="card"><div class="card-title">阅读 — 今日任务</div><div id="sk-read-today"></div></div>
+    <div class="card"><div class="card-title">本周阅读计划</div><div id="sk-read-week"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-read-prog"></div></div>
+    <div class="card"><div class="card-title">阅读复盘</div><div id="sk-read-rev"></div></div>
   </div>
   <div id="skill-write" class="skill-pane">
-    <div class="card"><div class="card-title"><span>✍️</span>写作 — 今日任务</div><div id="sk-write-today"></div></div>
-    <div class="card"><div class="card-title"><span>📅</span>本周写作计划</div><div id="sk-write-week"></div></div>
-    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-write-prog"></div></div>
-    <div class="card"><div class="card-title"><span>✏️</span>写作复盘</div><div id="sk-write-rev"></div></div>
+    <div class="card"><div class="card-title">写作 — 今日任务</div><div id="sk-write-today"></div></div>
+    <div class="card"><div class="card-title">本周写作计划</div><div id="sk-write-week"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-write-prog"></div></div>
+    <div class="card"><div class="card-title">写作复盘</div><div id="sk-write-rev"></div></div>
   </div>
   <div id="skill-speak" class="skill-pane">
-    <div class="card"><div class="card-title"><span>🗣</span>口语 — 今日任务</div><div id="sk-speak-today"></div></div>
-    <div class="card"><div class="card-title"><span>📅</span>本周口语计划</div><div id="sk-speak-week"></div></div>
-    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-speak-prog"></div></div>
-    <div class="card"><div class="card-title"><span>✏️</span>口语复盘</div><div id="sk-speak-rev"></div></div>
+    <div class="card"><div class="card-title">口语 — 今日任务</div><div id="sk-speak-today"></div></div>
+    <div class="card"><div class="card-title">本周口语计划</div><div id="sk-speak-week"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-speak-prog"></div></div>
+    <div class="card"><div class="card-title">口语复盘</div><div id="sk-speak-rev"></div></div>
   </div>
   <div id="skill-vocab" class="skill-pane">
     <div class="card">
-      <div class="card-title"><span>📝</span>词汇 — 今日进度</div>
+      <div class="card-title">词汇 — 今日进度</div>
       <div class="vocab-counter">
         <div>
           <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日新词</div>
@@ -357,18 +357,18 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
     </div>
-    <div class="card"><div class="card-title"><span>📊</span>词汇累计</div><div id="vocab-stats"></div></div>
-    <div class="card"><div class="card-title"><span>✏️</span>词汇收进小记</div><div id="sk-vocab-rev"></div></div>
+    <div class="card"><div class="card-title">词汇累计</div><div id="vocab-stats"></div></div>
+    <div class="card"><div class="card-title">词汇收进小记</div><div id="sk-vocab-rev"></div></div>
   </div>
 </div>
 
 <!-- Conflict modal -->
 <div class="overlay" id="conflict-overlay" style="display:none">
   <div class="modal">
-    <h3>⚠️ 任务冲突检测</h3>
+    <h3>任务冲突检测</h3>
     <p id="conflict-msg"></p>
     <div class="modal-btns">
-      <button class="mbtn mbtn-keep" onclick="resolveConflict('keep')">✅ 保留修改，同时学两遍（加强）</button>
+      <button class="mbtn mbtn-keep" onclick="resolveConflict('keep')">保留修改，同时学两遍（加强）</button>
       <button class="mbtn mbtn-replace" onclick="resolveConflict('replace')">🔄 替换原任务为调整内容</button>
       <button class="mbtn mbtn-cancel" onclick="resolveConflict('cancel')">↩ 取消本次修改</button>
     </div>
@@ -378,7 +378,7 @@ tr:last-child td{border-bottom:none}
 <!-- Edit modal -->
 <div class="overlay" id="edit-overlay" style="display:none">
   <div class="edit-modal">
-    <h3>✏️ 调整任务</h3>
+    <h3>调整任务</h3>
     <input class="edit-input" id="edit-name" placeholder="任务描述" />
     <input class="edit-input" id="edit-duration" placeholder="时长（如 90min）" />
     <div style="display:flex;gap:8px;margin-top:4px">
@@ -615,8 +615,8 @@ function calcCountdown(){
 function checkMilestone(streak){
   if(streak===7) return{title:'连续坚持7天！',sub:'第一周完成，状态很稳定 💪'};
   if(streak===14) return{title:'两周不间断！',sub:'习惯已经在形成了 🌱'};
-  if(streak===30) return{title:'一个月连续打卡！',sub:'你的英语在悄悄变好 🚀'};
-  if(streak===60) return{title:'两个月不停歇！',sub:'冲刺阶段，终点不远了 🔥'};
+  if(streak===30) return{title:'一个月连续打卡！',sub:'你的英语在悄悄变好'};
+  if(streak===60) return{title:'两个月不停歇！',sub:'冲刺阶段，终点不远了'};
   return null;
 }
 
@@ -659,7 +659,7 @@ function renderTodayTasks(){
   const bar=document.getElementById('today-prog-bar');
   if(chip&&totalCnt>0){
     const allDone=doneCnt===totalCnt;
-    chip.textContent=allDone?'🎉 全部完成！':`${doneCnt}/${totalCnt}`;
+    chip.textContent=allDone?'全部完成':`${doneCnt}/${totalCnt}`;
     chip.style.color=allDone?'var(--green)':'var(--muted)';
     if(bar){bar.style.width=Math.round(doneCnt/totalCnt*100)+'%';bar.style.background=allDone?'var(--green)':'var(--green-light)';}
     if(allDone) launchConfetti();
@@ -1061,9 +1061,9 @@ function checkStageTransition(){
   const banner=document.getElementById('stage-transition-banner');
   if(!banner) return;
   const transitions=[
-    {date:'2026-10-16',stage:2,title:'🚀 阶段2 开始：题型强化期',body:'筑基完成！接下来进入题型专项训练。B站课程：黄舒音→Vince9120→莱斯莉。重点：每科题型方法 + 限时练习。'},
-    {date:'2026-11-16',stage:3,title:'🔥 阶段3 开始：全真冲刺期',body:'最后30天！每周全真四科模考 + 全套复盘。稳住节奏，状态比技巧更重要。'},
-    {date:'2026-09-16',stage:1,title:'✨ 备考正式开始！',body:'90天计划启动。第一阶段目标：建立每日学习节奏，扎实词汇和阅读基础。加油！'}
+    {date:'2026-10-16',stage:2,title:'阶段2 · 题型强化期',body:'筑基完成！接下来进入题型专项训练。B站课程：黄舒音→Vince9120→莱斯莉。重点：每科题型方法 + 限时练习。'},
+    {date:'2026-11-16',stage:3,title:'阶段3 · 全真冲刺期',body:'最后30天！每周全真四科模考 + 全套复盘。稳住节奏，状态比技巧更重要。'},
+    {date:'2026-09-16',stage:1,title:'备考正式开始',body:'90天计划启动。第一阶段目标：建立每日学习节奏，扎实词汇和阅读基础。加油！'}
   ];
   const hit=transitions.find(tr=>tr.date===t);
   if(hit){
