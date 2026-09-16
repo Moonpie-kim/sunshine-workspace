@@ -22,10 +22,10 @@ html{-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,"SF Pro Text","PingFang SC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 8px)}
 
 /* ── Header ── */
-.hd{background:linear-gradient(160deg,var(--green) 0%,var(--green-mid) 100%);color:#fff;
+.hd{background:#1c1c1e;color:#fff;
   padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 14px;text-align:center}
 .hd h1{font-size:1.1rem;font-weight:700;letter-spacing:.01em;margin-bottom:3px}
-.hd p{font-size:.75rem;opacity:.75;letter-spacing:.02em}
+.hd p{font-size:.78rem;opacity:.5;letter-spacing:.04em}
 
 /* ── Bottom Tab Bar ── */
 .tabs{display:flex;background:rgba(255,255,255,.95);backdrop-filter:saturate(180%) blur(24px);
@@ -184,7 +184,7 @@ tr:last-child td{border-bottom:none}
 <body>
 <div class="hd">
   <h1>雅思备考 · 学习工作台</h1>
-  <p>2026.09.16 — 12.16 &nbsp;·&nbsp; 4.5 → 7 &nbsp;·&nbsp; 成功线 6.5</p>
+  <p>目标 4.5 → 7 &nbsp;·&nbsp; 成功线 6.5</p>
 </div>
 <div class="tabs">
   <button class="tb on" onclick="goTab('home',this)">
@@ -207,10 +207,6 @@ tr:last-child td{border-bottom:none}
 
 <!-- ======= HOME TAB ======= -->
 <div id="pane-home" class="pane on">
-  <div id="stage-transition-banner" class="stage-transition" style="display:none">
-    <h4 id="stage-transition-title"></h4>
-    <p id="stage-transition-body"></p>
-  </div>
   <div id="streak-warn-banner" class="streak-warn" style="display:none">
     <div class="streak-warn-icon" style="font-size:.9rem;font-weight:700;color:#92400e;background:#fbbf24;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">!</div>
     <div class="streak-warn-text"><h4 id="streak-warn-title"></h4><p id="streak-warn-body"></p></div>
@@ -668,7 +664,6 @@ function updateStats(){
     } else {banner.style.display='none';}
   }
   checkStreakWarning();
-  checkStageTransition();
 }
 
 // ===== RENDER: TODAY TASKS =====
@@ -1087,25 +1082,6 @@ function checkStreakWarning(){
   }
 }
 
-// ===== STAGE TRANSITION CHECK =====
-function checkStageTransition(){
-  const t=today();
-  const banner=document.getElementById('stage-transition-banner');
-  if(!banner) return;
-  const transitions=[
-    {date:'2026-10-16',stage:2,title:'阶段2 · 题型强化期',body:'筑基完成！接下来进入题型专项训练。B站课程：黄舒音→Vince9120→莱斯莉。重点：每科题型方法 + 限时练习。'},
-    {date:'2026-11-16',stage:3,title:'阶段3 · 全真冲刺期',body:'最后30天！每周全真四科模考 + 全套复盘。稳住节奏，状态比技巧更重要。'},
-    {date:'2026-09-16',stage:1,title:'备考正式开始',body:'90天计划启动。第一阶段目标：建立每日学习节奏，扎实词汇和阅读基础。加油！'}
-  ];
-  const hit=transitions.find(tr=>tr.date===t);
-  if(hit){
-    document.getElementById('stage-transition-title').textContent=hit.title;
-    document.getElementById('stage-transition-body').textContent=hit.body;
-    banner.style.display='block';
-  } else {
-    banner.style.display='none';
-  }
-}
 
 // ===== WEEK REVIEW =====
 function getWeekReviewKey(){return 'wr_'+getWeekKey();}
