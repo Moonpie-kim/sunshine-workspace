@@ -62,19 +62,6 @@ body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;backgr
 .prog-meta{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px}
 .bar{height:7px;background:var(--green-pale);border-radius:4px;overflow:hidden}
 .bar-fill{height:100%;background:var(--green-light);border-radius:4px;transition:width .4s}
-/* Calendar */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.cal-nav button{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 11px;cursor:pointer;font-size:1rem;color:var(--text)}
-.cal-nav button:disabled{opacity:.25;cursor:not-allowed}
-.cal-title{font-weight:600;font-size:.95rem}
-.cal-wdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:.72rem;color:var(--muted);margin-bottom:4px}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:.78rem;cursor:pointer;border:2px solid transparent;transition:all .15s;user-select:none}
-.day:hover:not(.off):not(.future){border-color:var(--green-light)}
-.day.checked{background:var(--green);color:#fff;border-color:var(--green)}
-.day.today:not(.checked){border-color:var(--green);font-weight:700;color:var(--green)}
-.day.off,.day.future{color:#ccc;cursor:default}
-.day.empty{cursor:default}
 /* Week grid */
 .week-grid{display:flex;flex-direction:column;gap:6px}
 .week-row{background:var(--card);border-radius:10px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
@@ -177,7 +164,6 @@ tr:last-child td{border-bottom:none}
   <button class="tb" onclick="goTab('week',this)">📆 本周</button>
   <button class="tb" onclick="goTab('overview',this)">🗺 总览</button>
   <button class="tb" onclick="goTab('skills',this)">📚 技能</button>
-  <button class="tb" onclick="goTab('checkin',this)">📅 打卡</button>
 </div>
 
 <!-- ======= HOME TAB ======= -->
@@ -343,27 +329,6 @@ tr:last-child td{border-bottom:none}
     </div>
     <div class="card"><div class="card-title"><span>📊</span>词汇累计</div><div id="vocab-stats"></div></div>
     <div class="card"><div class="card-title"><span>✏️</span>词汇收进小记</div><div id="sk-vocab-rev"></div></div>
-  </div>
-</div>
-
-<!-- ======= CHECKIN TAB ======= -->
-<div id="pane-checkin" class="pane">
-  <div class="stats">
-    <div class="stat"><div class="stat-v" id="c-streak">0</div><div class="stat-l">🔥 连续天</div></div>
-    <div class="stat"><div class="stat-v" id="c-rate">0%</div><div class="stat-l">✅ 完成率</div></div>
-    <div class="stat"><div class="stat-v" id="c-countdown">—</div><div class="stat-l">📅 距考试</div></div>
-  </div>
-  <div class="card">
-    <div class="prog-row"><div class="prog-meta"><span>阶段1 · 筑基（9.16–10.15）</span><span id="cp1t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="cp1" style="width:0%"></div></div></div>
-    <div class="prog-row"><div class="prog-meta"><span>阶段2 · 强化（10.16–11.15）</span><span id="cp2t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="cp2" style="width:0%"></div></div></div>
-    <div class="prog-row" style="margin-bottom:10px"><div class="prog-meta"><span>阶段3 · 冲刺（11.16–12.16）</span><span id="cp3t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="cp3" style="width:0%"></div></div></div>
-    <div class="cal-nav">
-      <button id="btn-prev" onclick="changeMonth(-1)">‹</button>
-      <span class="cal-title" id="cal-title"></span>
-      <button id="btn-next" onclick="changeMonth(1)">›</button>
-    </div>
-    <div class="cal-wdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
-    <div class="cal-grid" id="cal-grid"></div>
   </div>
 </div>
 
@@ -622,14 +587,9 @@ function checkMilestone(streak){
 // ===== RENDER: STATS =====
 function updateStats(){
   const streak=calcStreak(),rate=calcRate(),cd=calcCountdown();
-  ['h-streak','c-streak'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=streak});
-  ['h-rate','c-rate'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=rate+'%'});
-  ['h-countdown','c-countdown'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=cd});
-  STAGES.forEach(sg=>{
-    const pct=calcStage(sg.start,sg.end);
-    const f=document.getElementById(sg.id);const t=document.getElementById(sg.id+'t');
-    if(f)f.style.width=pct+'%';if(t)t.textContent=pct+'%';
-  });
+  const el_streak=document.getElementById('h-streak');if(el_streak)el_streak.textContent=streak;
+  const el_rate=document.getElementById('h-rate');if(el_rate)el_rate.textContent=rate+'%';
+  const el_cd=document.getElementById('h-countdown');if(el_cd)el_cd.textContent=cd;
   const m=checkMilestone(streak);
   const banner=document.getElementById('milestone-banner');
   if(banner){
@@ -693,7 +653,7 @@ function toggleTask(taskId,dateStr){
     });
     LS.set('ielts_skillcount',sc);
   }
-  renderTodayTasks();renderWeek();updateStats();renderCalendar();renderSkills();
+  renderTodayTasks();renderWeek();updateStats();renderSkills();
 }
 
 // ===== RENDER: WEEK =====
@@ -747,41 +707,6 @@ function renderWeek(){
   }
   el.innerHTML=html;
 }
-
-// ===== RENDER: CALENDAR =====
-let viewMonth=new Date().getMonth()+1;
-const viewYear=2026;
-function renderCalendar(){
-  const data=getCheckins();const t=today();
-  const mnames=['','一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
-  const title=document.getElementById('cal-title');if(title)title.textContent=`2026年 ${mnames[viewMonth]}`;
-  const prev=document.getElementById('btn-prev');const next=document.getElementById('btn-next');
-  if(prev)prev.disabled=viewMonth<=9;if(next)next.disabled=viewMonth>=12;
-  const grid=document.getElementById('cal-grid');if(!grid)return;
-  grid.innerHTML='';
-  const first=new Date(viewYear,viewMonth-1,1).getDay();
-  const days=new Date(viewYear,viewMonth,0).getDate();
-  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day empty';grid.appendChild(e);}
-  for(let d=1;d<=days;d++){
-    const k=toKey(viewYear,viewMonth,d);
-    const el=document.createElement('div');el.textContent=d;
-    const cls=['day'];
-    if(k<START||k>END)cls.push('off');
-    else if(k>t)cls.push('future');
-    else{if(data[k])cls.push('checked');if(k===t)cls.push('today');}
-    el.className=cls.join(' ');
-    if(!cls.includes('off')&&!cls.includes('future')){
-      el.addEventListener('click',()=>{
-        const checkins=getCheckins();
-        if(checkins[k])delete checkins[k];else checkins[k]=true;
-        LS.set('ielts_checkin',checkins);
-        renderCalendar();updateStats();
-      });
-    }
-    grid.appendChild(el);
-  }
-}
-function changeMonth(d){viewMonth=Math.min(12,Math.max(9,viewMonth+d));renderCalendar();}
 
 // ===== RENDER: REVIEW BLOCK =====
 function renderReviewBlock(containerId,date,skill){
@@ -1028,7 +953,6 @@ function goTab(name,btn){
   if(name==='home'){renderTodayTasks();renderTodayReview();updateStats();}
   if(name==='week'){renderWeek();renderWeekReview();}
   if(name==='skills')renderSkills();
-  if(name==='checkin'){renderCalendar();updateStats();}
 }
 function goSkill(name,btn){
   document.querySelectorAll('.skill-pane').forEach(p=>p.classList.remove('on'));
@@ -1124,7 +1048,6 @@ function setWeekStar(n){
 renderTodayTasks();
 renderTodayReview();
 updateStats();
-renderCalendar();
 renderWeek();
 renderWeekReview();
 renderSkills();
