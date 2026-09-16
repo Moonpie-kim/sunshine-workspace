@@ -168,7 +168,7 @@ body{font-family:-apple-system,"SF Pro Text","PingFang SC",sans-serif;background
 
 /* ── Misc ── */
 .readonly-badge{font-size:.68rem;background:var(--bg);color:var(--muted);padding:3px 8px;border-radius:20px;font-weight:600;margin-left:6px}
-.ov-stage{border-left:3px solid var(--green-light);padding-left:13px;margin-bottom:16px}
+.ov-stage{border-left:3px solid var(--green-light);padding-left:13px;margin-bottom:0}
 .ov-stage h3{font-size:.88rem;font-weight:700;color:var(--green);margin-bottom:5px}
 .ov-stage ul{padding-left:1.1em;font-size:.81rem;line-height:2;color:var(--text)}
 table{width:100%;border-collapse:collapse;font-size:.79rem;margin-top:6px}
@@ -177,6 +177,12 @@ td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:top;line
 tr:last-child td{border-bottom:none}
 .note{font-size:.76rem;color:var(--muted);line-height:1.55;margin-top:5px}
 .sec{font-size:.76rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 7px}
+
+/* ── Skill heatmap ── */
+.skill-heat{display:flex;gap:5px;margin:2px 0 0}
+.sh-cell{flex:1;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:600;background:var(--bg);color:var(--muted)}
+.sh-cell.done{color:#fff}
+.sh-cell.today{box-shadow:0 0 0 2px currentColor}
 
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 </style>
@@ -224,9 +230,12 @@ tr:last-child td{border-bottom:none}
     <div class="card-title">今日任务<span id="today-date-label" style="font-size:.78rem;font-weight:400;color:var(--muted);margin-left:6px"></span><span id="today-prog-chip" style="margin-left:auto;font-size:.8rem;font-weight:700;color:var(--green)"></span></div>
     <div class="bar" style="margin:-4px 0 10px"><div class="bar-fill" id="today-prog-bar" style="width:0%"></div></div>
     <div id="today-tasks-list"></div>
-    <div class="vocab-counter" style="margin-top:8px">
+  </div>
+  <div class="card">
+    <div class="card-title">今日词汇</div>
+    <div class="vocab-counter" style="margin-top:0">
       <div>
-        <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日词汇</div>
+        <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日新词</div>
         <div><span class="vocab-num" id="vocab-done">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;词</span></div>
       </div>
       <div class="vocab-actions">
@@ -269,14 +278,19 @@ tr:last-child td{border-bottom:none}
 <div id="pane-overview" class="pane">
   <div class="card">
     <div class="card-title">3个月总计划 <span class="readonly-badge">只读·基准</span></div>
-    <p class="note" style="margin-bottom:10px">所有调整以此为约束基础，不可直接修改。本周调整内容若偏离此计划会触发冲突提示。</p>
-    <div style="margin-bottom:16px">
+    <p class="note" style="margin-bottom:14px">所有调整以此为约束基础，不可直接修改。本周调整内容若偏离此计划会触发冲突提示。</p>
+    <div>
       <div class="prog-row"><div class="prog-meta"><span>阶段1 · 筑基（9.16–10.15）</span><span id="op1t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op1" style="width:0%"></div></div></div>
       <div class="prog-row"><div class="prog-meta"><span>阶段2 · 强化（10.16–11.15）</span><span id="op2t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op2" style="width:0%"></div></div></div>
       <div class="prog-row"><div class="prog-meta"><span>阶段3 · 冲刺（11.16–12.16）</span><span id="op3t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="op3" style="width:0%"></div></div></div>
     </div>
-    <div class="ov-stage">
-      <h3>阶段1 · 筑基期（9.16–10.15）</h3>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">阶段1 · 筑基期
+      <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:4px">9.16–10.15</span>
+    </div>
+    <div class="ov-stage" style="margin-bottom:0">
       <ul>
         <li>上班A日：Anki 30min + BBC Learning English精读 90min</li>
         <li>上班B日：Anki复习 30min + 雅思阅读原文拆句 90min</li>
@@ -288,8 +302,13 @@ tr:last-child td{border-bottom:none}
         <li>语法按周覆盖：定语从句→状语从句→被动+非谓语→名词化</li>
       </ul>
     </div>
-    <div class="ov-stage">
-      <h3>阶段2 · 题型强化（10.16–11.15）</h3>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--blue)">阶段2 · 题型强化
+      <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:4px">10.16–11.15</span>
+    </div>
+    <div class="ov-stage" style="border-color:var(--blue);margin-bottom:0">
       <ul>
         <li>上班A日：B站题型方法课 60min + Anki 30min + 真题对照 30min</li>
         <li>上班B日：BBC News精读 70min + BBC播客文稿精听 50min</li>
@@ -301,8 +320,13 @@ tr:last-child td{border-bottom:none}
         <li>第6周周六：听力+阅读完整模考摸底</li>
       </ul>
     </div>
-    <div class="ov-stage">
-      <h3>阶段3 · 全真冲刺（11.16–12.16）</h3>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--orange)">阶段3 · 全真冲刺
+      <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:4px">11.16–12.16</span>
+    </div>
+    <div class="ov-stage" style="border-color:var(--orange);margin-bottom:0">
       <ul>
         <li>上班A日：复盘笔记+错题+同义替换</li>
         <li>上班B日：原版新闻/职场英文精读</li>
@@ -311,7 +335,10 @@ tr:last-child td{border-bottom:none}
         <li>周六：全真四科机考模拟 + 全套复盘</li>
       </ul>
     </div>
-    <h3 style="font-size:.88rem;margin:10px 0 6px;color:var(--text)">目标评估</h3>
+  </div>
+
+  <div class="card">
+    <div class="card-title">目标评估</div>
     <table>
       <tr><th>科目</th><th>当前</th><th>预测</th><th>制约</th></tr>
       <tr><td>阅读</td><td>4.5</td><td>6.5–7</td><td>词汇提升后最快</td></tr>
@@ -350,25 +377,25 @@ tr:last-child td{border-bottom:none}
   <div id="skill-listen" class="skill-pane on">
     <div class="card"><div class="card-title">听力 — 今日任务</div><div id="sk-listen-today"></div></div>
     <div class="card"><div class="card-title">本周听力计划</div><div id="sk-listen-week"></div></div>
-    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-listen-prog"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div style="margin-bottom:8px"><div style="font-size:.72rem;color:var(--muted);margin-bottom:5px">本周练习</div><div class="skill-heat" id="sk-listen-heat"></div></div><div id="sk-listen-prog"></div></div>
     <div class="card"><div class="card-title">听力复盘</div><div id="sk-listen-rev"></div></div>
   </div>
   <div id="skill-read" class="skill-pane">
     <div class="card"><div class="card-title">阅读 — 今日任务</div><div id="sk-read-today"></div></div>
     <div class="card"><div class="card-title">本周阅读计划</div><div id="sk-read-week"></div></div>
-    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-read-prog"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div style="margin-bottom:8px"><div style="font-size:.72rem;color:var(--muted);margin-bottom:5px">本周练习</div><div class="skill-heat" id="sk-read-heat"></div></div><div id="sk-read-prog"></div></div>
     <div class="card"><div class="card-title">阅读复盘</div><div id="sk-read-rev"></div></div>
   </div>
   <div id="skill-write" class="skill-pane">
     <div class="card"><div class="card-title">写作 — 今日任务</div><div id="sk-write-today"></div></div>
     <div class="card"><div class="card-title">本周写作计划</div><div id="sk-write-week"></div></div>
-    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-write-prog"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div style="margin-bottom:8px"><div style="font-size:.72rem;color:var(--muted);margin-bottom:5px">本周练习</div><div class="skill-heat" id="sk-write-heat"></div></div><div id="sk-write-prog"></div></div>
     <div class="card"><div class="card-title">写作复盘</div><div id="sk-write-rev"></div></div>
   </div>
   <div id="skill-speak" class="skill-pane">
     <div class="card"><div class="card-title">口语 — 今日任务</div><div id="sk-speak-today"></div></div>
     <div class="card"><div class="card-title">本周口语计划</div><div id="sk-speak-week"></div></div>
-    <div class="card"><div class="card-title">本阶段打卡次数</div><div id="sk-speak-prog"></div></div>
+    <div class="card"><div class="card-title">本阶段打卡次数</div><div style="margin-bottom:8px"><div style="font-size:.72rem;color:var(--muted);margin-bottom:5px">本周练习</div><div class="skill-heat" id="sk-speak-heat"></div></div><div id="sk-speak-prog"></div></div>
     <div class="card"><div class="card-title">口语复盘</div><div id="sk-speak-rev"></div></div>
   </div>
   <div id="skill-vocab" class="skill-pane">
@@ -770,9 +797,23 @@ function renderWeek(){
         ${slotTasks.map(t=>taskRow(t,dateStr,thisDow,done)).join('')}
       </div>`;
     };
+    // per-day completion status
+    const scheduledTasks=tasks.filter(t=>t.id!=='fri-rv'&&t.id!=='tue-rv');
+    const doneDayTasks=scheduledTasks.filter(t=>done[dateStr+'_'+t.id]);
+    let dayStatusDot='';
+    const isPast=dateStr<today();
+    const isFuture=dateStr>today();
+    if(!scheduledTasks.length){dayStatusDot='';}
+    else if(doneDayTasks.length===scheduledTasks.length){
+      dayStatusDot=`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:var(--green);background:var(--green-pale);border-radius:20px;padding:2px 8px;margin-left:6px">全部完成</span>`;
+    } else if(doneDayTasks.length>0){
+      dayStatusDot=`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:var(--yellow);background:var(--yellow-pale);border-radius:20px;padding:2px 8px;margin-left:6px">${doneDayTasks.length}/${scheduledTasks.length}</span>`;
+    } else if(isPast){
+      dayStatusDot=`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:var(--muted);background:var(--bg);border-radius:20px;padding:2px 8px;margin-left:6px">未打卡</span>`;
+    }
     html+=`<div class="week-row">
       <div class="week-day-head" style="margin-bottom:4px">
-        <span class="week-day-label${isToday?' today-label':''}">${days[thisDow]} <span style="font-weight:400;font-size:.78rem">${d.getMonth()+1}/${d.getDate()}</span>${isToday?'<span style="font-size:.72rem;color:var(--green);margin-left:4px">今天</span>':''}</span>
+        <span class="week-day-label${isToday?' today-label':''}">${days[thisDow]} <span style="font-weight:400;font-size:.78rem">${d.getMonth()+1}/${d.getDate()}</span>${isToday?'<span style="font-size:.72rem;color:var(--green);margin-left:4px">今天</span>':''}${dayStatusDot}</span>
         ${thisDow===6?`<span style="font-size:.7rem;color:var(--muted)">阶段${getCurrentStage()}</span>`:''}
       </div>
       ${slotSection('白天','var(--blue)',workTasks)}
@@ -888,6 +929,7 @@ function renderSkills(){
   ['listen','read','write','speak'].forEach(skill=>{
     const weekEl=document.getElementById(`sk-${skill}-week`);
     if(weekEl)renderSkillWeekPreview(skill,`sk-${skill}-week`);
+    renderSkillHeatmap(skill,`sk-${skill}-heat`);
     const todayEl=document.getElementById(`sk-${skill}-today`);
     if(todayEl){
       const skillTasks=tasks.filter(t=>t.skills&&t.skills.includes(skill));
@@ -1129,7 +1171,37 @@ function launchConfetti(){
   setTimeout(()=>wrap.remove(),2800);
 }
 
-// ===== OVERVIEW BARS =====
+// ===== SKILL HEATMAP =====
+function renderSkillHeatmap(skill, containerId){
+  const el=document.getElementById(containerId);if(!el)return;
+  const now=new Date();const dow=now.getDay();
+  const monday=new Date(now);monday.setDate(now.getDate()-(dow===0?6:dow-1));
+  const done=getTaskDone();
+  const dayNames=['一','二','三','四','五','六','日'];
+  const skColMap={listen:'--blue',read:'--green',write:'--orange',speak:'--purple'};
+  const colVar=skColMap[skill]||'--green';
+  const cells=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const thisDow=d.getDay();
+    const dateStr=toKey(d.getFullYear(),d.getMonth()+1,d.getDate());
+    const isToday=dateStr===today();
+    const tasks=getTasksForDow(thisDow);
+    const skillTasks=tasks.filter(t=>t.skills&&t.skills.includes(skill));
+    const hasTasks=skillTasks.length>0;
+    const allDone=hasTasks&&skillTasks.every(t=>done[dateStr+'_'+t.id]);
+    const anyDone=hasTasks&&skillTasks.some(t=>done[dateStr+'_'+t.id]);
+    let bg,color,opacity='1';
+    if(!hasTasks){bg='var(--bg)';color='var(--muted)';opacity='.4';}
+    else if(allDone){bg=`var(${colVar})`;color='#fff';}
+    else if(anyDone){bg=`var(${colVar}33)`;color=`var(${colVar})`;}
+    else{bg='var(--bg)';color='var(--muted)';}
+    cells.push(`<div class="sh-cell${allDone?' done':''}${isToday?' today':''}" style="background:${bg};color:${color};opacity:${opacity};${isToday?`box-shadow:0 0 0 2px var(${colVar})`:''}"><span>${dayNames[i]}</span></div>`);
+  }
+  el.innerHTML=cells.join('');
+}
+
+
 function renderOverviewBars(){
   const stages=[
     {s:'2026-09-16',e:'2026-10-15',bar:'op1',txt:'op1t'},
