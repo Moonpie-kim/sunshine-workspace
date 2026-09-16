@@ -138,6 +138,21 @@ body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;backgr
 .milestone-icon{font-size:1.8rem}
 .milestone-text h4{font-size:.9rem;margin-bottom:2px}
 .milestone-text p{font-size:.75rem;opacity:.85}
+/* Streak warning */
+.streak-warn{background:var(--yellow-pale);border:1.5px solid var(--yellow);border-radius:12px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px}
+.streak-warn-icon{font-size:1.5rem;line-height:1}
+.streak-warn-text h4{font-size:.88rem;font-weight:700;color:var(--yellow);margin-bottom:2px}
+.streak-warn-text p{font-size:.78rem;color:var(--text);line-height:1.5}
+/* Stage transition */
+.stage-transition{background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:12px;padding:14px 16px;color:#fff;margin-bottom:12px}
+.stage-transition h4{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.stage-transition p{font-size:.78rem;opacity:.9;line-height:1.5}
+/* Task highlight */
+.task-item.highlight{background:var(--green-pale);border:1.5px solid var(--green-light)}
+.task-item.highlight .task-name{font-weight:700}
+/* Week review card */
+.week-review-field{width:100%;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:.82rem;font-family:inherit;resize:vertical;min-height:56px;background:var(--bg);color:var(--text);margin-bottom:8px}
+.week-review-field:focus{outline:none;border-color:var(--green-light)}
 /* Readonly badge */
 .readonly-badge{font-size:.7rem;background:var(--border);color:var(--muted);padding:2px 7px;border-radius:20px;font-weight:600;margin-left:6px}
 /* Overview stage */
@@ -167,6 +182,14 @@ tr:last-child td{border-bottom:none}
 
 <!-- ======= HOME TAB ======= -->
 <div id="pane-home" class="pane on">
+  <div id="stage-transition-banner" class="stage-transition" style="display:none">
+    <h4 id="stage-transition-title"></h4>
+    <p id="stage-transition-body"></p>
+  </div>
+  <div id="streak-warn-banner" class="streak-warn" style="display:none">
+    <div class="streak-warn-icon">⚠️</div>
+    <div class="streak-warn-text"><h4 id="streak-warn-title"></h4><p id="streak-warn-body"></p></div>
+  </div>
   <div id="milestone-banner" class="milestone" style="display:none">
     <div class="milestone-icon">🎉</div>
     <div class="milestone-text"><h4 id="milestone-title"></h4><p id="milestone-sub"></p></div>
@@ -205,6 +228,17 @@ tr:last-child td{border-bottom:none}
     <div class="week-grid" id="week-grid"></div>
   </div>
   <p class="note" style="padding:0 4px">调整任务后系统自动检测与总计划的冲突。<strong>每周一 00:00 自动刷新</strong>本周任务为基础计划，上周调整不延续。</p>
+  <div class="card" style="margin-top:4px">
+    <div class="card-title"><span>📝</span>本周复盘</div>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">本周卡点</div>
+    <textarea id="week-review-stumble" class="week-review-field" placeholder="哪些地方没弄懂？哪个题型最难？" onblur="saveWeekReview('stumble',this.value)"></textarea>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">待解决问题</div>
+    <textarea id="week-review-todo" class="week-review-field" placeholder="下周需要重点攻克的问题…" onblur="saveWeekReview('todo',this.value)"></textarea>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">整体评分</div>
+    <div id="week-review-stars" class="stars" style="margin-bottom:8px"></div>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">自由笔记</div>
+    <textarea id="week-review-note" class="week-review-field" placeholder="其他想记录的…" onblur="saveWeekReview('note',this.value)"></textarea>
+  </div>
 </div>
 
 <!-- ======= OVERVIEW TAB ======= -->
@@ -605,6 +639,8 @@ function updateStats(){
       banner.style.display='flex';
     } else {banner.style.display='none';}
   }
+  checkStreakWarning();
+  checkStageTransition();
 }
 
 // ===== RENDER: TODAY TASKS =====
@@ -620,13 +656,15 @@ function renderTodayTasks(){
   const dLabel=document.getElementById('today-date-label');
   if(dLabel){const days=['周日','周一','周二','周三','周四','周五','周六'];dLabel.textContent=days[dow];}
   if(!tasks.length){el.innerHTML='<p class="note">今日无固定任务</p>';return;}
+  const activeSlot=getCurrentTimeSlot();
   el.innerHTML=tasks.map(task=>{
     const key=t+'_'+task.id;
     const checked=done[key];
-    return `<div class="task-item${checked?' done':''}" id="ti-${task.id}">
+    const highlight=!checked&&activeSlot&&task.slot===activeSlot;
+    return `<div class="task-item${checked?' done':''}${highlight?' highlight':''}" id="ti-${task.id}">
       <div class="task-check${checked?' checked':''}" onclick="toggleTask('${task.id}','${t}')">${checked?'✓':''}</div>
       <div class="task-body">
-        <div class="task-name">${task.name}${task.customized?'<span style="font-size:.7rem;color:var(--orange);margin-left:4px">已调整</span>':''}</div>
+        <div class="task-name">${task.name}${task.customized?'<span style="font-size:.7rem;color:var(--orange);margin-left:4px">已调整</span>':''}${highlight?'<span style="font-size:.7rem;color:var(--green);margin-left:4px">▶ 现在</span>':''}</div>
         <div class="task-meta">${task.dur} &nbsp;${task.skills.map(skillTag).join('')}</div>
       </div>
     </div>`;
@@ -988,7 +1026,7 @@ function goTab(name,btn){
   if(pane)pane.classList.add('on');
   if(btn)btn.classList.add('on');
   if(name==='home'){renderTodayTasks();renderTodayReview();updateStats();}
-  if(name==='week')renderWeek();
+  if(name==='week'){renderWeek();renderWeekReview();}
   if(name==='skills')renderSkills();
   if(name==='checkin'){renderCalendar();updateStats();}
 }
@@ -1001,12 +1039,94 @@ function goSkill(name,btn){
   renderSkills();
 }
 
-// ===== INIT =====
+// ===== TIME SLOT AUTO-HIGHLIGHT =====
+function getCurrentTimeSlot(){
+  const h=new Date().getHours();
+  if(h>=9&&h<18) return 'work';
+  if(h>=19&&h<23) return 'eve';
+  return null;
+}
+
+// ===== STREAK WARNING =====
+function checkStreakWarning(){
+  const data=getCheckins();
+  const t=today();
+  // find how many consecutive days back had no check-in (not counting today)
+  let missedDays=0;
+  const cur=new Date(t+'T12:00:00');
+  cur.setDate(cur.getDate()-1); // start from yesterday
+  for(let i=0;i<30;i++){
+    const k=toKey(cur.getFullYear(),cur.getMonth()+1,cur.getDate());
+    if(k<START) break;
+    if(data[k]) break;
+    missedDays++;
+    cur.setDate(cur.getDate()-1);
+  }
+  const warn=document.getElementById('streak-warn-banner');
+  if(!warn) return;
+  if(missedDays>=2){
+    document.getElementById('streak-warn-title').textContent=`你已经 ${missedDays} 天没有学习`;
+    document.getElementById('streak-warn-body').textContent='今天完成任意 1 个任务就能重新开始连续记录，加油！';
+    warn.style.display='flex';
+  } else {
+    warn.style.display='none';
+  }
+}
+
+// ===== STAGE TRANSITION CHECK =====
+function checkStageTransition(){
+  const t=today();
+  const banner=document.getElementById('stage-transition-banner');
+  if(!banner) return;
+  const transitions=[
+    {date:'2026-10-16',stage:2,title:'🚀 阶段2 开始：题型强化期',body:'筑基完成！接下来进入题型专项训练。B站课程：黄舒音→Vince9120→莱斯莉。重点：每科题型方法 + 限时练习。'},
+    {date:'2026-11-16',stage:3,title:'🔥 阶段3 开始：全真冲刺期',body:'最后30天！每周全真四科模考 + 全套复盘。稳住节奏，状态比技巧更重要。'},
+    {date:'2026-09-16',stage:1,title:'✨ 备考正式开始！',body:'90天计划启动。第一阶段目标：建立每日学习节奏，扎实词汇和阅读基础。加油！'}
+  ];
+  const hit=transitions.find(tr=>tr.date===t);
+  if(hit){
+    document.getElementById('stage-transition-title').textContent=hit.title;
+    document.getElementById('stage-transition-body').textContent=hit.body;
+    banner.style.display='block';
+  } else {
+    banner.style.display='none';
+  }
+}
+
+// ===== WEEK REVIEW =====
+function getWeekReviewKey(){return 'wr_'+getWeekKey();}
+function getWeekReview(){return LS.get(getWeekReviewKey(),{stumble:'',todo:'',note:'',stars:0});}
+function saveWeekReview(field,val){
+  const key=getWeekReviewKey();const rv=LS.get(key,{stumble:'',todo:'',note:'',stars:0});
+  rv[field]=val;LS.set(key,rv);
+}
+function renderWeekReview(){
+  const rv=getWeekReview();
+  const s=document.getElementById('week-review-stumble');
+  const td=document.getElementById('week-review-todo');
+  const n=document.getElementById('week-review-note');
+  if(s&&s.value===''&&!document.activeElement===s) s.value=rv.stumble;
+  if(td&&td.value===''&&!document.activeElement===td) td.value=rv.todo;
+  if(n&&n.value===''&&!document.activeElement===n) n.value=rv.note;
+  // only set textarea if it hasn't been touched this session
+  [['week-review-stumble','stumble'],['week-review-todo','todo'],['week-review-note','note']].forEach(([id,field])=>{
+    const el=document.getElementById(id);if(el&&el.dataset.loaded!=='1'){el.value=rv[field]||'';el.dataset.loaded='1';}
+  });
+  // render stars
+  const starsEl=document.getElementById('week-review-stars');
+  if(starsEl){
+    starsEl.innerHTML=[1,2,3,4,5].map(n=>`<span class="star${(rv.stars||0)>=n?' lit':''}" onclick="setWeekStar(${n})" style="font-size:1.1rem;cursor:pointer;opacity:${(rv.stars||0)>=n?1:.3}">★</span>`).join('');
+  }
+}
+function setWeekStar(n){
+  saveWeekReview('stars',n);renderWeekReview();
+}
 renderTodayTasks();
 renderTodayReview();
 updateStats();
 renderCalendar();
 renderWeek();
+renderWeekReview();
 renderSkills();
 
 
