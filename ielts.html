@@ -214,7 +214,7 @@ tr:last-child td{border-bottom:none}
     <div class="vocab-counter" style="margin-top:8px">
       <div>
         <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日词汇</div>
-        <div><span class="vocab-num" id="vocab-done">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;/ 20</span></div>
+        <div><span class="vocab-num" id="vocab-done">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;词</span></div>
       </div>
       <div class="vocab-actions">
         <button class="vcbtn vcbtn-minus" onclick="changeVocab(-1)">−</button>
@@ -349,7 +349,7 @@ tr:last-child td{border-bottom:none}
       <div class="vocab-counter">
         <div>
           <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日新词</div>
-          <div><span class="vocab-num" id="vocab-done2">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;/ 20</span></div>
+          <div><span class="vocab-num" id="vocab-done2">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;词</span></div>
         </div>
         <div class="vocab-actions">
           <button class="vcbtn vcbtn-minus" onclick="changeVocab(-1)">−</button>
@@ -911,7 +911,7 @@ function renderSkills(){
 // ===== VOCAB COUNTER =====
 function changeVocab(delta){
   const t=today();const vocab=getVocab();
-  vocab[t]=Math.min(20,Math.max(0,(vocab[t]||0)+(delta===1?5:delta)));
+  vocab[t]=Math.max(0,(vocab[t]||0)+(delta===1?5:delta));
   LS.set('ielts_vocab',vocab);
   renderSkills();
 }
