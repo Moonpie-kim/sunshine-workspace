@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雅思备考 · 学习工作台</title>
+<style>
+:root {
+  --green:#2d6a4f; --green-mid:#40916c; --green-light:#52b788; --green-pale:#d8f3dc;
+  --blue:#2563eb; --blue-pale:#dbeafe;
+  --orange:#ea580c; --orange-pale:#ffedd5;
+  --purple:#7c3aed; --purple-pale:#ede9fe;
+  --red:#dc2626; --red-pale:#fee2e2;
+  --yellow:#d97706; --yellow-pale:#fef3c7;
+  --bg:#f8f5f0; --card:#fff; --text:#1a1a1a; --muted:#888; --border:#e8e4de;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+/* Header */
+.hd{background:var(--green);color:#fff;padding:14px 16px 10px;text-align:center}
+.hd h1{font-size:1.15rem;font-weight:700;margin-bottom:2px}
+.hd p{font-size:0.78rem;opacity:.8}
+/* Top tabs */
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:0 0 auto;padding:11px 16px;border:none;background:none;font-size:0.88rem;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.tb.on{color:var(--green);border-bottom-color:var(--green);font-weight:700}
+/* Pane */
+.pane{display:none;padding:14px;max-width:720px;margin:0 auto}
+.pane.on{display:block}
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:.92rem;font-weight:700;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card-title span{font-size:1rem}
+/* Section label */
+.sec{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px}
+/* Task item */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px;position:relative}
+.task-item.done{opacity:.55}
+.task-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.task-check.checked{background:var(--green);border-color:var(--green);color:#fff;font-size:.7rem}
+.task-body{flex:1;min-width:0}
+.task-name{font-size:.85rem;line-height:1.4;font-weight:500}
+.task-meta{font-size:.75rem;color:var(--muted);margin-top:2px}
+.task-edit{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.8rem;padding:2px 4px;opacity:0;transition:opacity .15s}
+.task-item:hover .task-edit{opacity:1}
+/* Skill tag colors */
+.tag{display:inline-block;font-size:.7rem;padding:1px 7px;border-radius:20px;margin-right:3px;font-weight:600}
+.tag-listen{background:var(--blue-pale);color:var(--blue)}
+.tag-read{background:var(--green-pale);color:var(--green)}
+.tag-write{background:var(--orange-pale);color:var(--orange)}
+.tag-speak{background:var(--purple-pale);color:var(--purple)}
+.tag-vocab{background:var(--yellow-pale);color:var(--yellow)}
+/* Stats row */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border-radius:10px;padding:10px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.stat-v{font-size:1.6rem;font-weight:700;color:var(--green);line-height:1}
+.stat-l{font-size:.72rem;color:var(--muted);margin-top:3px}
+/* Progress bar */
+.prog-row{margin-bottom:8px}
+.prog-meta{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px}
+.bar{height:7px;background:var(--green-pale);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:var(--green-light);border-radius:4px;transition:width .4s}
+/* Calendar */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-nav button{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 11px;cursor:pointer;font-size:1rem;color:var(--text)}
+.cal-nav button:disabled{opacity:.25;cursor:not-allowed}
+.cal-title{font-weight:600;font-size:.95rem}
+.cal-wdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:.72rem;color:var(--muted);margin-bottom:4px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:.78rem;cursor:pointer;border:2px solid transparent;transition:all .15s;user-select:none}
+.day:hover:not(.off):not(.future){border-color:var(--green-light)}
+.day.checked{background:var(--green);color:#fff;border-color:var(--green)}
+.day.today:not(.checked){border-color:var(--green);font-weight:700;color:var(--green)}
+.day.off,.day.future{color:#ccc;cursor:default}
+.day.empty{cursor:default}
+/* Week grid */
+.week-grid{display:flex;flex-direction:column;gap:6px}
+.week-row{background:var(--card);border-radius:10px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.week-day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.week-day-label{font-size:.82rem;font-weight:700;color:var(--text)}
+.week-day-label.today-label{color:var(--green)}
+.week-edit-btn{font-size:.75rem;color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:2px 7px;cursor:pointer}
+.week-tasks{display:flex;flex-wrap:wrap;gap:4px}
+.week-task-chip{font-size:.74rem;padding:3px 9px;border-radius:20px;background:var(--bg)}
+/* Skill tabs (secondary) */
+.skill-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px;padding-bottom:2px}
+.skill-tabs::-webkit-scrollbar{display:none}
+.stb{flex:0 0 auto;padding:6px 14px;border-radius:20px;border:none;font-size:.82rem;cursor:pointer;background:var(--bg);color:var(--muted);font-weight:500;transition:all .2s}
+.stb.on{font-weight:700}
+.stb-listen.on{background:var(--blue-pale);color:var(--blue)}
+.stb-read.on{background:var(--green-pale);color:var(--green)}
+.stb-write.on{background:var(--orange-pale);color:var(--orange)}
+.stb-speak.on{background:var(--purple-pale);color:var(--purple)}
+.stb-vocab.on{background:var(--yellow-pale);color:var(--yellow)}
+.skill-pane{display:none}.skill-pane.on{display:block}
+/* Review */
+.review-day{background:var(--card);border-radius:10px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.review-date{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:8px}
+.stars{display:flex;gap:4px;margin-bottom:6px}
+.star{font-size:1.1rem;cursor:pointer;opacity:.3;transition:opacity .1s}
+.star.lit{opacity:1}
+.review-field{width:100%;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:.82rem;font-family:inherit;resize:vertical;min-height:52px;background:var(--bg);color:var(--text);margin-bottom:6px}
+.review-field:focus{outline:none;border-color:var(--green-light)}
+.review-row{display:flex;gap:6px;align-items:center;margin-bottom:4px}
+.review-label{font-size:.75rem;color:var(--muted);min-width:52px;flex-shrink:0}
+/* Vocab counter */
+.vocab-counter{display:flex;align-items:center;justify-content:space-between;background:var(--yellow-pale);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+.vocab-num{font-size:2rem;font-weight:700;color:var(--yellow)}
+.vocab-actions{display:flex;gap:8px}
+.vcbtn{border:none;border-radius:8px;padding:7px 14px;font-size:.85rem;cursor:pointer;font-weight:600}
+.vcbtn-plus{background:var(--yellow);color:#fff}
+.vcbtn-minus{background:#fff;color:var(--yellow);border:1px solid var(--yellow)}
+/* Conflict modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay.hidden{display:none}
+.modal{background:#fff;border-radius:16px;padding:20px;max-width:360px;width:100%}
+.modal h3{font-size:1rem;margin-bottom:8px;color:var(--red)}
+.modal p{font-size:.85rem;color:var(--text);margin-bottom:14px;line-height:1.6}
+.modal-btns{display:flex;flex-direction:column;gap:7px}
+.mbtn{border:none;border-radius:9px;padding:10px;font-size:.85rem;cursor:pointer;font-weight:600;text-align:left}
+.mbtn-keep{background:var(--green-pale);color:var(--green)}
+.mbtn-replace{background:var(--orange-pale);color:var(--orange)}
+.mbtn-cancel{background:var(--bg);color:var(--muted)}
+/* Edit modal */
+.edit-modal{background:#fff;border-radius:16px;padding:20px;max-width:380px;width:100%}
+.edit-modal h3{font-size:.95rem;margin-bottom:12px;color:var(--text)}
+.edit-input{width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.85rem;font-family:inherit;margin-bottom:8px;background:var(--bg)}
+.edit-input:focus{outline:none;border-color:var(--green-light)}
+.edit-row{display:flex;gap:8px}
+.edit-row .edit-input{flex:1}
+.ebtn{border:none;border-radius:9px;padding:9px 16px;font-size:.85rem;cursor:pointer;font-weight:600}
+.ebtn-save{background:var(--green);color:#fff}
+.ebtn-cancel{background:var(--bg);color:var(--muted)}
+/* Milestone */
+.milestone{background:linear-gradient(135deg,var(--green),var(--green-mid));border-radius:12px;padding:12px 16px;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.milestone-icon{font-size:1.8rem}
+.milestone-text h4{font-size:.9rem;margin-bottom:2px}
+.milestone-text p{font-size:.75rem;opacity:.85}
+/* Readonly badge */
+.readonly-badge{font-size:.7rem;background:var(--border);color:var(--muted);padding:2px 7px;border-radius:20px;font-weight:600;margin-left:6px}
+/* Overview stage */
+.ov-stage{border-left:3px solid var(--green);padding-left:12px;margin-bottom:14px}
+.ov-stage h3{font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:4px}
+.ov-stage ul{padding-left:1em;font-size:.82rem;line-height:1.9;color:var(--text)}
+table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:6px}
+th{background:var(--green-pale);color:var(--green);padding:6px 8px;text-align:left;font-weight:600}
+td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+.note{font-size:.78rem;color:var(--muted);line-height:1.5;margin-top:5px}
+@media(max-width:380px){.stats{grid-template-columns:repeat(3,1fr)}.stat-v{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>雅思备考 · 学习工作台</h1>
+  <p>2026.09.16 — 12.16 &nbsp;·&nbsp; 4.5 → 7 &nbsp;·&nbsp; 成功线 6.5</p>
+</div>
+<div class="tabs">
+  <button class="tb on" onclick="goTab('home',this)">🏠 首页</button>
+  <button class="tb" onclick="goTab('week',this)">📆 本周</button>
+  <button class="tb" onclick="goTab('overview',this)">🗺 总览</button>
+  <button class="tb" onclick="goTab('skills',this)">📚 技能</button>
+  <button class="tb" onclick="goTab('checkin',this)">📅 打卡</button>
+</div>
+
+<!-- ======= HOME TAB ======= -->
+<div id="pane-home" class="pane on">
+  <div id="milestone-banner" class="milestone" style="display:none">
+    <div class="milestone-icon">🎉</div>
+    <div class="milestone-text"><h4 id="milestone-title"></h4><p id="milestone-sub"></p></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-v" id="h-streak">0</div><div class="stat-l">🔥 连续天</div></div>
+    <div class="stat"><div class="stat-v" id="h-rate">0%</div><div class="stat-l">✅ 完成率</div></div>
+    <div class="stat"><div class="stat-v" id="h-countdown">—</div><div class="stat-l">📅 距考试</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span>📋</span>今日任务<span id="today-date-label" style="font-size:.78rem;font-weight:400;color:var(--muted);margin-left:6px"></span></div>
+    <div id="today-tasks-list"></div>
+    <div class="vocab-counter" style="margin-top:8px">
+      <div>
+        <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日词汇</div>
+        <div><span class="vocab-num" id="vocab-done">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;/ 20</span></div>
+      </div>
+      <div class="vocab-actions">
+        <button class="vcbtn vcbtn-minus" onclick="changeVocab(-1)">−</button>
+        <button class="vcbtn vcbtn-plus" onclick="changeVocab(1)">+5</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span>✏️</span>今日复盘</div>
+    <div id="today-review-home"></div>
+  </div>
+</div>
+
+<!-- ======= WEEK TAB ======= -->
+<div id="pane-week" class="pane">
+  <div class="card">
+    <div class="card-title"><span>📆</span>本周任务总览
+      <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:4px">点击铅笔可调整</span>
+    </div>
+    <div class="week-grid" id="week-grid"></div>
+  </div>
+  <p class="note" style="padding:0 4px">调整任务后系统自动检测与总计划的冲突。<strong>每周一 00:00 自动刷新</strong>本周任务为基础计划，上周调整不延续。</p>
+</div>
+
+<!-- ======= OVERVIEW TAB ======= -->
+<div id="pane-overview" class="pane">
+  <div class="card">
+    <div class="card-title"><span>🗺</span>3个月总计划 <span class="readonly-badge">只读·基准</span></div>
+    <p class="note" style="margin-bottom:10px">所有调整以此为约束基础，不可直接修改。本周调整内容若偏离此计划会触发冲突提示。</p>
+    <div class="ov-stage">
+      <h3>阶段1 · 筑基期（9.16–10.15）</h3>
+      <ul>
+        <li>上班A日：Anki 30min + BBC Learning English精读 90min</li>
+        <li>上班B日：Anki复习 30min + 雅思阅读原文拆句 90min</li>
+        <li>周一/三晚：精听训练 70min + 长难句拆解 60min</li>
+        <li>周二晚：雅思真题限时（听力或阅读）90min + 复盘 30min</li>
+        <li>周四晚：写作段落练习（第3周起）90min + 自评 30min</li>
+        <li>周五晚：口语跟读 + 自由话题口述 60min + 复盘 30min</li>
+        <li>B站主线：英语兔（语音连读）</li>
+        <li>语法按周覆盖：定语从句→状语从句→被动+非谓语→名词化</li>
+      </ul>
+    </div>
+    <div class="ov-stage">
+      <h3>阶段2 · 题型强化（10.16–11.15）</h3>
+      <ul>
+        <li>上班A日：B站题型方法课 60min + Anki 30min + 真题对照 30min</li>
+        <li>上班B日：BBC News精读 70min + BBC播客文稿精听 50min</li>
+        <li>周一/三晚：精听训练 + 长难句拆解</li>
+        <li>周二晚：雅思真题限时（轮换科目）+ 复盘</li>
+        <li>周四晚：写作Task1或Task2限时打字 + 自评</li>
+        <li>周五晚：口语题库录音 + 自由口述 + 复盘</li>
+        <li>B站：黄舒音(5-6周)→Vince9120(7周)→莱斯莉(8周)</li>
+        <li>第6周周六：听力+阅读完整模考摸底</li>
+      </ul>
+    </div>
+    <div class="ov-stage">
+      <h3>阶段3 · 全真冲刺（11.16–12.16）</h3>
+      <ul>
+        <li>上班A日：复盘笔记+错题+同义替换</li>
+        <li>上班B日：原版新闻/职场英文精读</li>
+        <li>周一/三/五晚：完整听力+阅读限时模考 + 复盘</li>
+        <li>周二/四晚：Task1+Task2限时写作 + 口语Part2/3模拟</li>
+        <li>周六：全真四科机考模拟 + 全套复盘</li>
+      </ul>
+    </div>
+    <h3 style="font-size:.88rem;margin:10px 0 6px;color:var(--text)">目标评估</h3>
+    <table>
+      <tr><th>科目</th><th>当前</th><th>预测</th><th>制约</th></tr>
+      <tr><td>阅读</td><td>4.5</td><td>6.5–7</td><td>词汇提升后最快</td></tr>
+      <tr><td>听力</td><td>4.5</td><td>6–6.5</td><td>需大量输入</td></tr>
+      <tr><td>写作</td><td>4.5</td><td>5.5–6</td><td>最慢，是天花板</td></tr>
+      <tr><td>口语</td><td>4.5</td><td>6–6.5</td><td>流利度需时间</td></tr>
+      <tr><td><strong>总分</strong></td><td><strong>4.5</strong></td><td><strong>6–6.5</strong></td><td>12月成功线6.5</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ======= SKILLS TAB ======= -->
+<div id="pane-skills" class="pane">
+  <div class="skill-tabs">
+    <button class="stb stb-listen on" onclick="goSkill('listen',this)">🎧 听力</button>
+    <button class="stb stb-read" onclick="goSkill('read',this)">📖 阅读</button>
+    <button class="stb stb-write" onclick="goSkill('write',this)">✍️ 写作</button>
+    <button class="stb stb-speak" onclick="goSkill('speak',this)">🗣 口语</button>
+    <button class="stb stb-vocab" onclick="goSkill('vocab',this)">📝 词汇</button>
+  </div>
+  <div id="skill-listen" class="skill-pane on">
+    <div class="card"><div class="card-title"><span>🎧</span>听力 — 今日任务</div><div id="sk-listen-today"></div></div>
+    <div class="card"><div class="card-title"><span>📅</span>本周听力计划</div><div id="sk-listen-week"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-listen-prog"></div></div>
+    <div class="card"><div class="card-title"><span>✏️</span>听力复盘</div><div id="sk-listen-rev"></div></div>
+  </div>
+  <div id="skill-read" class="skill-pane">
+    <div class="card"><div class="card-title"><span>📖</span>阅读 — 今日任务</div><div id="sk-read-today"></div></div>
+    <div class="card"><div class="card-title"><span>📅</span>本周阅读计划</div><div id="sk-read-week"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-read-prog"></div></div>
+    <div class="card"><div class="card-title"><span>✏️</span>阅读复盘</div><div id="sk-read-rev"></div></div>
+  </div>
+  <div id="skill-write" class="skill-pane">
+    <div class="card"><div class="card-title"><span>✍️</span>写作 — 今日任务</div><div id="sk-write-today"></div></div>
+    <div class="card"><div class="card-title"><span>📅</span>本周写作计划</div><div id="sk-write-week"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-write-prog"></div></div>
+    <div class="card"><div class="card-title"><span>✏️</span>写作复盘</div><div id="sk-write-rev"></div></div>
+  </div>
+  <div id="skill-speak" class="skill-pane">
+    <div class="card"><div class="card-title"><span>🗣</span>口语 — 今日任务</div><div id="sk-speak-today"></div></div>
+    <div class="card"><div class="card-title"><span>📅</span>本周口语计划</div><div id="sk-speak-week"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span>本阶段打卡次数</div><div id="sk-speak-prog"></div></div>
+    <div class="card"><div class="card-title"><span>✏️</span>口语复盘</div><div id="sk-speak-rev"></div></div>
+  </div>
+  <div id="skill-vocab" class="skill-pane">
+    <div class="card">
+      <div class="card-title"><span>📝</span>词汇 — 今日进度</div>
+      <div class="vocab-counter">
+        <div>
+          <div style="font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:2px">今日新词</div>
+          <div><span class="vocab-num" id="vocab-done2">0</span><span style="font-size:.9rem;color:var(--muted)">&nbsp;/ 20</span></div>
+        </div>
+        <div class="vocab-actions">
+          <button class="vcbtn vcbtn-minus" onclick="changeVocab(-1)">−</button>
+          <button class="vcbtn vcbtn-plus" onclick="changeVocab(1)">+5</button>
+        </div>
+      </div>
+    </div>
+    <div class="card"><div class="card-title"><span>📊</span>词汇累计</div><div id="vocab-stats"></div></div>
+    <div class="card"><div class="card-title"><span>✏️</span>词汇收进小记</div><div id="sk-vocab-rev"></div></div>
+  </div>
+</div>
+
+<!-- ======= CHECKIN TAB ======= -->
+<div id="pane-checkin" class="pane">
+  <div class="stats">
+    <div class="stat"><div class="stat-v" id="c-streak">0</div><div class="stat-l">🔥 连续天</div></div>
+    <div class="stat"><div class="stat-v" id="c-rate">0%</div><div class="stat-l">✅ 完成率</div></div>
+    <div class="stat"><div class="stat-v" id="c-countdown">—</div><div class="stat-l">📅 距考试</div></div>
+  </div>
+  <div class="card">
+    <div class="prog-row"><div class="prog-meta"><span>阶段1 · 筑基（9.16–10.15）</span><span id="cp1t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="cp1" style="width:0%"></div></div></div>
+    <div class="prog-row"><div class="prog-meta"><span>阶段2 · 强化（10.16–11.15）</span><span id="cp2t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="cp2" style="width:0%"></div></div></div>
+    <div class="prog-row" style="margin-bottom:10px"><div class="prog-meta"><span>阶段3 · 冲刺（11.16–12.16）</span><span id="cp3t" style="color:var(--green);font-weight:600">0%</span></div><div class="bar"><div class="bar-fill" id="cp3" style="width:0%"></div></div></div>
+    <div class="cal-nav">
+      <button id="btn-prev" onclick="changeMonth(-1)">‹</button>
+      <span class="cal-title" id="cal-title"></span>
+      <button id="btn-next" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-wdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+</div>
+
+<!-- Conflict modal -->
+<div class="overlay" id="conflict-overlay" style="display:none">
+  <div class="modal">
+    <h3>⚠️ 任务冲突检测</h3>
+    <p id="conflict-msg"></p>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-keep" onclick="resolveConflict('keep')">✅ 保留修改，同时学两遍（加强）</button>
+      <button class="mbtn mbtn-replace" onclick="resolveConflict('replace')">🔄 替换原任务为调整内容</button>
+      <button class="mbtn mbtn-cancel" onclick="resolveConflict('cancel')">↩ 取消本次修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="overlay" id="edit-overlay" style="display:none">
+  <div class="edit-modal">
+    <h3>✏️ 调整任务</h3>
+    <input class="edit-input" id="edit-name" placeholder="任务描述" />
+    <input class="edit-input" id="edit-duration" placeholder="时长（如 90min）" />
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="ebtn ebtn-save" onclick="saveEdit()">保存</button>
+      <button class="ebtn ebtn-cancel" onclick="closeEdit()">取消</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+
+// ===== CONSTANTS =====
+const START='2026-09-16', END='2026-12-16';
+const STAGES=[
+  {id:'cp1',start:'2026-09-16',end:'2026-10-15'},
+  {id:'cp2',start:'2026-10-16',end:'2026-11-15'},
+  {id:'cp3',start:'2026-11-16',end:'2026-12-16'}
+];
+const SKILL_LABELS={listen:'听力',read:'阅读',write:'写作',speak:'口语',vocab:'词汇'};
+const SKILL_COLORS={listen:'listen',read:'read',write:'write',speak:'speak',vocab:'vocab'};
+const BASE_PLAN={
+  1:[// 周一
+    {name:'Anki背单词（20个新词）',dur:'30min',skills:['vocab'],id:'mon-anki',slot:'work'},
+    {name:'BBC Learning English精读，标记生词和长句',dur:'90min',skills:['read'],id:'mon-bbc',slot:'work'},
+    {name:'精听训练（BBC/雅思短音频轮换）',dur:'70min',skills:['listen'],id:'mon-l',slot:'eve'},
+    {name:'长难句拆解（原版+雅思原文各半）',dur:'60min',skills:['read'],id:'mon-r',slot:'eve'}],
+  2:[// 周二
+    {name:'Anki复习昨日词汇',dur:'30min',skills:['vocab'],id:'tue-anki',slot:'work'},
+    {name:'雅思阅读原文拆句（2-3段，标注主干+修饰成分）',dur:'90min',skills:['read'],id:'tue-parse',slot:'work'},
+    {name:'雅思真题限时练习（听力或阅读轮换）',dur:'90min',skills:['listen','read'],id:'tue-t',slot:'eve'},
+    {name:'错题复盘',dur:'30min',skills:['listen','read'],id:'tue-rv',slot:'eve'}],
+  3:[// 周三
+    {name:'Anki背单词（20个新词）',dur:'30min',skills:['vocab'],id:'wed-anki',slot:'work'},
+    {name:'BBC Learning English精读，标记生词和长句',dur:'90min',skills:['read'],id:'wed-bbc',slot:'work'},
+    {name:'精听训练（BBC/雅思短音频轮换）',dur:'70min',skills:['listen'],id:'wed-l',slot:'eve'},
+    {name:'长难句拆解（原版+雅思原文各半）',dur:'60min',skills:['read'],id:'wed-r',slot:'eve'}],
+  4:[// 周四
+    {name:'Anki复习昨日词汇',dur:'30min',skills:['vocab'],id:'thu-anki',slot:'work'},
+    {name:'雅思阅读原文拆句（2-3段，标注主干+修饰成分）',dur:'90min',skills:['read'],id:'thu-parse',slot:'work'},
+    {name:'写作限时打字（Task1或Task2交替）',dur:'90min',skills:['write'],id:'thu-w',slot:'eve'},
+    {name:'写作自评（TA/CC/LR/GRA）',dur:'30min',skills:['write'],id:'thu-we',slot:'eve'}],
+  5:[// 周五
+    {name:'Anki背单词（20个新词）',dur:'30min',skills:['vocab'],id:'fri-anki',slot:'work'},
+    {name:'BBC Learning English精读，标记生词和长句',dur:'90min',skills:['read'],id:'fri-bbc',slot:'work'},
+    {name:'口语题库录音（Part1/2）',dur:'60min',skills:['speak'],id:'fri-s',slot:'eve'},
+    {name:'自由话题口述（非雅思话题）',dur:'30min',skills:['speak'],id:'fri-sf',slot:'eve'},
+    {name:'当周复盘',dur:'30min',skills:[],id:'fri-rv',slot:'eve'}],
+  6:'stage-aware',
+  0:[// 周日
+    {name:'BBC Global News泛听',dur:'60min',skills:['listen'],id:'sun-l',slot:'eve'},
+    {name:'轻量阅读，保持语感',dur:'30min',skills:['read'],id:'sun-r',slot:'eve'}]
+};
+const CONFLICT_KEYS={
+  listen:['听力','精听','BBC','listening'],
+  read:['阅读','精读','长难句','拆句','reading'],
+  write:['写作','task','Task','作文'],
+  speak:['口语','录音','口述','speaking']
+};
+
+// ===== STORAGE =====
+const LS={
+  get:(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v!==null?v:d}catch{return d}},
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
+};
+function today(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`}
+function todayDow(){return new Date().getDay()}
+function toKey(y,m,d){return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
+function getCheckins(){return LS.get('ielts_checkin',{})}
+function getWeekKey(){
+  // ISO week number - resets every Monday 00:00
+  const d=new Date();
+  const day=d.getDay();
+  const monday=new Date(d);monday.setHours(0,0,0,0);
+  monday.setDate(d.getDate()-(day===0?6:day-1));
+  return `w_${monday.getFullYear()}_${String(monday.getMonth()+1).padStart(2,'0')}_${String(monday.getDate()).padStart(2,'0')}`;
+}
+function getCustom(){
+  const wk=getWeekKey();
+  const all=LS.get('ielts_custom_weeks',{});
+  return all[wk]||{};
+}
+function saveCustom(obj){
+  const wk=getWeekKey();
+  const all=LS.get('ielts_custom_weeks',{});
+  // keep only last 2 weeks to avoid bloat
+  const keys=Object.keys(all).sort();
+  if(keys.length>=3) delete all[keys[0]];
+  all[wk]=obj;
+  LS.set('ielts_custom_weeks',all);
+}
+function getTaskDone(){return LS.get('ielts_taskdone',{})}
+function getVocab(){return LS.get('ielts_vocab',{})}
+function getReviews(){return LS.get('ielts_reviews',{})}
+function getSkillCount(){return LS.get('ielts_skillcount',{})}
+
+
+// ===== TASK HELPERS =====
+
+const SAT_TASKS={
+  1:[// stage 1 saturdays
+    {name:'本周语法笔记整理 + 10个真实例句验证',dur:'1h',skills:['read'],id:'sat-s1-gram'},
+    {name:'BBC文章深度精读（1-2篇，查词+拆句+逻辑）',dur:'2h',skills:['read'],id:'sat-s1-bbc'},
+    {name:'雅思剑14阅读原文拆句（3段）',dur:'1h',skills:['read'],id:'sat-s1-ielts'}
+  ],
+  2:[// stage 2 saturdays - week 6 is mock test, others are regular
+    {name:'题型专项练习（对应本周B站课程）',dur:'2h',skills:['listen','read'],id:'sat-s2-prac'},
+    {name:'BBC精读',dur:'1h',skills:['read'],id:'sat-s2-bbc'},
+    {name:'作文修改（TA/CC/LR/GRA自评）',dur:'1h',skills:['write'],id:'sat-s2-write'}
+  ],
+  '2-mock':[// stage 2 week 6 mock test
+    {name:'听力完整模考（剑15）',dur:'40min',skills:['listen'],id:'sat-s2m-listen'},
+    {name:'阅读完整模考（剑15）',dur:'60min',skills:['read'],id:'sat-s2m-read'},
+    {name:'模考全套复盘，薄弱题型记录',dur:'90min',skills:['listen','read'],id:'sat-s2m-review'},
+    {name:'作文修改',dur:'30min',skills:['write'],id:'sat-s2m-write'}
+  ],
+  3:[// stage 3 saturdays - full mock
+    {name:'全真四科机考模拟（听力+阅读+写作+口语）',dur:'3.5h',skills:['listen','read','write','speak'],id:'sat-s3-mock'},
+    {name:'全套复盘，失分题型统计',dur:'1h',skills:['listen','read','write','speak'],id:'sat-s3-review'}
+  ]
+};
+function getCurrentStage(){
+  const t=today();
+  if(t>='2026-11-16') return 3;
+  if(t>='2026-10-16') return 2;
+  return 1;
+}
+function isWeek6(){
+  // week 6 of stage 2 = Oct 27 - Nov 1 (Mon Oct 27)
+  const t=today();return t>='2026-10-26'&&t<='2026-11-01';
+}
+function getTasksForDow(dow){
+  const custom=getCustom();
+  let base;
+  if(dow===6){
+    const stage=getCurrentStage();
+    const key=(stage===2&&isWeek6())?'2-mock':stage;
+    base=SAT_TASKS[key]||[];
+  } else {
+    base=BASE_PLAN[dow]||[];
+  }
+  if(typeof base==='string') base=[];
+  // apply customizations to base tasks
+  const result=base.map(t=>{
+    const c=custom[t.id];
+    return c?{...t,...c,customized:true}:t;
+  });
+  // append added tasks for this dow
+  Object.entries(custom).forEach(([id,v])=>{
+    if(id.startsWith(`custom-${dow}-`)&&v.added) result.push({...v,id});
+  });
+  return result;
+}
+function getTasksForDate(dateStr){
+  const dow=new Date(dateStr+'T12:00:00').getDay();
+  return getTasksForDow(dow);
+}
+function detectConflict(taskId,newName,newDur,dow){
+  const base=BASE_PLAN[dow]||[];
+  const orig=base.find(t=>t.id===taskId);
+  if(!orig) return null;
+  const conflicts=[];
+  const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+  for(const skill of Object.keys(CONFLICT_KEYS)){
+    const keys=CONFLICT_KEYS[skill];
+    if(!keys.some(k=>newName.includes(k))) continue;
+    // same-day conflict
+    const sameDay=base.filter(t=>t.id!==taskId&&t.skills.includes(skill));
+    if(sameDay.length>0){conflicts.push({type:'sameday',skill,tasks:sameDay,dow});continue;}
+    // cross-week: same skill on other days
+    const crossDays=[];
+    for(let d=0;d<7;d++){
+      if(d===dow) continue;
+      const custom=getCustom();
+      const dt=(BASE_PLAN[d]||[]).map(t=>{const c=custom[t.id];return c?{...t,...c}:t;});
+      const hits=dt.filter(t=>t.skills&&t.skills.includes(skill));
+      if(hits.length) crossDays.push({dow:d,label:dayNames[d],tasks:hits});
+    }
+    if(crossDays.length) conflicts.push({type:'crossweek',skill,crossDays});
+  }
+  return conflicts.length?conflicts:null;
+}
+
+// ===== CALC HELPERS =====
+function calcStreak(){
+  const data=getCheckins();let streak=0;
+  const t=today();let cur=new Date(t+'T12:00:00');
+  while(true){
+    const k=toKey(cur.getFullYear(),cur.getMonth()+1,cur.getDate());
+    if(k<START) break;
+    if(data[k]) streak++;
+    else if(k===t){cur.setDate(cur.getDate()-1);continue;}
+    else break;
+    cur.setDate(cur.getDate()-1);
+  }
+  return streak;
+}
+function calcRate(){
+  const data=getCheckins();const t=today();
+  let total=0,done=0;
+  let cur=new Date(START+'T12:00:00');
+  const cap=new Date((t<END?t:END)+'T12:00:00');
+  while(cur<=cap){
+    const k=toKey(cur.getFullYear(),cur.getMonth()+1,cur.getDate());
+    total++;if(data[k])done++;
+    cur.setDate(cur.getDate()+1);
+  }
+  return total?Math.round(done/total*100):0;
+}
+function calcStage(s,e){
+  const data=getCheckins();const t=today();
+  if(t<s) return 0;
+  let total=0,done=0;
+  let cur=new Date(s+'T12:00:00');
+  const cap=new Date((t<e?t:e)+'T12:00:00');
+  while(cur<=cap){
+    const k=toKey(cur.getFullYear(),cur.getMonth()+1,cur.getDate());
+    total++;if(data[k])done++;cur.setDate(cur.getDate()+1);
+  }
+  return total?Math.round(done/total*100):0;
+}
+function calcCountdown(){
+  const n=new Date();n.setHours(0,0,0,0);
+  const diff=Math.round((new Date(END)-n)/86400000);
+  return diff>0?diff:0;
+}
+function checkMilestone(streak){
+  if(streak===7) return{title:'连续坚持7天！',sub:'第一周完成，状态很稳定 💪'};
+  if(streak===14) return{title:'两周不间断！',sub:'习惯已经在形成了 🌱'};
+  if(streak===30) return{title:'一个月连续打卡！',sub:'你的英语在悄悄变好 🚀'};
+  if(streak===60) return{title:'两个月不停歇！',sub:'冲刺阶段，终点不远了 🔥'};
+  return null;
+}
+
+// ===== RENDER: STATS =====
+function updateStats(){
+  const streak=calcStreak(),rate=calcRate(),cd=calcCountdown();
+  ['h-streak','c-streak'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=streak});
+  ['h-rate','c-rate'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=rate+'%'});
+  ['h-countdown','c-countdown'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=cd});
+  STAGES.forEach(sg=>{
+    const pct=calcStage(sg.start,sg.end);
+    const f=document.getElementById(sg.id);const t=document.getElementById(sg.id+'t');
+    if(f)f.style.width=pct+'%';if(t)t.textContent=pct+'%';
+  });
+  const m=checkMilestone(streak);
+  const banner=document.getElementById('milestone-banner');
+  if(banner){
+    if(m&&streak>0){
+      document.getElementById('milestone-title').textContent=m.title;
+      document.getElementById('milestone-sub').textContent=m.sub;
+      banner.style.display='flex';
+    } else {banner.style.display='none';}
+  }
+}
+
+// ===== RENDER: TODAY TASKS =====
+function skillTag(skill){
+  const labels={listen:'听力',read:'阅读',write:'写作',speak:'口语',vocab:'词汇'};
+  return `<span class="tag tag-${skill}">${labels[skill]||skill}</span>`;
+}
+function renderTodayTasks(){
+  const el=document.getElementById('today-tasks-list');if(!el)return;
+  const t=today();const dow=todayDow();
+  const tasks=getTasksForDow(dow);
+  const done=getTaskDone();
+  const dLabel=document.getElementById('today-date-label');
+  if(dLabel){const days=['周日','周一','周二','周三','周四','周五','周六'];dLabel.textContent=days[dow];}
+  if(!tasks.length){el.innerHTML='<p class="note">今日无固定任务</p>';return;}
+  el.innerHTML=tasks.map(task=>{
+    const key=t+'_'+task.id;
+    const checked=done[key];
+    return `<div class="task-item${checked?' done':''}" id="ti-${task.id}">
+      <div class="task-check${checked?' checked':''}" onclick="toggleTask('${task.id}','${t}')">${checked?'✓':''}</div>
+      <div class="task-body">
+        <div class="task-name">${task.name}${task.customized?'<span style="font-size:.7rem;color:var(--orange);margin-left:4px">已调整</span>':''}</div>
+        <div class="task-meta">${task.dur} &nbsp;${task.skills.map(skillTag).join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+  el.innerHTML += `<button onclick="goToWeekTab()" style="margin-top:8px;background:none;border:none;color:var(--green);font-size:.8rem;cursor:pointer;padding:4px 0;display:block">✏️ 去本周调整任务 →</button>`;
+}
+function toggleTask(taskId,dateStr){
+  const key=dateStr+'_'+taskId;
+  const done=getTaskDone();
+  if(done[key])delete done[key];else done[key]=true;
+  LS.set('ielts_taskdone',done);
+  // also mark calendar day if any task done
+  const allTasks=getTasksForDate(dateStr);
+  const scheduledTasks=allTasks.filter(t=>t.id!=='fri-rv'&&t.id!=='tue-rv'); // exclude review-only tasks
+  const allDone=scheduledTasks.length>0&&scheduledTasks.every(t=>done[dateStr+'_'+t.id]);
+  const checkins=getCheckins();
+  if(allDone)checkins[dateStr]=true;else delete checkins[dateStr];
+  LS.set('ielts_checkin',checkins);
+  // update skill count
+  const task=allTasks.find(t=>t.id===taskId);
+  if(task){
+    const sc=getSkillCount();
+    task.skills.forEach(sk=>{
+      if(!sc[sk])sc[sk]=0;
+      if(done[key])sc[sk]++;else sc[sk]=Math.max(0,sc[sk]-1);
+    });
+    LS.set('ielts_skillcount',sc);
+  }
+  renderTodayTasks();renderWeek();updateStats();renderCalendar();renderSkills();
+}
+
+// ===== RENDER: WEEK =====
+function taskRow(t, dateStr, thisDow, done){
+  const key=dateStr+'_'+t.id;const checked=done[key];
+  const skColors={listen:'blue',read:'green',write:'orange',speak:'purple',vocab:'yellow'};
+  const sk=t.skills&&t.skills[0];const col=skColors[sk]||'muted';
+  return `<div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border)">
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--${col});flex-shrink:0;margin-top:2px"></div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.8rem;${checked?'text-decoration:line-through;opacity:.5':''}line-height:1.4">${t.name}${t.customized?'<span style="font-size:.68rem;color:var(--orange);margin-left:3px">调整</span>':t.added?'<span style="font-size:.68rem;color:var(--blue);margin-left:3px">新增</span>':''}</div>
+      <div style="font-size:.72rem;color:var(--muted)">${t.dur}</div>
+    </div>
+    <button onclick="openEdit('${t.id}',${thisDow})" style="background:none;border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:.72rem;color:var(--muted);cursor:pointer;flex-shrink:0">✏️</button>
+    ${t.added?`<button onclick="removeCustomTask('${t.id}',${thisDow})" style="background:none;border:1px solid #fee2e2;border-radius:5px;padding:2px 6px;font-size:.72rem;color:var(--red);cursor:pointer;flex-shrink:0">✕</button>`:''}
+  </div>`;
+}
+function renderWeek(){
+  const el=document.getElementById('week-grid');if(!el)return;
+  const days=['周日','周一','周二','周三','周四','周五','周六'];
+  const dow=todayDow();
+  const now=new Date();
+  const monday=new Date(now);monday.setDate(now.getDate()-(dow===0?6:dow-1));
+  const done=getTaskDone();
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const thisDow=d.getDay();
+    const dateStr=toKey(d.getFullYear(),d.getMonth()+1,d.getDate());
+    const isToday=dateStr===today();
+    const tasks=getTasksForDow(thisDow);
+    const workTasks=tasks.filter(t=>t.slot==='work');
+    const eveTasks=tasks.filter(t=>t.slot==='eve'||!t.slot);
+    const slotSection=(label,color,slotTasks)=>{
+      if(!slotTasks.length) return '';
+      return `<div style="margin-bottom:2px">
+        <div style="font-size:.7rem;font-weight:600;color:${color};margin:5px 0 2px;letter-spacing:.03em">${label}</div>
+        ${slotTasks.map(t=>taskRow(t,dateStr,thisDow,done)).join('')}
+      </div>`;
+    };
+    html+=`<div class="week-row">
+      <div class="week-day-head" style="margin-bottom:4px">
+        <span class="week-day-label${isToday?' today-label':''}">${days[thisDow]} <span style="font-weight:400;font-size:.78rem">${d.getMonth()+1}/${d.getDate()}</span>${isToday?'<span style="font-size:.72rem;color:var(--green);margin-left:4px">今天</span>':''}</span>
+        ${thisDow===6?`<span style="font-size:.7rem;color:var(--muted)">阶段${getCurrentStage()}</span>`:''}
+      </div>
+      ${slotSection('白天','var(--blue)',workTasks)}
+      ${slotSection('晚间','var(--green)',eveTasks)}
+      ${!workTasks.length&&!eveTasks.length?'<div style="font-size:.75rem;color:var(--muted);padding:4px 0">无固定任务</div>':''}
+      <button onclick="openAddTask(${thisDow},'${dateStr}')" style="margin-top:6px;background:none;border:1px dashed var(--border);border-radius:6px;width:100%;padding:5px;font-size:.75rem;color:var(--muted);cursor:pointer">＋ 新增任务</button>
+    </div>`;
+  }
+  el.innerHTML=html;
+}
+
+// ===== RENDER: CALENDAR =====
+let viewMonth=new Date().getMonth()+1;
+const viewYear=2026;
+function renderCalendar(){
+  const data=getCheckins();const t=today();
+  const mnames=['','一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+  const title=document.getElementById('cal-title');if(title)title.textContent=`2026年 ${mnames[viewMonth]}`;
+  const prev=document.getElementById('btn-prev');const next=document.getElementById('btn-next');
+  if(prev)prev.disabled=viewMonth<=9;if(next)next.disabled=viewMonth>=12;
+  const grid=document.getElementById('cal-grid');if(!grid)return;
+  grid.innerHTML='';
+  const first=new Date(viewYear,viewMonth-1,1).getDay();
+  const days=new Date(viewYear,viewMonth,0).getDate();
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day empty';grid.appendChild(e);}
+  for(let d=1;d<=days;d++){
+    const k=toKey(viewYear,viewMonth,d);
+    const el=document.createElement('div');el.textContent=d;
+    const cls=['day'];
+    if(k<START||k>END)cls.push('off');
+    else if(k>t)cls.push('future');
+    else{if(data[k])cls.push('checked');if(k===t)cls.push('today');}
+    el.className=cls.join(' ');
+    if(!cls.includes('off')&&!cls.includes('future')){
+      el.addEventListener('click',()=>{
+        const checkins=getCheckins();
+        if(checkins[k])delete checkins[k];else checkins[k]=true;
+        LS.set('ielts_checkin',checkins);
+        renderCalendar();updateStats();
+      });
+    }
+    grid.appendChild(el);
+  }
+}
+function changeMonth(d){viewMonth=Math.min(12,Math.max(9,viewMonth+d));renderCalendar();}
+
+// ===== RENDER: REVIEW BLOCK =====
+function renderReviewBlock(containerId,date,skill){
+  const el=document.getElementById(containerId);if(!el)return;
+  const reviews=getReviews();
+  const key=date+(skill?'_'+skill:'');
+  const rv=reviews[key]||{stars:0,block:'',vocab:'',note:''};
+  const isVocab=skill==='vocab';
+  el.innerHTML=`
+    <div class="review-day">
+      <div class="review-date">${date} ${skill?`· ${SKILL_LABELS[skill]||skill}`:''}</div>
+      <div class="review-row"><span class="review-label">完成质量</span>
+        <div class="stars">${[1,2,3,4,5].map(n=>`<span class="star${rv.stars>=n?' lit':''}" onclick="setStars('${key}',${n},'${containerId}','${date}','${skill||''}')">★</span>`).join('')}</div>
+      </div>
+      ${!isVocab?`<div class="review-label" style="margin-bottom:3px">今日卡点</div>
+      <textarea class="review-field" placeholder="遇到了什么不懂的？哪里卡住了？" onblur="saveReview('${key}','block',this.value,'${containerId}','${date}','${skill||''}')">${rv.block}</textarea>`:''}
+      <div class="review-label" style="margin-bottom:3px">${isVocab?'今日收录词汇':'好词好句收录'}</div>
+      <textarea class="review-field" placeholder="${isVocab?'记录今天遇到的好词、例句…':'印象深的词汇或句子…'}" onblur="saveReview('${key}','vocab',this.value,'${containerId}','${date}','${skill||''}')">${rv.vocab}</textarea>
+      <div class="review-label" style="margin-bottom:3px">自由笔记</div>
+      <textarea class="review-field" placeholder="其他想记录的…" onblur="saveReview('${key}','note',this.value,'${containerId}','${date}','${skill||''}')">${rv.note}</textarea>
+    </div>`;
+}
+function setStars(key,n,containerId,date,skill){
+  const reviews=getReviews();
+  if(!reviews[key])reviews[key]={stars:0,block:'',vocab:'',note:''};
+  reviews[key].stars=n;LS.set('ielts_reviews',reviews);
+  renderReviewBlock(containerId,date,skill);
+}
+function saveReview(key,field,val,containerId,date,skill){
+  const reviews=getReviews();
+  if(!reviews[key])reviews[key]={stars:0,block:'',vocab:'',note:''};
+  reviews[key][field]=val;LS.set('ielts_reviews',reviews);
+}
+
+// ===== RENDER: TODAY REVIEW (home) =====
+function renderTodayReview(){
+  const t=today();
+  const dow=todayDow();
+  const tasks=getTasksForDow(dow);
+  const skills=[...new Set(tasks.flatMap(t=>t.skills))].filter(s=>s&&s!=='vocab');
+  const el=document.getElementById('today-review-home');if(!el)return;
+  if(!skills.length){
+    renderReviewBlock('today-review-home',t,'');
+    return;
+  }
+  // render tabs using data-attr to avoid JSON-in-onclick issues
+  el.innerHTML=`<div class="rev-tab-bar" style="display:flex;gap:6px;margin-bottom:8px;overflow-x:auto">
+    ${skills.map((s,i)=>`<button class="stb stb-${s}${i===0?' on':''}" data-skill="${s}" data-skills="${skills.join(',')}" onclick="switchRevTab(this)">${SKILL_LABELS[s]}</button>`).join('')}
+  </div>
+  ${skills.map((s,i)=>`<div id="rev-skill-${s}" style="${i===0?'':'display:none'}"></div>`).join('')}`;
+  skills.forEach(s=>renderReviewBlock(`rev-skill-${s}`,t,s));
+}
+function switchRevTab(btn){
+  const skill=btn.dataset.skill;
+  const skills=btn.dataset.skills.split(',');
+  skills.forEach(s=>{
+    const el=document.getElementById(`rev-skill-${s}`);
+    if(el)el.style.display=s===skill?'block':'none';
+  });
+  btn.parentElement.querySelectorAll('.stb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ===== RENDER: SKILL WEEK PREVIEW =====
+function renderSkillWeekPreview(skill, containerId){
+  const el=document.getElementById(containerId);if(!el)return;
+  const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+  const now=new Date();const dow=now.getDay();
+  const monday=new Date(now);monday.setDate(now.getDate()-(dow===0?6:dow-1));
+  const custom=getCustom();
+  const rows=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const thisDow=d.getDay();
+    const dateStr=toKey(d.getFullYear(),d.getMonth()+1,d.getDate());
+    const isToday=dateStr===today();
+    const tasks=getTasksForDow(thisDow);
+    const skillTasks=tasks.filter(t=>t.skills&&t.skills.includes(skill));
+    if(!skillTasks.length) continue;
+    const done=getTaskDone();
+    rows.push(`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 10px;background:${isToday?'var(--green-pale)':'var(--bg)'};border-radius:8px;margin-bottom:5px">
+      <div style="font-size:.78rem;font-weight:700;color:${isToday?'var(--green)':'var(--muted)'};min-width:42px">${dayNames[thisDow]}<br><span style="font-weight:400">${d.getMonth()+1}/${d.getDate()}</span></div>
+      <div style="flex:1">${skillTasks.map(t=>{
+        const key=dateStr+'_'+t.id;const checked=done[key];
+        return `<div style="font-size:.8rem;line-height:1.5;${checked?'text-decoration:line-through;opacity:.5':''}">
+          ${checked?'✅ ':isToday?'▶ ':'○ '}${t.name} <span style="color:var(--muted)">${t.dur}</span></div>`;
+      }).join('')}</div>
+    </div>`);
+  }
+  el.innerHTML=rows.length?rows.join(''):`<p class="note">本周无${SKILL_LABELS[skill]}专项任务</p>`;
+}
+
+
+// ===== RENDER: SKILLS TAB =====
+function renderSkills(){
+  const t=today();const dow=todayDow();
+  const tasks=getTasksForDow(dow);
+  const done=getTaskDone();
+  const sc=getSkillCount();
+  const vocab=getVocab();
+  const todayVocab=vocab[t]||0;
+
+  ['listen','read','write','speak'].forEach(skill=>{
+    const weekEl=document.getElementById(`sk-${skill}-week`);
+    if(weekEl)renderSkillWeekPreview(skill,`sk-${skill}-week`);
+    const todayEl=document.getElementById(`sk-${skill}-today`);
+    if(todayEl){
+      const skillTasks=tasks.filter(t=>t.skills&&t.skills.includes(skill));
+      if(!skillTasks.length){todayEl.innerHTML=`<p class="note">今日无${SKILL_LABELS[skill]}任务</p>`;}
+      else{
+        todayEl.innerHTML=skillTasks.map(task=>{
+          const key=t+'_'+task.id;const checked=done[key];
+          return `<div class="task-item${checked?' done':''}">
+            <div class="task-check${checked?' checked':''}" onclick="toggleTask('${task.id}','${t}')">${checked?'✓':''}</div>
+            <div class="task-body"><div class="task-name">${task.name}</div><div class="task-meta">${task.dur}</div></div>
+          </div>`;
+        }).join('');
+      }
+    }
+    const progEl=document.getElementById(`sk-${skill}-prog`);
+    if(progEl){
+      const total=sc[skill]||0;
+      progEl.innerHTML=`<div style="font-size:1.4rem;font-weight:700;color:var(--${skill})">${total}</div><div class="note">累计完成次数（整个备考期）</div>`;
+    }
+    const revEl=document.getElementById(`sk-${skill}-rev`);
+    if(revEl)renderReviewBlock(`sk-${skill}-rev`,t,skill);
+  });
+
+  // vocab
+  const vd=document.getElementById('vocab-done');const vd2=document.getElementById('vocab-done2');
+  if(vd)vd.textContent=todayVocab;if(vd2)vd2.textContent=todayVocab;
+  const vstats=document.getElementById('vocab-stats');
+  if(vstats){
+    const total=Object.values(vocab).reduce((a,b)=>a+b,0);
+    vstats.innerHTML=`<div style="display:flex;gap:16px">
+      <div><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">${todayVocab}<span style="font-size:.85rem;color:var(--muted)">/20</span></div><div class="note">今日</div></div>
+      <div><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">${total}</div><div class="note">累计</div></div>
+      <div><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">${Math.round(total/Math.max(1,Object.keys(vocab).length))}</div><div class="note">日均</div></div>
+    </div>`;
+  }
+  const vrev=document.getElementById('sk-vocab-rev');
+  if(vrev)renderReviewBlock('sk-vocab-rev',t,'vocab');
+}
+
+// ===== VOCAB COUNTER =====
+function changeVocab(delta){
+  const t=today();const vocab=getVocab();
+  vocab[t]=Math.min(20,Math.max(0,(vocab[t]||0)+(delta===1?5:delta)));
+  LS.set('ielts_vocab',vocab);
+  renderSkills();
+}
+
+// ===== EDIT / CONFLICT =====
+let editCtx={taskId:null,dow:null,isNew:false};
+let addCtx={dow:null,dateStr:null};
+
+function openAddTask(dow,dateStr){
+  addCtx={dow,dateStr};
+  editCtx={taskId:null,dow,isNew:true};
+  document.getElementById('edit-name').value='';
+  document.getElementById('edit-duration').value='';
+  document.getElementById('edit-overlay').style.display='flex';
+  document.querySelector('#edit-overlay .edit-modal h3').textContent='＋ 新增任务';
+}
+function removeCustomTask(taskId,dow){
+  const custom=getCustom();
+  delete custom[taskId];
+  saveCustom(custom);
+  renderTodayTasks();renderWeek();renderSkills();
+}
+let conflictCtx={taskId:null,dow:null,newName:null,newDur:null,conflict:null};
+
+function openEdit(taskId,dow){
+  const tasks=getTasksForDow(dow);
+  const task=tasks.find(t=>t.id===taskId);if(!task)return;
+  editCtx={taskId,dow};
+  document.getElementById('edit-name').value=task.name;
+  document.getElementById('edit-duration').value=task.dur;
+  document.getElementById('edit-overlay').style.display='flex';
+}
+function closeEdit(){document.getElementById('edit-overlay').style.display='none';}
+function saveEdit(){
+  const name=document.getElementById('edit-name').value.trim();
+  const dur=document.getElementById('edit-duration').value.trim();
+  if(!name)return;
+  closeEdit();
+  document.querySelector('#edit-overlay .edit-modal h3').textContent='✏️ 调整任务';
+  if(editCtx.isNew){
+    // generate unique id for new task
+    const newId=`custom-${editCtx.dow}-${Date.now()}`;
+    const custom=getCustom();
+    custom[newId]={name,dur,skills:[],slot:'eve',added:true,customized:false};
+    saveCustom(custom);
+    renderTodayTasks();renderWeek();renderSkills();
+    return;
+  }
+  const{taskId,dow}=editCtx;
+  const conflict=detectConflict(taskId,name,dur,dow);
+  if(conflict){
+    conflictCtx={taskId,dow,newName:name,newDur:dur,conflict};
+    const base=BASE_PLAN[dow]||[];
+    const orig=base.find(t=>t.id===taskId);
+    let msgs=conflict.map(c=>{
+      if(c.type==='sameday') return `当天已有「${c.tasks[0].name}」，与修改内容都涉及<strong>${SKILL_LABELS[c.skill]}</strong>，同日叠加负荷偏高`;
+      return `本周${c.crossDays.map(d=>d.label).join('、')}已安排<strong>${SKILL_LABELS[c.skill]}</strong>，修改后该科目本周将出现在${c.crossDays.length+1}天`;
+    });
+    document.getElementById('conflict-msg').innerHTML=
+      `修改任务「<strong>${name}</strong>」检测到以下问题：<br><br>${msgs.map(m=>`• ${m}`).join('<br>')}<br><br>建议：跨天叠加是<em>正常加强训练</em>；同日叠加需谨慎评估精力。`;
+    document.getElementById('conflict-overlay').style.display='flex';
+    return;
+  }
+  applyEdit(taskId,dow,name,dur);
+}
+function resolveConflict(action){
+  document.getElementById('conflict-overlay').style.display='none';
+  if(action==='cancel')return;
+  const{taskId,dow,newName,newDur}=conflictCtx;
+  if(action==='keep'||action==='replace'){
+    applyEdit(taskId,dow,newName,newDur);
+  }
+}
+function applyEdit(taskId,dow,name,dur){
+  const custom=getCustom();
+  custom[taskId]={name,dur,customized:true};
+  saveCustom(custom);
+  renderTodayTasks();renderWeek();renderSkills();
+}
+// openWeekEdit removed — each task row has its own edit button
+
+// ===== WEEK TAB JUMP =====
+function goToWeekTab(){
+  const btn=document.querySelector('.tb:nth-child(2)');
+  goTab('week',btn);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===== TAB NAVIGATION =====
+function goTab(name,btn){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  const pane=document.getElementById('pane-'+name);
+  if(pane)pane.classList.add('on');
+  if(btn)btn.classList.add('on');
+  if(name==='home'){renderTodayTasks();renderTodayReview();updateStats();}
+  if(name==='week')renderWeek();
+  if(name==='skills')renderSkills();
+  if(name==='checkin'){renderCalendar();updateStats();}
+}
+function goSkill(name,btn){
+  document.querySelectorAll('.skill-pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.skill-tabs .stb').forEach(b=>b.classList.remove('on'));
+  const pane=document.getElementById('skill-'+name);
+  if(pane)pane.classList.add('on');
+  if(btn)btn.classList.add('on');
+  renderSkills();
+}
+
+// ===== INIT =====
+renderTodayTasks();
+renderTodayReview();
+updateStats();
+renderCalendar();
+renderWeek();
+renderSkills();
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
